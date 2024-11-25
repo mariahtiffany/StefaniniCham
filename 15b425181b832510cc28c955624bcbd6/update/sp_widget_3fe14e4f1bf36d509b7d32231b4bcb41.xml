@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope) {
+  /* widget controller */
+  var c = this;
+	
+	if (location.hash) {
+		setTimeout(function () {
+			var anchor = document.getElementById(location.hash.slice(1));
+			
+			anchor.scrollIntoView({ behavior: 'smooth' });
+		}, 1000);
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-dow-manager-training-progress {
+  .panel-body {
+  	padding: 16px 32px;
+  }
+}
+
+.ino-dow-manager-training-progress-list {
+	display: flex;
+  flex-direction: column;
+  
+  gap: 16px;
+}
+
+.ino-dow-manager-training-progress-item {
+	border-radius: 5px;
+
+  box-shadow: $default-box-shadow;
+  
+  padding: 16px;
+  
+  display: flex;
+  
+  @media(max-width: 768px) {
+  	flex-direction: column;
+    align-items: center;
+  }
+  
+  gap: 16px;
+}
+
+.ino-dow-manager-training-progress-item--avatar {
+  height: 40px;
+  width: 40px;
+
+  img {
+  	height: 100%;
+    width: 100%;
+ 		border-radius: 50%;
+  }
+}
+
+.ino-dow-manager-training-progress-item--details {
+  width: 20%;
+  
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+  
+  p {
+  	margin-top: 0;
+    margin-bottom: 0;
+    
+  
+    @media(max-width: 768px) {
+      text-align: center;
+    }
+  }
+}
+
+.ino-dow-manager-training-progress-item--tasks {
+  width: 30%;
+  
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+  
+  p, li {
+    @media(max-width: 768px) {
+      text-align: center;
+    }
+  }
+  
+  ul {
+  	list-style: none;
+    padding-left: 0;
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_manager_training_progress</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Manager Training Progress</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	var configuredDefaultOnboardingDays = new ChameleonUtil().getConfigKey('DefaultOnboardingDays');
+	var defaultOnboardingDays = configuredDefaultOnboardingDays && +configuredDefaultOnboardingDays.value || 360;
+
+	var onboardingTime = new GlideDateTime();
+	onboardingTime.addDaysUTC(-defaultOnboardingDays);
+	
+	var newHireGr = new GlideRecord('sys_user');
+	newHireGr.addQuery('sys_created_on', '>', onboardingTime);
+	newHireGr.addQuery('name', '!=', '');
+	newHireGr.orderBy('name');
+	newHireGr.query();
+	
+	var pendingTaskTotal = 10;
+	var tasks = [
+		'First Login',
+		'Employee Profile',
+		'Submit Documents',
+		'Onboarding and Orientation',
+		'Technical Skills Training',
+		'Compliance and Ethics',
+		'Security',
+		'Professional Development and Soft Skills',
+		'Cybersecurity',
+		'Diversity and Inclusion',
+	];
+	var newHires = [];
+	
+	while(newHireGr.next()) {
+		var pendingTasks = Math.max(1, newHireGr.getValue('sys_id').charCodeAt(0) % 10);
+		
+		newHires.push({
+			sys_id: newHireGr.getUniqueValue(),
+			photo: newHireGr.getDisplayValue('avatar') || newHireGr.getDisplayValue('photo'),
+			name: newHireGr.getValue('name'),
+			title: newHireGr.getValue('title') || '-',
+			email: newHireGr.getValue('email'),
+			created: newHireGr.getValue('sys_created_on'),
+			pendingTasks: tasks.slice(pendingTasks - 1, tasks.length),
+			completedTasks: tasks.slice(0, pendingTasks - 1),
+			itHealth: (newHireGr.getValue('sys_id').charCodeAt(0) % 100),
+		});
+	}
+	
+	data.newHires = newHires;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-07 15:10:18</sys_created_on>
+        <sys_id>3fe14e4f1bf36d509b7d32231b4bcb41</sys_id>
+        <sys_mod_count>57</sys_mod_count>
+        <sys_name>Ino DOW Manager Training Progress</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_3fe14e4f1bf36d509b7d32231b4bcb41</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-13 18:29:18</sys_updated_on>
+        <template><![CDATA[<div class="panel ino-dow-manager-training-progress">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      ${Training Progress}
+    </h3>
+  </div>
+  
+  <div class="panel-body">
+    <p>
+      ${Below you can check the progress of the new employees, which trainings are pending, and which ones they have already completed.}
+    </p>
+    
+    <div class="ino-dow-manager-training-progress-list">
+      <div ng-repeat="user in c.data.newHires" id="anc_{{user.sys_id}}" class="ino-dow-manager-training-progress-item">
+        <div class="ino-dow-manager-training-progress-item--avatar">
+          <img src="{{user.photo || '/x_stefa_chameleon.no-image.png'}}" alt="{{user.name}}">
+        </div>
+        
+        <div class="ino-dow-manager-training-progress-item--details">
+          <p>
+            <b>${Name:}</b>
+            {{ user.name }}
+          </p>
+          <p>
+            <b>${Title:}</b>
+            {{ user.title }}
+          </p>
+          <p>
+            <b>${Started:}</b>
+            <sn-time-ago timestamp="::user.created"></sn-time-ago>
+          </p>
+        </div>
+        
+        <div class="ino-dow-manager-training-progress-item--tasks">
+          <p>
+            <b style="color: #E80033">${Pending trainings}</b>
+          </p>
+          
+          <ul>
+            <li ng-repeat="task in user.pendingTasks">{{task}}</li>
+          </ul>
+        </div>
+        
+        <div class="ino-dow-manager-training-progress-item--tasks">
+          <p>
+            <b style="color: #0FA397">${Completed trainings}</b>
+          </p>
+          
+          <ul>
+            <li ng-repeat="task in user.completedTasks">{{task}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

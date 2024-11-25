@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	var requiredDocuments = [
+		{ key: 'INO_DOW_DRIVER_LICENSE', name: 'Driver\'s license' },
+		{ key: 'INO_DOW_RESIDENCE_CHECKING', name: 'Residence checking' },
+	];
+
+	c.missingDocuments = requiredDocuments.filter(function (doc) {
+		return !localStorage.getItem(doc.key);
+	});
+	c.isDocumentComplete = c.missingDocuments.length === 0;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-dow-your-progress {
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  
+  h2 {
+  	font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  p {
+    font-size: 2rem;
+    margin: 0;
+  }
+  
+  h2, p {
+    color: #36424F;
+  }
+}
+
+.ino-dow-your-progress-cards {
+	margin-top: 32px;
+  
+  display: flex;
+  gap: 2rem;
+
+  @media(max-width: 1024px) {
+  	flex-direction: column;
+  }
+}
+
+.ino-dow-your-progress-card {
+  box-shadow: $default-box-shadow;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  
+  h3 {
+  	font-size: 20px;
+    margin: 0;
+    color: white;
+    text-transform: uppercase;
+
+    @media(max-width: 1024px) {
+  	  font-size: 18px;
+    }
+  }
+  
+  p {
+    font-size: 14px;
+  }
+}
+
+.ino-progress-button {
+  margin-top: auto;
+  margin-left: auto;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  background-color: #B92312;
+  color: #FFF !important;
+  border-radius: $default-border-radius;
+  padding: 8px 16px;
+  
+  svg {
+  	width: 15px;
+    height: 15px;
+    margin-left: 10px;
+  }
+}
+
+.ino-dow-your-progress-card-heading {
+  padding: 8px 16px;
+  background: #E2221C;
+  height: 70px;
+  border-radius: 5px 5px 0 0;
+  
+  display: flex;
+  align-items: center;
+  
+  svg {
+  	height: 34px;
+    width: 34px;
+    
+    margin-right: 16px;
+  }
+}
+
+.ino-dow-your-progress-card-heading--completed,
+.ino-progress-button-completed {
+  background-color: #01B26E;
+}
+
+.ino-dow-your-progress-card-body {
+  background-color: white;
+  border: 2px solid #E2221C;
+  border-radius: 0 0 5px 5px;
+  
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ino-dow-your-progress-card-body--completed {
+	border-color: #01B26E;
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_your_progress</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Your Progress</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+	var user = gs.getUser();
+	var grUser = new GlideRecord('sys_user');
+	
+	if (!grUser.get(user.getID()))
+		return;
+	
+	var fields = ['title', 'company', 'department', 'location'];
+	data.missingFields = fields.filter(field => !grUser.getValue(field));
+	data.isProfileCompleted = data.missingFields.length === 0;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-28 14:33:03</sys_created_on>
+        <sys_id>2213a3441bb761509b7d32231b4bcb0e</sys_id>
+        <sys_mod_count>97</sys_mod_count>
+        <sys_name>Ino DOW Your Progress</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_2213a3441bb761509b7d32231b4bcb0e</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-06 13:52:56</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-your-progress">
+  <h2>
+    ${Check your progress and complete what is still pending}
+  </h2>
+  
+  <p>
+    ${After completing what is pending on the card below, click on the to mark the card as completed.}
+  </p>
+  
+  <div class="ino-dow-your-progress-cards">
+    <div class="ino-dow-your-progress-card">
+      <div class="ino-dow-your-progress-card-heading ino-dow-your-progress-card-heading--completed">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+	        <path d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.503 30.6 3.4 24.497 3.4 17C3.4 9.503 9.503 3.4 17 3.4C24.497 3.4 30.6 9.503 30.6 17C30.6 24.497 24.497 30.6 17 30.6ZM24.803 9.486L13.6 20.689L9.197 16.303L6.8 18.7L13.6 25.5L27.2 11.9L24.803 9.486Z" fill="white"/>
+        </svg>
+
+        <h3>
+          ${First login}
+        </h3>
+      </div>
+      
+      <div class="ino-dow-your-progress-card-body ino-dow-your-progress-card-body--completed">
+        <p>
+          ${Congratulations!}
+          ${You have made your first login to our platform and completed your first task.}
+          <br>
+          ${Keep completing the pending tasks below and discover more about our platform!}
+        </p>
+      </div>
+    </div>
+
+    <div ng-if="c.isDocumentComplete" class="ino-dow-your-progress-card">
+      <div class="ino-dow-your-progress-card-heading ino-dow-your-progress-card-heading--completed">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+	        <path d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.503 30.6 3.4 24.497 3.4 17C3.4 9.503 9.503 3.4 17 3.4C24.497 3.4 30.6 9.503 30.6 17C30.6 24.497 24.497 30.6 17 30.6ZM24.803 9.486L13.6 20.689L9.197 16.303L6.8 18.7L13.6 25.5L27.2 11.9L24.803 9.486Z" fill="white"/>
+        </svg>
+
+        <h3>
+          ${Submit required documents}
+        </h3>
+      </div>
+      
+      <div class="ino-dow-your-progress-card-body ino-dow-your-progress-card-body--completed">
+        <p>
+        	${Congratulations on successfully submitting all the necessary documents! This achievement showcases your diligence and attention to detail, ensuring that everything is in order and ready for the next steps.}
+        </p>
+        
+        <a href="?id=ino_progress_all_documents" class="ino-progress-button ino-progress-button-completed">
+          ${See all documents}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+            <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+              <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+              <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+              <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div ng-if="!c.isDocumentComplete" class="ino-dow-your-progress-card">
+      <div class="ino-dow-your-progress-card-heading">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z" fill="white"/>
+        </svg>
+
+        <h3>
+          ${Submit required documents}
+        </h3>
+      </div>
+      
+      <div class="ino-dow-your-progress-card-body">
+        <p>
+        	${There are some pending documents to be sent}.
+        </p>
+        
+        <ul>
+          <li ng-repeat="doc in c.missingDocuments">
+            <p>{{doc.name}}</p>
+          </li>
+        </ul>
+        
+        <a href="?id=ino_progress_all_documents" class="ino-progress-button">
+          ${See all documents}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+            <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+              <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+              <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+              <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div ng-if="!c.data.isProfileCompleted" class="ino-dow-your-progress-card">
+      <div class="ino-dow-your-progress-card-heading">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.486 30.6 3.4 24.514 3.4 17C3.4 9.486 9.486 3.4 17 3.4C24.514 3.4 30.6 9.486 30.6 17C30.6 24.514 24.514 30.6 17 30.6Z" fill="white"/>
+        </svg>
+
+        <h3>
+          ${Employee Profile} - ${Complete your information}
+        </h3>
+      </div>
+      
+      <div class="ino-dow-your-progress-card-body">
+        <p>
+          ${Complete a profile with their basic information, we are missing the following fields:}
+        </p>
+
+        <ul>
+          <li ng-repeat="field in c.data.missingFields">
+            <p>{{field}}</p>
+          </li>
+        </ul>
+        
+        <a href="?id=hri_user_profile&sys_id={{user.sys_id}}" class="ino-progress-button">
+          ${Access your profile}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+            <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+              <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+              <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+              <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div ng-if="c.data.isProfileCompleted" class="ino-dow-your-progress-card">
+      <div class="ino-dow-your-progress-card-heading ino-dow-your-progress-card-heading--completed">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+	        <path d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.503 30.6 3.4 24.497 3.4 17C3.4 9.503 9.503 3.4 17 3.4C24.497 3.4 30.6 9.503 30.6 17C30.6 24.497 24.497 30.6 17 30.6ZM24.803 9.486L13.6 20.689L9.197 16.303L6.8 18.7L13.6 25.5L27.2 11.9L24.803 9.486Z" fill="white"/>
+        </svg>
+
+        <h3>
+          ${Employee Profile}
+        </h3>
+      </div>
+      
+      <div class="ino-dow-your-progress-card-body ino-dow-your-progress-card-body--completed">
+        <p>
+          ${Congratulations! Completing your profile demonstrates your commitment and professionalism, which will undoubtedly make a positive impression on potential employers, colleagues, or anyone else who comes across your profile. Your attention to detail and willingness to go the extra mile set you apart from the crowd.}
+        </p>
+        
+        <a href="?id=hri_user_profile&sys_id={{user.sys_id}}" class="ino-progress-button ino-progress-button-completed">
+          ${Access your profile}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+            <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+              <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+              <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+              <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+$secondary-contrast-color: blue!default;
+
+.list-group-item {
+  span {
+    font-size: 1.1rem;
+  }
+  a &gt; h5 {
+  	margin-top: 5px;
+  }
+}
+
+.panel-heading {
+  h2 {
+    display: flex;
+    align-items: center;
+    
+    b {
+      border-radius: 50%;
+      border: 2px solid white;
+      width: 33px;
+      height: 33px;
+      display: flex;
+      margin-right: 10px;
+
+      i {
+        width: 100%;
+        height: 22px;
+        display: flex;
+        overflow: hidden;
+        font-size: 30px;
+        color: white;
+        justify-content: center;
+      }
+    }
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>trending_store_solutions</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Trending Store Solutions</name>
+        <option_schema>[{"hint":"If authentication is required, configure the REST Message and set the name here.","name":"rest_message_name","section":"Data","default_value":"","label":"REST Message Name","type":"string"},&#13;
+  {"hint":"Set the method name here.","name":"rest_message_method_name","section":"Data","label":"REST Message Method Name","type":"string"},&#13;
+  {"hint":"else, just set the RSS news feed URL","name":"url","section":"Data","label":"RSS news feed URL","type":"string"},&#13;
+  {"hint":"","name":"show_description","section":"Presentation","default_value":"true","label":"Show description","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	options.show_description = (options.show_description === "true");
+	options.title = gs.getMessage(options.title || 'Trending Store Solutions');
+
+	data.items = [
+		{link: "?id=kb_article_view&sys_kb_id=28b93faf1bb186505a2e113fad4bcb89", description: "Cegid - Cannot Open or Close Mobile Register in MPOS App"},
+		{link: "?id=kb_article_view&sys_kb_id=ef61fbe71bb186505a2e113fad4bcb9f", description: "Brilliance - App is missing from retail client advisor iPhone"},
+		{link: "?id=kb_article_view&sys_kb_id=a1d633ab1bb186505a2e113fad4bcb84", description: "Error obtaining the transfer pricing from JDE E1 when attempting to SHIP an order"},
+		{link: "?id=kb_article_view&sys_kb_id=89ccb7a31bf186505a2e113fad4bcb4b", description: "iPad Pro or Mini Damaged: USA Retail"}
+	];
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-04-24 21:04:50</sys_created_on>
+        <sys_id>dc5307491b390e105a2e113fad4bcbad</sys_id>
+        <sys_mod_count>25</sys_mod_count>
+        <sys_name>Trending Store Solutions</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_dc5307491b390e105a2e113fad4bcbad</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-24 18:28:58</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary" >
+  <div class="panel-heading">
+    <h2 class="h4 panel-title ng-binding">
+      
+      <b><i>&#8593;</i></b>
+      <!--<svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24">
+        <path id="Icon_awesome-newspaper" data-name="Icon awesome-newspaper" d="M34.5,4.5H5.5A1.5,1.5,0,0,0,4,6v.5H1.5A1.5,1.5,0,0,0,0,8V25a3.5,3.5,0,0,0,3.5,3.5H33a3,3,0,0,0,3-3V6A1.5,1.5,0,0,0,34.5,4.5Zm-31,21A.5.5,0,0,1,3,25V9.5H4V25A.5.5,0,0,1,3.5,25.5Zm14.75-1H8.75A.75.75,0,0,1,8,23.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,24.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,24.5Zm-13-6H8.75A.75.75,0,0,1,8,17.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,18.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,18.5Zm0-6H8.75A.75.75,0,0,1,8,11.75V9.25a.75.75,0,0,1,.75-.75h22.5a.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,31.25,12.5Z" transform="translate(0 -4.5)" />
+      </svg>-->
+      {{ c.options.title }}
+    </h2>
+  </div>
+  <div ng-if="!c.data.show_message || !c.data.no_have_items" class="list-group">
+    <div ng-repeat="item in data.items | limitTo: 5" class="list-group-item">
+      <span>{{ item.pubDate | date:"MM/dd/yyyy" }}</span>
+      <a ng-href={{item.link}} target="_blank">
+        <h5>{{ item.description }}</h5>
+      </a>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($http, spModal) {
+  var c = this;	
+	
+	c.widgetId = 'swiper_' + Math.random().toString(16).slice(2);
+	var qtdWith640 = Math.floor(c.options.qtd / 2) <= 1 ? 1 : Math.floor(c.options.qtd / 2);
+	
+	setTimeout(function () {
+		var swiperEl = document.getElementById(c.widgetId);
+
+    Object.assign(swiperEl, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+			navigation: {
+				nextEl: '.swiper-button-next-unique',
+				prevEl: '.swiper-button-prev-unique'
+			},
+      breakpoints: {
+        640: {
+          slidesPerView: qtdWith640,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: c.options.qtd,
+          spaceBetween: 20,
+        },
+      },
+    });
+    swiperEl.initialize();
+		
+	}, 1000);
+	
+	c.seeDetails = function(){
+		spModal.open({
+			title: 'Edit KB cards to this page',
+			widget: 'kb_slider_cards_editing', 
+			shared: c.data.page,
+			size: 'lg',
+			buttons: []
+		}).then(function () {
+			spModal.close();
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.slider-cards {
+	width: 100%;
+  min-height: 32rem;
+	position: relative;
+  
+  margin-bottom: 3rem;
+  box-shadow: $default-box-shadow;
+  border-radius: $default-border-radius;
+  background-color: #FFF;
+  
+  .content {
+  	padding: 2rem 4rem;
+  }
+  
+  ul {
+  	margin-top: 2rem;
+  }
+  
+  swiper-container {
+  	width: 100%;
+  	height: 100%;
+  }
+  
+  swiper-slide {
+  	padding: 1rem;
+  }
+  
+  .no-article {
+  	display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    min-height: 20rem;
+    
+    svg {
+    	margin-right: 3rem;
+    }
+  }
+}
+
+.swiper-button-next-unique,
+.swiper-button-prev-unique {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+	height: 80px;
+  width: 40px;
+  top: calc(50% - 2.25rem);
+  position: absolute;
+  
+  background: #F7F7F7 0% 0% no-repeat padding-box;
+	border: 1px solid #EAEAEA;
+	
+  color: $primary;
+  opacity: 0.7;
+  
+  transition: opacity 200ms ease;
+ 	 
+  &amp;:focus, &amp;:hover, &amp;:active {
+    opacity: 1;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+.swiper-button-disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.swiper-button-next-unique {
+	right: 0;
+  border-radius: 5px 0px 0px 5px;
+}
+
+.swiper-button-prev-unique {
+	left: 0;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.slider-item {
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  box-shadow: 2px 3px 10px 0px #cdcdcd;
+  border-radius: 5px;
+  
+  background-color: #FFF;
+}
+
+.slider-item-image {
+  height: 22rem;
+  width: 100%;
+  align-content: center;
+  text-align: center;
+  
+  img {
+  	height: 100%;
+    width: 100%;
+    
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    object-fit: cover;
+  }
+  
+  &amp;.no-image {
+  	background: rgb(241,241,241);
+    background: linear-gradient(130deg, rgba(241,241,241,0) 10%, rgba(241,241,241,1) 100%);
+  }
+}
+
+.slider-content {
+  padding: 1.5rem;
+  min-height: 12rem;
+  overflow-y: auto;
+  
+  p {
+    font-size: 1.4rem;
+  	margin-bottom: 0;
+    color: $text-color;
+    white-space: pre-line;
+    font-weight: 100;
+    
+    strong {
+      font-weight: normal;
+      margin-bottom: 10px;
+      display: inline-block;
+      color: #000;
+      width: 100%;
+    }
+  }
+}
+
+.edit-cards {
+  padding: 5px 10px;
+  border: 2px solid rgba(100,100,100,0.8);
+  border-radius: 5px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  
+  span {
+  	color: rgba(100,100,100,0.8);
+  }
+  
+  &amp;:hover {
+  	background-color: rgba(100,100,100,0.3);
+    border-color: rgba(100,100,100,1);
+    
+    span {
+    	color: rgba(100,100,100,1);
+    }
+  }
+}
+
+[role="button"]:focus{
+  outline: none!important;
+  box-shadow: 0 0 0 0!important;
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>kb_slider_cards</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+}]]></link>
+        <name>KB Slider Cards</name>
+        <option_schema>[{"hint":"Text to display in header","name":"title","section":"Presentation","default_value":"","label":"Title","type":"string"},{"hint":"How many cards will be displayed","name":"qtd","section":"Presentation","default_value":"4","label":"Number of Cards to be displayed","type":"integer"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  var userId = gs.getUserID();
+	var userLanguageCode = gs.getSession().getLanguage();
+	var permissionsNameList = ["knowledge_manager", "knowledge_admin"];
+	
+	options.title = gs.getMessage(options.title || 'Guides that will assist you');
+	options.shadow = options.shadow == 'true';
+	
+	data.hasPermissionToEdit = false;
+	for (var i = 0; i < permissionsNameList.length; i++) {
+		if (gs.hasRole(permissionsNameList[i], userId)) {
+			data.hasPermissionToEdit = true;
+			break;
+		}
+	}
+	
+	data.list = [];
+	data.page = {};
+	data.page.portal = $sp.getPortalRecord().getDisplayValue("url_suffix");
+	data.page.id = $sp.getParameter('id');
+	
+	var editingView = data.page.id == 'sp-preview';
+	var gr = new GlideRecord('x_stefa_chameleon_kb_cards');
+
+	if(!editingView) {
+		gr.addQuery('u_portal', data.page.portal);
+		gr.addQuery('u_page_id', data.page.id);
+	}
+	gr.query();
+
+	var cards = [];
+
+	while (gr.next()) {
+		cards.push({
+			number: gr.getDisplayValue('u_kb'),
+			image: gr.getDisplayValue('u_image'),
+			order: gr.getDisplayValue('u_order'),
+			short_description: '',
+			meta_description: '',
+			link: '',
+			language: ''
+		});
+	}
+
+	cards.sort(function (a, b) {
+		return a.order - b.order;
+	});
+	
+	var grKbList = new GlideRecord('kb_knowledge');
+
+	grKbList.addQuery('number', 'IN', cards.map(function(o) {return o.number;}));
+	grKbList.addQuery('language', userLanguageCode);
+	grKbList.query();
+
+	while (grKbList.next()) {
+		var item = cards.filter(function(o) {return o.number === grKbList.number.toString()})[0];
+		if(item){
+			item.short_description = grKbList.short_description.toString();
+			item.meta_description = grKbList.meta_description.toString();
+			item.link = '?id=kb_article_view&sys_kb_id='+grKbList.sys_id.toString();
+			item.language = userLanguageCode;
+		}
+	}
+
+	data.list = cards.filter(function(o) {return o.language === userLanguageCode;});
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-03-14 13:26:07</sys_created_on>
+        <sys_id>89211e331b304a109b7d32231b4bcbfd</sys_id>
+        <sys_mod_count>100</sys_mod_count>
+        <sys_name>KB Slider Cards</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_89211e331b304a109b7d32231b4bcbfd</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-03 13:56:25</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary slider-cards">
+
+  <div class="panel-heading">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path id="Icon_ionic-md-list-box" data-name="Icon ionic-md-list-box" d="M26,4.5H7A2.5,2.5,0,0,0,4.5,7V26A2.5,2.5,0,0,0,7,28.5H26A2.5,2.5,0,0,0,28.5,26V7A2.5,2.5,0,0,0,26,4.5Zm-6.5,19H9.5v-3h10Zm4-5.5H9.5V15h14Zm0-5.5H9.5v-3h14Z" transform="translate(-4.5 -4.5)" />
+      </svg>
+
+      {{c.options.title}}
+    </h3>
+  </div>
+
+  <div class="content">
+
+    <a class="edit-cards" role="button" ng-if="c.data.hasPermissionToEdit" href="javascript:void(0)" ng-click="c.seeDetails()">
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span class="sr-only">${Edit Cards}</span>
+    </a>
+
+    <div ng-show="c.data.list.length == 0" class="no-article">
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="48.000000pt" height="48.000000pt" viewBox="0 0 48.000000 48.000000" preserveAspectRatio="xMidYMid meet">
+        <g fill="#ddd" transform="translate(0.000000,48.000000) scale(0.100000,-0.100000)" stroke="none">
+          <path d="M249 274 c-152 -152 -168 -165 -188 -155 -47 25 -35 107 17 117 23 5 33 16 49 53 21 50 65 81 117 81 17 0 26 5 26 16 0 14 -8 16 -45 12 -56 -7 -109 -46 -126 -93 -7 -19 -19 -35 -27 -35 -24 0 -72 -57 -72 -85 0 -34 24 -81 46 -89 13 -5 15 -9 6 -18 -16 -16 -15 -38 0 -38 7 0 74 61 149 136 75 75 141 134 147 130 5 -3 12 -19 15 -36 5 -21 12 -30 27 -30 48 0 76 -65 46 -106 -12 -16 -31 -20 -138 -24 -72 -3 -123 -9 -123 -15 0 -15 213 -18 248 -4 32 13 57 55 57 94 0 28 -48 85 -72 85 -8 0 -20 16 -27 36 -13 35 -12 37 23 73 37 38 46 61 23 61 -6 0 -87 -75 -178 -166z"/>
+        </g>
+      </svg>
+
+      ${No articles available for display.}
+    </div>
+
+    <swiper-container ng-attr-id="{{c.widgetId}}" init="false">
+      <swiper-slide ng-repeat="item in c.data.list">
+        <a href="{{item.link}}" target="_blank" class="slider-item">
+          <div ng-class="['slider-item-image', {'no-image': !item.image}]">
+            <img ng-show="item.image" src="{{item.image}}" alt="The image of the card.">
+            <svg ng-hide="item.image" version="1.0" xmlns="http://www.w3.org/2000/svg" width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
+              <g fill="#ddd" transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)" stroke="none">
+                <path d="M525 550 c-27 -27 -53 -50 -57 -50 -5 0 -14 12 -20 26 -17 36 -58 54 -127 54 -72 0 -108 -14 -127 -52 -11 -21 -22 -28 -45 -28 -41 0 -83 -23 -97 -55 -16 -34 -16 -295 -1 -329 9 -20 9 -29 -1 -41 -10 -12 -10 -19 -1 -28 9 -9 74 51 281 258 149 149 269 274 267 279 -7 22 -25 13 -72 -34z m-161 -136 c25 -10 -1 -34 -36 -34 -63 0 -108 -45 -108 -109 0 -35 -24 -60 -34 -35 -21 54 9 129 66 164 33 20 81 26 112 14z"/>
+                <path d="M497 412 c-55 -55 -57 -59 -46 -88 38 -100 -75 -213 -175 -175 -29 11 -33 9 -81 -39 l-50 -50 188 0 c268 0 267 -1 267 220 0 136 -10 190 -34 190 -7 0 -37 -26 -69 -58z"/>
+                <path d="M341 256 c-62 -63 -67 -76 -25 -76 37 0 74 22 90 51 15 31 19 75 6 83 -5 3 -36 -23 -71 -58z"/>
+              </g>
+            </svg>
+          </div>
+          <div class="slider-content">
+            <p>
+              <strong>${{{item.short_description}}}:</strong>
+              ${{{item.meta_description}}}
+            </p>
+          </div>
+        </a>
+      </swiper-slide>
+    </swiper-container>
+
+    <button class="swiper-button-prev-unique">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.595" viewBox="0 -1 16 15.595">
+        <g filter="url(#swiper_button_prev_unique)">
+          <path fill="currentColor" id="Icon_awesome-arrow-right" data-name="Icon awesome-arrow-right" d="M6.8,3.692,7.6,2.9a.854.854,0,0,1,1.211,0l6.942,6.939a.854.854,0,0,1,0,1.211L8.806,17.99a.854.854,0,0,1-1.211,0L6.8,17.2a.858.858,0,0,1,.014-1.225l4.3-4.1H.857A.855.855,0,0,1,0,11.016V9.873a.855.855,0,0,1,.857-.857H11.12l-4.3-4.1A.852.852,0,0,1,6.8,3.692Z" transform="translate(16 18.242) rotate(180)"/>
+        </g>
+      </svg>
+    </button>
+
+    <button class="swiper-button-next-unique">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.595" viewBox="0 1 16 15.596">
+        <g filter="url(#swiper_button_next_unique)">
+          <path fill="currentColor" id="Icon_awesome-arrow-left" data-name="Icon awesome-arrow-left" d="M6.8,3.692,7.6,2.9a.854.854,0,0,1,1.211,0l6.942,6.939a.854.854,0,0,1,0,1.211L8.806,17.99a.854.854,0,0,1-1.211,0L6.8,17.2a.858.858,0,0,1,.014-1.225l4.3-4.1H.857A.855.855,0,0,1,0,11.016V9.873a.855.855,0,0,1,.857-.857H11.12l-4.3-4.1A.852.852,0,0,1,6.8,3.692Z" />
+        </g>
+      </svg>
+    </button>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

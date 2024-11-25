@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>Service Portal</category>
+        <format>png</format>
+        <height>45</height>
+        <image>ee57c23b1befed109b7d32231b4bcb22</image>
+        <name>x_stefa_chameleon.ino-tech-hub.png</name>
+        <size_bytes>998</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:13:27</sys_created_on>
+        <sys_id>4c47c23b1befed109b7d32231b4bcb70</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>x_stefa_chameleon.ino-tech-hub.png</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>db_image_4c47c23b1befed109b7d32231b4bcb70</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-27 13:13:43</sys_updated_on>
+        <thumbnail/>
+        <width>45</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color>#0</average_image_color>
+        <chunk_size_bytes>700000</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <file_name>image</file_name>
+        <hash>703ec234e57e06f9b185fdb7dc96e57cfd252e59d12e7bbbacdfddf587972c91</hash>
+        <image_height>45</image_height>
+        <image_width>45</image_width>
+        <size_bytes>998</size_bytes>
+        <size_compressed>1021</size_compressed>
+        <state>available</state>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:13:42</sys_created_on>
+        <sys_id>ee57c23b1befed109b7d32231b4bcb22</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-27 13:13:43</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>4c47c23b1befed109b7d32231b4bcb70</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="ee57c23b1befed109b7d32231b4bcb22">ee57c23b1befed109b7d32231b4bcb22</sys_attachment>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:13:42</sys_created_on>
+        <sys_id>2257c23b1befed109b7d32231b4bcb23</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>AeYDGfyJUE5HDQoaCgAAAA1JSERSAAAALQAAAC0IBgAAADoa4poAAAAJcEhZcwAACxMAAAsTAQCanBgAAAABc1JHQgCuzhzpAAAABGdBTUEAALGPC/xhBQAAA3tJREFUeAHtWV2ITVEU/gaRGJSUn2G2SRokHqT8Dy9TiJImZVISofzN22hkNA8K07zMg0RTUuNBSR680L1EyW+k/MYwYsQgxKAZ1rL3mbPumb2dae4959ziq29m3/uts/c6++6ftfYGwqGIrcT7pmxDA/ETcatDn0f8QDxHHIYYsIb4y/COw+azsJlt0fcJ/QhiwBDiDdHoJovNRqFfsegTiI+EzULEgInQPz83mHLYnILvVLFFLxN6A2LCZdPgM4e+Fr5TKx02rUY/jyzQr5d2o4njTPmjw2aJKLdZdEUsMuV2RIzhxAvwe7HaYrOb2An/lygI6Ir4RNSxDhGCG78pGmOHgktWtdCZFQFdEVuEfhYRo1Y09gA912n+3GH0LuIuSx3Noo40cQQixlP4Pawseo1wqMqis4NdRufNqQAxwHPohENvEjZDLfo0odcgRwhbPbyVQjn0t6I8y6J/EeWxiAnH4ffUDou+SOi8axZabLzdlIdJLDvhFOje9hwrtdikhL7fopcL/RVxEGLAdtMgrxLKoo+HnqhsU+eoow7uNTwyzISOP1wohn1MS/BQiny5+49/Hjwp5hM3ID/wHTrLeR1meA+ZAU/SPBrm8ADodCqfoKATCs47OVtK24y8NfYakkMR3D3PQ2Vb8IF8d1omzH/W+d6mW3EiTVxKXEVshN76GXOJ9Z5RvvV0U0BT8H1kluVjTwfRQlwvPq+WTif5AmFBVBo63WMsk44mGcz0F+VOh033sQQ73WHKA5EcRoryS4dNifnfzk5fNB84Lh6FZDBZlK9a9C3Q54GMFP/hNMqbmcuRDGRaNymgrYB/jsgpm+Ivp4oHmpEMnsN3qtGQY5BLyNxg9sqHrpsvvyL+CVmJ3gVStcEHq4RYj3ghN44geVicgSOL5959Ywx/EqcjHsgbAt4JiwMcHFZBhajgMXEMogUny96RGfe2Qh9xEr7jt6CPeaMAT/53oq1KZAE+xn0oKruLLHrAgQXEF3CsCH2FQubk4HI5sgefLO0k/hB1H0MOoaCPZuVM5olSgr5hMTJvyJgHEcFpEwcxh9BzGUpB53Clf3mWZ/0M4h74G4fH98jy+oLfdA5xMzIjLQm+bVUOjR3i4fMNOhHlM2qOX/iFCh3P8P1Nm0PjFzoAd9DUjdvITeqfKx4Oc5ijPL646UR+gI+VT4cZ/QZDSmmXQhCmtAAAAABJRU5ErkJgggbwcQnmAwAA</data>
+        <length>1348</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="ee57c23b1befed109b7d32231b4bcb22">ee57c23b1befed109b7d32231b4bcb22</sys_attachment>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:13:42</sys_created_on>
+        <sys_id>a257c23b1befed109b7d32231b4bcb23</sys_id>
+    </sys_attachment_doc>
+</record_update>

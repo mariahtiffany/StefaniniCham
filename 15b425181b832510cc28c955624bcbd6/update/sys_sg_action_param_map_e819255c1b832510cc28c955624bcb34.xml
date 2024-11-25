@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_action_param_map">
+    <sys_sg_action_param_map action="INSERT_OR_UPDATE">
+        <button display_value="New Button (Chameleon Configuration)">6819255c1b832510cc28c955624bcb32</button>
+        <item_parameter display_value="Chameleon Configuration number">6419255c1b832510cc28c955624bcb31</item_parameter>
+        <sys_class_name>sys_sg_action_param_map</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-22 17:31:17</sys_created_on>
+        <sys_id>e819255c1b832510cc28c955624bcb34</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>6419255c1b832510cc28c955624bcb31</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_sg_action_param_map_e819255c1b832510cc28c955624bcb34</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-22 17:31:17</sys_updated_on>
+        <ui_parameter display_value="Number">e019255c1b832510cc28c955624bcb34</ui_parameter>
+    </sys_sg_action_param_map>
+</record_update>

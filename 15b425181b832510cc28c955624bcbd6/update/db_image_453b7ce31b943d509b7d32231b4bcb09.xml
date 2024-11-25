@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>Service Portal</category>
+        <format>png</format>
+        <height>25</height>
+        <image>2362ff16db960e1018ca174b1396199f</image>
+        <name>x_stefa_chameleon.yammer_brain.png</name>
+        <size_bytes>2451</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-08-02 19:50:21</sys_created_on>
+        <sys_id>453b7ce31b943d509b7d32231b4bcb09</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>x_stefa_chameleon.yammer_brain.png</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>db_image_453b7ce31b943d509b7d32231b4bcb09</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-23 18:14:28</sys_updated_on>
+        <thumbnail/>
+        <width>39</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color>#d2c8cf</average_image_color>
+        <chunk_size_bytes>700000</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <file_name>image</file_name>
+        <hash>7f050f67864b0851efef7a532695a5e716bb432467fd78f2d0bba5bd30d8389b</hash>
+        <image_height>25</image_height>
+        <image_width>39</image_width>
+        <size_bytes>2451</size_bytes>
+        <size_compressed>2193</size_compressed>
+        <state>available</state>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-23 18:14:28</sys_created_on>
+        <sys_id>2362ff16db960e1018ca174b1396199f</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-23 18:14:28</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>453b7ce31b943d509b7d32231b4bcb09</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="2362ff16db960e1018ca174b1396199f">2362ff16db960e1018ca174b1396199f</sys_attachment>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-23 18:14:28</sys_created_on>
+        <sys_id>6362ff16db960e1018ca174b1396199f</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>2912</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="2362ff16db960e1018ca174b1396199f">2362ff16db960e1018ca174b1396199f</sys_attachment>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-23 18:14:28</sys_created_on>
+        <sys_id>e362ff16db960e1018ca174b1396199f</sys_id>
+    </sys_attachment_doc>
+</record_update>

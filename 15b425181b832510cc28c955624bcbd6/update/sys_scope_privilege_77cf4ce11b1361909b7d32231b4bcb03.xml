@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_scope_privilege">
+    <sys_scope_privilege action="INSERT_OR_UPDATE">
+        <operation>execute</operation>
+        <source_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</source_scope>
+        <status>allowed</status>
+        <sys_class_name>sys_scope_privilege</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-07 18:29:24</sys_created_on>
+        <sys_id>77cf4ce11b1361909b7d32231b4bcb03</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>todoPageUtils</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_scope_privilege_77cf4ce11b1361909b7d32231b4bcb03</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-07 18:29:24</sys_updated_on>
+        <target_name>todoPageUtils</target_name>
+        <target_scope display_value="Employee Center Core">3d1da2705b021200a4656ede91f91ab6</target_scope>
+        <target_type>sys_script_include</target_type>
+    </sys_scope_privilege>
+</record_update>

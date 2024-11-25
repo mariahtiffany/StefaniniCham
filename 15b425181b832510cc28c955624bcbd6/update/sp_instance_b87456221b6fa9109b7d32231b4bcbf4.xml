@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>2</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">8f2ba6e51b0be510ad11eb93b24bcbe1</sp_column>
+        <sp_widget display_value="Ino Training Progress">4f2bc2e61b2fa9109b7d32231b4bcbb6</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-23 16:58:32</sys_created_on>
+        <sys_id>b87456221b6fa9109b7d32231b4bcbf4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_b87456221b6fa9109b7d32231b4bcbf4</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-23 16:58:32</sys_updated_on>
+        <title/>
+        <url/>
+        <widget_parameters/>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=b87456221b6fa9109b7d32231b4bcbf4"/>
+</record_update>

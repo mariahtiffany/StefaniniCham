@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_ng_pro_sp_widget">
+    <m2m_sp_ng_pro_sp_widget action="INSERT_OR_UPDATE">
+        <sp_angular_provider display_value="spRecipientList">8e9b6926d711120023c84f80de610379</sp_angular_provider>
+        <sp_widget display_value="Ino SQANDA Question">b40d55501b2fa1109b7d32231b4bcbaf</sp_widget>
+        <sys_class_name>m2m_sp_ng_pro_sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-16 13:09:59</sys_created_on>
+        <sys_id>700d55501b2fa1109b7d32231b4bcbb5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>spRecipientList.Copy of SQANDA Question</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_ng_pro_sp_widget_700d55501b2fa1109b7d32231b4bcbb5</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-16 13:09:59</sys_updated_on>
+    </m2m_sp_ng_pro_sp_widget>
+</record_update>

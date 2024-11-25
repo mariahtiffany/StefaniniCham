@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = 'ASK YOUR QUESTION';
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = 'LOADING...';
+		
+		c.server.get({
+			question: c.question,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = 'ASK YOUR QUESTION';
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-packaging-specialist {
+	margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $default-box-shadow;
+  background-color: #FFF;
+}
+
+.ino-packaging-specialist-heading {
+	background-color: $header-bg-color;
+  display: flex;
+  padding: 16px;
+  gap: 1.5rem;
+  
+  h2 {
+  	font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+		color: $header-color;
+  }
+}
+
+.ino-packaging-specialist-body {
+	padding: 16px;
+}
+
+.ino-packaging-specialist-inputs {
+  display: flex;
+ 	align-items: center;
+    
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+  
+  span {
+  	font-size: 7rem;
+    padding: 0 10px;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #AEAEAE;
+    padding: 8px;
+    height: 300px;
+    resize: none;
+    flex: 1;
+    
+    @media(max-width: 768px) {
+      height: 150px;
+    	flex: unset;
+      width: 100%;
+    }
+    
+    &amp;:focus, &amp;:active {
+    	border-width: 1px;
+    }
+  }
+}
+
+.ino-packaging-button {
+  margin-top: 3rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  color: #FFF;
+  font-size: 20px;
+	border-radius: 5px;
+  border: 1px solid #36424F;
+  background: #36424F;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_packaging_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Packaging Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": "I want you to act as a packaging expert from AMCOR and be prepared to help answer questions about packaging materials, design and innovation, sustainability, and any other packaging-related topics. From explaining the properties of a component within the packaging material to providing guidance and best practices, you should offer detailed explanations, examples, and formulas to help you understand and explore the world of packaging. If the question is not related to packaging or AMCOR, simply respond 'I think the question is not related to packaging. Do you have any packaging-related question that I can help you with?'"
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-31 18:13:54</sys_created_on>
+        <sys_id>571292761bd879509b7d32231b4bcbb0</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>GPT Packaging Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_571292761bd879509b7d32231b4bcbb0</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-31 20:28:15</sys_updated_on>
+        <template><![CDATA[<div class="ino-packaging-specialist">
+  <div class="ino-packaging-specialist-heading">
+    <img src="data:image/png;base64,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">
+
+    <h2>
+      ${I am your packaging specialist!}<br>
+      ${Feel free to ask me anything related to packaging, and I'll provide you with the answers you need!}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="ino-packaging-specialist-body">
+    <div class="ino-packaging-specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="Example: What are the main components to produce a flexible packaging?" ng-model="c.question"></textarea>
+			<span>=</span>
+      <textarea placeholder="The answer will be presented here." readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="ino-packaging-button">
+      {{c.textButton}}
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="ino-packaging-specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

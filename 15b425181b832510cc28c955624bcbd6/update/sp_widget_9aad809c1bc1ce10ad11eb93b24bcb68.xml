@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $http, $timeout, spModal) {
+	var c = this;
+	c.data.page = angular.copy(c.options.shared);
+	
+	$scope.category = '';
+	$scope.categoryList = c.data.categoryList;
+	
+	getServerContent('selectedList', null);
+	getServerContent('kbList', {filter:null, selectedList: c.selectedList});
+	
+	c.selectImage = function(kb){
+		var shared = {};
+		spModal.open({
+			title: 'Select a Image to this card',
+			widget: 'kb_slider_cards_editing_images',
+			shared: shared,
+			size: 'md',
+			buttons: [
+				{ label: c.data.messages.cancelBtn, cancel: true },
+				{ label: c.data.messages.selectBtn, primary: true, value: c.imageSelected }
+			]
+		}).then(function () {
+			kb.image = shared.selectedImage;
+		});
+	};
+	
+	$scope.filterKbs = function() {
+		getServerContent('kbList', {filter:$scope.c.filter, selectedList: c.selectedList});
+	};
+	
+	$scope.toggleCheckbox = function(event, kb) {
+		if(kb.chosen)
+			return;
+		
+		kb.selected = !kb.selected;
+		
+		var targetElement = event.currentTarget;
+    if (kb.selected) 
+        targetElement.classList.add('selected');
+    else 
+        targetElement.classList.remove('selected');
+	};
+	
+	$scope.addKBs = function() {
+		var selectedKBs = c.kbList.filter(function(kb) { return kb.selected && !kb.chosen; });
+    selectedKBs.forEach(function(kb, index) {
+        kb.order = 100 + index;
+    });
+		if (selectedKBs.length == 0)
+			showNotification(c.data.messages.selectKb, 3000, 'error');
+		else {
+    	c.selectedList = c.selectedList.concat(selectedKBs);
+			showNotification(c.data.messages.kbAdded, 3000, 'alert');
+		}
+		$timeout(function () {
+			enableDragSort('drag-sort-enable');
+		}, 500);
+		
+		getServerContent('kbList', {filter:$scope.c.filter, selectedList: c.selectedList});
+	};
+	
+	$scope.removeKb = function(kb) {
+		var indexToRemove = c.selectedList.findIndex(function(item) {return item.sys_id === kb.sys_id;});
+
+    if (indexToRemove !== -1) {
+			spModal.open({
+				title: c.data.messages.deleteConfirm,
+				message: c.data.messages.deleteDescription,
+				size: 'sm',
+				windowClass: 'delete-modal',
+				buttons: [
+					{ label: c.data.messages.cancelBtn, cancel: true },
+					{ label: c.data.messages.deleteBtn, primary: true }
+				]
+			}).then(function() {
+				c.selectedList.splice(indexToRemove, 1);
+				getServerContent('kbList', {filter:$scope.c.filter, selectedList: c.selectedList});
+			});
+			
+			var checkExist = setInterval(function() {
+				var x = document.getElementsByClassName('modal-header')[0];
+				if (x) {
+					clearInterval(checkExist);
+					x.style.display = "none";
+				}
+			}, 10);
+    }
+	};
+
+	$scope.saveOrder = function() {
+		getServerContent('save', {selectedKbs: c.selectedList});
+		showNotification(c.data.messages.settingsSaved, 4000, 'success');
+	};
+
+	$scope.loadingHTML = function() {
+		return '<div class="loading"><div></div><div></div><div></div><div></div></div>';
+	};
+	
+	function assignPaddingRight(className, scrollbarWidth) {
+		var elements = document.getElementsByClassName(className);
+		for (var i = 0; i < elements.length; i++) {
+			elements[i].style.paddingRight = scrollbarWidth + 'px';
+		}
+	}
+
+	function getServerContent(action, param) {
+		
+		c[action + 'Loaded'] = false;
+		var params = {
+			action: action,
+			page: c.data.page
+		};
+
+		if (typeof param === 'object')
+			Object.assign(params, param);
+		else 
+			params[param] = param;
+		
+		c.server.get(params).then(function (response) {
+			c[action] = response.data[action];
+			
+			$timeout(function () {
+				c[action + 'Loaded'] = true;
+				if(action == 'selectedList')
+					enableDragSort('drag-sort-enable');
+			}, 500);
+			
+			$timeout(function () {
+				var element = document.querySelector('.scrollAllItems');
+				if (element.scrollHeight > element.clientHeight) {
+					var scrollElements = document.getElementsByClassName("scrollAllItems");
+					var scrollbarWidth = scrollElements[0].offsetWidth - scrollElements[0].clientWidth;
+					assignPaddingRight('table-header all-list', scrollbarWidth);
+				}
+			}, 700);
+		});
+	}
+	
+	// Drag and drop functionalities below -----------------------------
+	
+	function enableDragSort(listClass) {
+		var sortableLists = document.getElementsByClassName(listClass);
+		Array.prototype.map.call(sortableLists, function (list) {enableDragList(list)});
+	}
+
+	function enableDragList(list) {
+		Array.prototype.map.call(list.children, function (item) {enableDragItem(item)});
+	}
+
+	function enableDragItem(item) {
+		item.setAttribute('draggable', true)
+		item.ondrag = handleDrag;
+		item.ondragend = handleDrop;
+	}
+
+	function handleDrag(item) {
+		var selectedItem = item.target,
+				list = selectedItem.parentNode,
+				x = event.clientX,
+				y = event.clientY;
+
+		selectedItem.classList.add('drag-sort-active');
+		var swapItem = document.elementFromPoint(x, y) === null ? selectedItem : document.elementFromPoint(x, y);
+
+		if (list === swapItem.parentNode) {
+			swapItem = swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
+			list.insertBefore(selectedItem, swapItem);
+		}
+	}
+
+	function handleDrop(item) {
+		item.target.classList.remove('drag-sort-active');
+		
+		var updatedList = Array.from(item.target.parentNode.children);
+
+    updatedList.forEach(function (uItem, index) {
+			c.selectedList.find(function(e) { 
+				return e.sys_id == uItem.id;
+			}).order = (index + 1);
+		});
+	}
+	
+	function showNotification(message, duration, type) {
+		var notificationContainer = document.getElementById('notification-container');
+
+		var notification = document.createElement('div');
+		notification.className = 'notification ' + type;
+		notification.textContent = message;
+
+		notificationContainer.appendChild(notification);
+
+		setTimeout(function() {
+			notification.classList.add('show');
+		}, 10);
+
+		setTimeout(function() {
+			notification.classList.remove('show');
+			setTimeout(function() {
+				notificationContainer.removeChild(notification);
+			}, 300);
+		}, duration);
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #ccc!default;
+
+.chmlBannerEdit {
+  display: flex; 
+  flex-direction: column;
+
+  select,
+  input {
+    border: 1px solid #AFAFAF;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1.4rem;
+  }
+
+  button {
+    background-color: #0E8FD8;
+    color: white;
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 5px;
+    font-size: 1.4rem;
+
+    &amp;:hover {
+      background-color: #0680CA;
+    }
+  }
+
+  .alignButton {
+  	display: flex;
+  }
+  
+  .applyButton {
+    font-size: 1.6rem;
+    padding: 10px 15px;
+    display: flex;
+    align-self: flex-end;
+  }
+
+  .uploadArea {
+    display: flex; 
+    flex-direction: column;
+    align-items: baseline;
+
+    label {
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      margin: 10px 0;
+
+      span {
+        color: #f00;
+        margin-top: 5px;
+      }
+    }
+
+    .custom-file-input {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      cursor: pointer;
+      margin-right: 10px;
+
+      input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+      }
+
+      span {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #0E8FD8;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      &amp;:hover span {
+        background-color: #0680CA;
+      }
+    }
+  }
+
+  .boxArea {
+    border: 1px solid #d9d9d9;
+    padding: 15px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+
+    h4, h5 {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      color: #000;
+      padding: 0 0 10px;
+      margin: 0;
+      font-size: 18px;
+    }
+    
+    h5 { 
+      padding: 0; 
+    
+      .glyphicon {
+      	font-size: 12px;
+      }
+    }
+  }
+
+  .kbList {
+    background-color: #d9d9d9;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .scrollSelectedItems {
+    	width: 100%;
+    }
+    
+    .scrollAllItems{
+    	max-height: 32rem;
+      overflow-y: auto;
+      width: 100%;
+    }
+    
+    .scrollAllItems &gt; .table,
+    .scrollSelectedItems &gt; .table,
+    .table {
+      width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      
+      .table-header {
+        font-weight: bold;
+        display: flex;
+        font-size: 14px;
+      }
+
+      .table-row {
+        display: flex;
+        border: 1px solid #ccc;
+        background: #fcfcfc;
+        padding: 0;
+        border-radius: 5px;
+        
+        strong {
+        	width:80%;
+        }
+        
+        input[type="checkbox"] {
+          margin: 0 10px 0 0;
+        }
+        
+        &amp;.selected {
+        	background-color: rgba(14, 143, 216, 0.2);
+          border-color: rgba(14, 143, 216, 0.4);
+          color: #000;
+        }
+        
+        &amp;.chosen {
+        	cursor: not-allowed;
+          background-color: #efefef;
+          color: #999;
+        }
+      }
+      
+      .all-list {
+        span {
+          padding: 3px 5px;
+          &amp;:nth-child(1) { width: 4%; }
+          &amp;:nth-child(2) { width: 12%; min-width: 7.5rem; }
+          &amp;:nth-child(3) { width: 53%; }
+          &amp;:nth-child(4) { width: 17%; min-width: 13rem; }
+          &amp;:nth-child(5) { width: 14%; min-width: 7rem; text-align: right; }
+        }
+      }
+      
+      .selected-list {
+        span {
+          padding: 3px 5px;
+          align-content: center;
+          
+          &amp;:nth-child(1) { width: 13%; min-width: 8rem; }
+          &amp;:nth-child(2) { width: 12%; min-width: 7.5rem; }
+          &amp;:nth-child(3) { width: 40%; }
+          &amp;:nth-child(4) { width: 17%; min-width: 13rem; }
+          &amp;:nth-child(5) { width: 14%; min-width: 7rem; text-align: right; }
+          &amp;:nth-child(6) { width: 4%; text-align: right; }
+          
+          .thumb {
+            position: relative;
+            overflow: hidden;
+            object-fit: cover;
+            max-height: 60px;
+            flex: auto;
+            //box-shadow: #666 1px 1px 3px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+
+            .uploadImage {
+              margin: 0 15px;
+            }
+          }
+          
+          svg {
+          	margin-top: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.drag-sort-enable &gt; li {
+  cursor: move;
+}
+
+.details {
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+  
+  &amp;.ng-hide {
+    opacity: 0;
+  }
+}
+
+.loading {
+  display: inline-block;
+  position: relative;
+  width: 8rem;
+  height: 13rem;
+
+  div {
+    position: absolute;
+    top: 50%;
+    margin-top: -7px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: $secondary-color;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+
+  div:nth-child(1) {
+    left: 8px;
+    animation: loading1 0.6s infinite;
+  }
+  div:nth-child(2) {
+    left: 8px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(3) {
+    left: 32px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(4) {
+    left: 56px;
+    animation: loading3 0.6s infinite;
+  }
+}
+
+.uploadArea &gt; div &gt; button &gt; span &gt; .loading {
+	height: 1rem;
+  
+  div {
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    background-color:#fff;
+  }
+}
+
+@keyframes loading1 {
+  0% {transform: scale(0);}
+  100% {transform: scale(1);}
+}
+@keyframes loading3 {
+  0% {transform: scale(1);}
+  100% {transform: scale(0);}
+}
+@keyframes loading2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(24px, 0);}
+}
+@keyframes loadingSm2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(12px, 0);}
+}
+
+.notification-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  z-index: 9000;
+  
+  .notification {
+    color: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    
+    &amp;.show {
+      opacity: 1;
+    }
+    &amp;.success {
+      background-color: #4CAF50;
+    }
+    &amp;.alert {
+      background-color: #FF8500;
+    }
+    &amp;.error {
+      background-color: #AF0000;
+    }
+  }
+}
+
+.modal-content {
+	background-color: #AF0000!important;
+  color: #FFF;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>kb_slider_cards_editing</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>KB Slider Cards - Editing</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.messages = {
+		selectKb: gs.getMessage("Select a KB before adding."),
+		kbAdded: gs.getMessage("KB added to the selection list."),
+		settingsSaved: gs.getMessage("Settings saved successfully!"),
+		deleteConfirm: gs.getMessage("Delete Confirmation"),
+		deleteDescription: gs.getMessage("Are you <b>sure</b> you want to delete this KB?"),
+		deleteBtn: gs.getMessage("Delete"),
+		selectBtn: gs.getMessage("Select"),
+		cancelBtn: gs.getMessage("Cancel")
+	};
+	
+	data.categoryList = [
+		{value: 'cms', title: gs.getMessage('Content Management')},
+		{value: 'general', title: gs.getMessage('General')},
+		{value: 'kb', title: gs.getMessage('Knowledge Management')},
+		{value: 'sc', title: gs.getMessage('Service Catalog')},
+		{value: 'Service Portal', title: gs.getMessage('Service Portal')},
+		{value: 'system', title: gs.getMessage('System')}
+	];
+	
+	if (!input)
+    return;
+	
+	var editingView = $sp.getParameter('id') == 'sp-preview';
+	if (editingView) {
+		input.page = {
+			id: "chameleon_home",
+			portal: "chameleon_doordash"
+		}
+	}
+	
+	if (input.action === 'kbList') {
+		
+		var kbSelectedList = [];
+
+		if (input.selectedList) {
+			kbSelectedList = input.selectedList.map(function(o) {return o.number;});
+		}
+		else {
+			var grSelectedList = new GlideRecord('x_stefa_chameleon_kb_cards');
+
+			if(input.page) {
+				grSelectedList.addQuery('u_page_id', input.page.id);
+				grSelectedList.addQuery('u_portal', input.page.portal);
+			}
+			grSelectedList.query();
+
+			while (grSelectedList.next()) {
+				kbSelectedList.push(grSelectedList.u_kb.toString());
+			}
+		}
+		
+		var kbList = [];
+		var languageList = listLanguages();
+		var grKbList = new GlideRecord('kb_knowledge');
+		
+		if(input.filter)
+			grKbList.addQuery('short_description', 'LIKE', '%' + input.filter + '%');
+		
+		grKbList.addQuery('active', true);
+		grKbList.orderBy('kb_knowledge_base');
+		grKbList.orderBy('short_description');
+		grKbList.query();
+		
+		while (grKbList.next()) {
+			var selected = kbSelectedList.filter(function(o) {return o === grKbList.number.toString()}).length > 0;
+			var kb = {
+				id: grKbList.sys_id.toString(),
+				number: grKbList.number.toString(),
+				short_description: gs.getMessage(grKbList.short_description.toString()),
+				knowledgeBase: gs.getMessage(grKbList.kb_knowledge_base.getDisplayValue()),
+				language: gs.getMessage(languageList.filter(function(o) {return o.id.toString() === grKbList.language.toString()})[0].name),
+				selected: selected,
+				chosen: selected,
+				order: 0
+			};
+			kbList.push(kb);
+		}
+		data.kbList = kbList;
+		return;
+	}
+
+	if (input.action === 'selectedList') {
+		listSelectedKbs();
+		return;
+	}
+	
+	if (input.action === 'save') {
+		insertSelectedKbs(input.selectedKbs);
+		listSelectedKbs();
+		return;
+	}
+
+	function listSelectedKbs(){
+		var languageList = listLanguages();
+		var selectedList = [];
+		var grSelectedList = new GlideRecord('x_stefa_chameleon_kb_cards');
+		
+		if(input.page) {
+			grSelectedList.addQuery('u_page_id', input.page.id);
+			grSelectedList.addQuery('u_portal', input.page.portal);
+		}
+		grSelectedList.query();
+		
+		while (grSelectedList.next()) {
+
+			var selectedKb = {
+				sys_id: grSelectedList.sys_id.toString(),
+				page_id: grSelectedList.u_page_id.toString(),
+				portal: grSelectedList.u_portal.toString(),
+				order: parseInt(grSelectedList.u_order.toString(), 10),
+				image: grSelectedList.u_image.toString(),
+				number: grSelectedList.u_kb.toString(),
+				short_description: '',
+				knowledgeBase: '',
+				language: ''
+			};
+			selectedList.push(selectedKb);
+		}
+		
+		//Get some data to the selected list
+		var grKbList = new GlideRecord('kb_knowledge');
+		
+		grKbList.addQuery('number', 'IN', selectedList.map(function(o) {return o.number;}));
+		grKbList.query();
+		
+		while (grKbList.next()) {
+			var item = selectedList.filter(function(o) {return o.number === grKbList.number.toString()})[0];
+			if(item){
+				item.short_description = gs.getMessage(grKbList.short_description.toString());
+				item.knowledgeBase = gs.getMessage(grKbList.kb_knowledge_base.getDisplayValue());
+				item.language = gs.getMessage(languageList.filter(function(o) {return o.id.toString() === grKbList.language.toString()})[0].name);
+			}
+		}
+		
+		data.selectedList = selectedList;
+	}
+	
+	function listLanguages() {
+		var languageList = [];
+		var grLanguageList = new GlideRecord('sys_language');
+		grLanguageList.query();
+
+		while (grLanguageList.next()) {
+			languageList.push({
+				name: grLanguageList.getValue('name'),
+				id: grLanguageList.getValue('id')
+			});
+		}
+		
+		return languageList;
+	}
+	
+	function insertSelectedKbs(kbs) {
+		var grSelectedList = new GlideRecord('x_stefa_chameleon_kb_cards');
+
+		if (input.page) {
+			grSelectedList.addQuery('u_page_id', input.page.id);
+			grSelectedList.addQuery('u_portal', input.page.portal);
+		}
+
+		grSelectedList.deleteMultiple();
+
+		for (var i = 0; i < kbs.length; i++) {
+			var kb = kbs[i];
+
+			grSelectedList.initialize();
+			grSelectedList.u_page_id = input.page.id;
+			grSelectedList.u_portal = input.page.portal;
+			grSelectedList.u_order = kb.order;
+			grSelectedList.u_image = kb.image;
+			grSelectedList.u_kb = kb.number;
+
+			grSelectedList.insert();
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-03-15 17:08:38</sys_created_on>
+        <sys_id>9aad809c1bc1ce10ad11eb93b24bcb68</sys_id>
+        <sys_mod_count>151</sys_mod_count>
+        <sys_name>KB Slider Cards - Editing</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_9aad809c1bc1ce10ad11eb93b24bcb68</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-09 19:07:50</sys_updated_on>
+        <template><![CDATA[<div class="chmlBannerEdit">
+  <button class="applyButton" ng-click="saveOrder()">${Apply Configuration}</button>
+
+  <div class="boxArea">
+    <h4>
+      ${Selected Knowledge Articles}
+    </h4>
+    <label>${Drag and drop to rearrange the display order of the KBs.}</label>
+
+    <div class="kbList" ng-model="c.selectedList">
+      <span ng-show="c.selectedList.length == 0 && c.selectedListLoaded && c.kbListLoaded">${No Knowledge Articles selected}</span>
+      <ul class="table" ng-show="c.selectedList.length > 0 && c.selectedListLoaded && c.kbListLoaded">
+        <li class="table-header selected-list">
+          <span>${Image}</span>
+          <span>${Number}</span>
+          <span>${Title}</span>
+          <span>${Knowledge Base}</span>
+          <span>${Language}</span>
+          <span></span>
+        </li>
+      </ul>
+      <div class="scrollSelectedItems">
+        <ul ng-show="c.selectedListLoaded && c.kbListLoaded" class="table drag-sort-enable">
+          <li ng-repeat="kb in c.selectedList | orderBy: 'order'" id="{{kb.sys_id}}" class="table-row selected-list">
+            <span>
+              <span class="thumb" ng-click="c.selectImage(kb)">
+                <img ng-show="kb.image" ng-src="/{{kb.image}}" />
+                <img ng-hide="kb.image" class="uploadImage" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEKklEQVR4nO3W609TdxzH8cbEJcqlcusFVthQEN3cspEgzvlgIA6p7FQGOp1x7MnMsifL/oEmtgwKpBsM2LrKACkViwTNolnMLg+Yu5mMEYPUlpZCL1DLzbbYOoXP0gaTGXp6gV9pSfpN3jmPTtvX75zf6WEwYhOb2MQmKuf4FPgCC0wCCxDJKAuMAguOhgxYORFR0mTIgCj40fh/MYAgdgXgXQSxbRFapxku17j3KLItbp5byPPj4davqnZmcXMAPCvuC6BxmjcH4KHL4BPw0GXYHIBNfwVENHtAFMRGjgrAU4RnxV0ug/cY8afQW8Mu5P+0gPxfFlA84g4LWhAOAGUGCgYfILff+kwH/3RGP4AyL3tXPKdv2mcHfnNEL4AyL+P1H+exSzXtt0LCCAYJAGVcxqs/zGJn71RQFd6yr/qMwyNuFA7asX/QjpK7jzYOUD65hH3XbchWWkJq/68rCDNw6LbTuwCv3JjFvuszePn7GRy6vQFPoWOGJey5ZsMLPZY1VTBox5t/OfHazblVgL3XbDj4hzN8AL7+CXZfsSKr27yu8gbu0wL2DNzHG787yQPKdE+8T5XMLhORdvdbaQF5V6w4cGsB1ORjvDPxaKV/QZmWIDAvhw4o1TxG9qUp8DpNRMvpsz4LuGpFnsqEXOUEcrp1KLhpBl89v9ICjmnsKNcthg7wXPaM74xhKUc17QW8NGBB3uUJ5CrUeLGjH7x2ETjyj8H69hRYsveQ0X4Ou3rFKPj5BhjCqudCAqRfmETYkk8g+6IBey+PY6fiKp7v+gTcjlPgtJ8ES34CabJKpLZVIKVFgKRmCju+LAdTyh9jNpRVBA3gyicRrjhtWnCa7yCzswUZ3WeQ3vV+MAAkNpYhXvJ2A0Mo3BIQwJFNIByxW8fAbhpBurwZvJ6zoQPqSxFXe0QSEMD+xgDifa0Hq+kuOK19yOytXg8A22qOCPwC0toMIF1qswZp0iFkKj/1C5hzOzDrsvsFbK85rPe7sVNbxkG0r/RIkY6A3apClupDv4Cn4x9Qgm3ioipaQIrnC0nWpEVy4x1kdNSSA5wvUtACkpv0IJpUg6S6YfCUn5EDiIrVtIAdX+hAtEY1mJ8PIUt1bhVg3u1AoPHsCR8ABy2AKR0D0RpGkVjzt0/A3JoBRQ9oAYmNYyCaRI0E8RB4PQRvofNFo7SAhHqtMaFeC2LVqREv+gfcCzUk90A3LWB7nfpovOSeMV6iAZHq7iFONIxkqZLkFahkbPTkyz7amqWq1vr9I3PZA/+RiUt0Ib+hkpqsvuqKdb9KiIspRiSH1/tBw9oBJXWMiI9QuIWnOFsfKiBOUioJ6nV6o4Z78YyA23laGxhQpo2vL4vsbUM3no3N6ThdxW4/qWDJT4ymyt51pLQddyS3UKNJzZSCKeVXMmT5W32d/B+oF7musm98PQAAAABJRU5ErkJggg==">
+              </span>
+            </span>
+            <span>{{kb.number}}</span>
+            <span>{{kb.short_description}}</span>
+            <span>{{kb.knowledgeBase}}</span>
+            <span>{{kb.language}}</span>
+            <span>
+              <svg ng-click="removeKb(kb)" width="14" height="18" viewBox="0 0 14 18" fill="red" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z"/>
+              </svg>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <span ng-hide="c.selectedListLoaded && c.kbListLoaded" ng-bind-html="loadingHTML()"></span>
+    </div>
+  </div>
+	
+  <div class="boxArea">
+    <h4>
+      ${Knowledge Articles}
+      <button ng-click="addKBs()">${Add Selected Knowledge Articles}</button>
+    </h4>
+
+    <label>${Please type below the Knowledge Article you wish to filter}</label>
+    <input type="text" ng-model="c.filter" placeholder="${e.g. IT}" ng-change="filterKbs()">
+
+    <div class="kbList">
+      <ul class="table" ng-show="c.kbListLoaded && c.selectedListLoaded">
+        <li class="table-header all-list">
+          <span></span>
+          <span>${Number}</span>
+          <span>${Title}</span>
+          <span>${Knowledge Base}</span>
+          <span>${Language}</span>
+        </li>
+      </ul>
+      <div class="scrollAllItems">
+      	<ul class="table" ng-show="c.kbListLoaded && c.selectedListLoaded">
+          <li ng-repeat="kb in c.kbList" ng-click="toggleCheckbox($event, kb)" ng-class="['table-row', 'all-list', {'chosen':kb.chosen}]">
+            <span><input type="checkbox" ng-click="toggleCheckbox($event, kb)" ng-model="kb.selected" ng-disabled="{{kb.chosen}}" /></span>
+            <span>{{kb.number}}</span>
+            <span>{{kb.short_description}}</span>
+            <span>{{kb.knowledgeBase}}</span>
+            <span>{{kb.language}}</span>
+          </li>
+        </ul>  
+      </div>
+      <span ng-hide="c.kbListLoaded && c.selectedListLoaded" ng-bind-html="loadingHTML()"></span>
+    </div>
+  </div>
+  
+  <div id="notification-container" class="notification-container"></div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

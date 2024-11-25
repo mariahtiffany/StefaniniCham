@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="" label="Chameleon Persona Background" language="en" table="x_stefa_chameleon_chameleon_persona_background">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>Chameleon Persona Background</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_chameleon_persona_background</name>
+            <plural>Chameleon Persona Backgrounds</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+            <sys_created_on>2023-06-05 16:40:18</sys_created_on>
+            <sys_id>16a365b81bd3ad509b7d32231b4bcb98</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Chameleon Persona Background</sys_name>
+            <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+            <sys_update_name>sys_documentation_x_stefa_chameleon_chameleon_persona_background__en</sys_update_name>
+            <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+            <sys_updated_on>2023-06-05 16:40:18</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

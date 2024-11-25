@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="Add Echart">64cbcee81b836d109b7d32231b4bcbff</sp_dependency>
+        <sp_widget display_value="IT Health">a4f4641f1b8fe5509b7d32231b4bcbad</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 20:51:09</sys_created_on>
+        <sys_id>0c2dec171bcfe5509b7d32231b4bcb1f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Add Echart.IT Health</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_0c2dec171bcfe5509b7d32231b4bcb1f</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-31 20:51:09</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

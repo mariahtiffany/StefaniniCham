@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	var cachedContentKey = 'CACHED_TRAINING';
+	var userId = c.data.userId;
+
+	function randomTraining(name, progressBg, progressFill, index) {
+		var charCodeAt = userId[index % userId.length].charCodeAt(0);
+		var progress = Math.max(charCodeAt % 100, 10);
+
+		return { name: name, progressBg: progressBg, progressFill: progressFill, progress: progress };
+	}
+	
+	function getTrainings() {
+		var cachedContent = window.localStorage.getItem(cachedContentKey);
+
+		if (cachedContent) {
+			return JSON.parse(cachedContent);
+		}
+
+		var trainings = [
+			randomTraining(
+				'${Skills Development: Introduction Training}', 
+				'#c1f1ed',
+				'#81d8d0',
+				1
+			),
+			randomTraining(
+				'${Skills Development: Effective Communication Strategies}', 
+				'#a0d6f4',
+				'#4bb4ef',
+				2
+			),
+			randomTraining(
+				'${Skills Development: Mastering Time Management}', 
+				'#da94b7',
+				'#910048',
+				3
+			),
+		];
+
+		window.localStorage.setItem(cachedContentKey, JSON.stringify(trainings));
+
+		return trainings;
+	}
+	
+	c.trainings = getTrainings();
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel {
+	min-height: 40px;
+}
+
+.ino-training-progress {
+  .panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    background-color: transparent;
+    
+    a {
+    	color: $primary;
+    }
+  }
+}
+
+.ino-training-progress {}
+
+.ino-training-progress-body {
+	display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  &amp;:after, &amp;:before {
+  	content: unset;
+  }
+  
+  
+}
+
+.training-item {}
+
+.training-item-text {
+	display: inline-block;
+  margin-bottom: 1rem;
+  
+  span, p {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  
+  span {
+		display: inline-block;
+    margin-right: 1.5rem;
+  }
+
+  p {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.training-item-progress {
+	width: 100%;
+  height: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.training-item-progress-fill {
+  height: 100%;	
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_training_progress</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Training Progress</name>
+        <option_schema>[{"hint":"","name":"title","section":"Presentation","default_value":"The title of this card","label":"Title","type":"string"},{"hint":"The custom class for the header of the card","name":"custom_heading_class","section":"Presentation","label":"(optional) Custom Heading Class","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+	data.userId = gs.getUserID();
+	data.title = gs.getMessage(options.title);
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-23 16:17:59</sys_created_on>
+        <sys_id>4f2bc2e61b2fa9109b7d32231b4bcbb6</sys_id>
+        <sys_mod_count>22</sys_mod_count>
+        <sys_name>Ino Training Progress</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_4f2bc2e61b2fa9109b7d32231b4bcbb6</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:51:33</sys_updated_on>
+        <template><![CDATA[<div class="panel ino-training-progress">
+  <div class="panel-heading" ng-class="c.options.custom_heading_class">
+    <h2 class="panel-title">
+      {{c.data.title}}
+    </h2>
+  </div>
+  
+  <div class="panel-body ino-training-progress-body">
+    <div class="training-item" 
+         ng-repeat="item in c.trainings">
+      <div class="training-item-text">
+        <span>{{ item.progress }}%</span>
+        <p>
+          {{ item.name }}
+        </p>
+      </div>
+      
+      <div class="training-item-progress"
+           ng-style="{'background-color': item.progressBg }">
+        <div class="training-item-progress-fill"
+             ng-style="{width: item.progress + '%', 'background-color': item.progressFill }"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div ng-if="options.see_more_link" class="panel-footer">
+    <a href="{{options.see_more_link}}">${See more} >></a>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

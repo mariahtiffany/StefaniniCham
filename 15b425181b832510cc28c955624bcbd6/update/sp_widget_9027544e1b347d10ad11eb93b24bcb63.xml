@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $sce) {
+	/* widget controller */
+	var c = this;
+	
+	// If the browser is Safari, don't display this widget. 
+	var agent = navigator.userAgent.toLowerCase();
+	c.data.isSafari = agent.indexOf('safari') != -1 && agent.indexOf('chrome') < 0;
+	
+	var yammerSupportedTypes = {
+		initial_page: '/feed',
+		community: '/groups/:id',
+		user: '/users/:id',
+	};
+	var yammerOptions = {
+		header: c.options.show_header,
+		footer: c.options.show_footer,
+		hideNetworkName: !c.options.hide_network_name,
+		theme: c.options.theme || 'light',
+		promptText: c.options.prompt_text || 'Tell me more about your day',
+		includeFeedInformation: c.options.include_feed_information,
+	};
+
+	var yammerSearchParams = new URLSearchParams(yammerOptions);
+
+	var yammerBaseUrl = "https://web.yammer.com/embed"
+	var selectedType = yammerSupportedTypes[c.options.type || 'initial_page'];
+	var iframeUrl = yammerBaseUrl + selectedType.replace(':id', c.options.yammer_id) + '?' + yammerSearchParams.toString();
+
+	c.iframe_max_height = c.options.visual === 'card' ? c.options.iframe_height || 400 : 0;
+	c.iframe_height = c.options.iframe_height || 400;
+	c.src = $sce.trustAsResourceUrl(iframeUrl);
+
+	c.expanded = getExpandedByCache();
+	c.toggleDropdown = function () {
+		if (c.options.visual !== 'dropdown') {
+			return;
+		}
+
+		c.expanded = !c.expanded;
+		saveExpandedOnCache();
+	}
+
+	function getExpandedByCache() {
+		if (c.options.visual !== 'dropdown') {
+			return false;
+		}
+
+		try {
+			var content = localStorage.getItem('@ino/yammer:expanded');
+
+			if (content === undefined) {
+				return !!c.options.default_opened_dropdown;
+			}
+
+			return content === 'true';
+		} catch (e) {
+			return false;
+		}
+	}
+
+	function saveExpandedOnCache() {
+		localStorage.setItem('@ino/yammer:expanded', c.expanded.toString());
+	}
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$yammer-heading-bg-color: $primary !default; 
+$yammer-heading-color: white !default;
+$yammer-border-radius: 5px !default;
+
+.yammer-feed {
+	display: flex;
+  flex-direction: column;
+}
+
+.yammer-heading {
+	padding: 1rem 1.5rem;
+
+  background-color: $yammer-heading-bg-color;
+
+  border-top-left-radius: $yammer-border-radius;
+  border-top-right-radius: $yammer-border-radius;
+
+  display: flex;
+  
+  align-items: center;
+
+  cursor: initial;
+  
+  h2 {
+  	margin: 0;
+    font-size: 16px;
+    color: $yammer-heading-color;
+    font-weight: bold;
+  }
+  
+  svg {
+    margin-left: 8px;
+    transition: transform 400ms ease;
+  }
+  
+  svg path {
+  	fill: $yammer-heading-color;
+  }
+}
+
+.yammer-dropdown {
+  .yammer-heading {
+  	cursor: pointer;
+    
+    transition: border-radius 300ms ease;
+
+    border-bottom-left-radius: $yammer-border-radius;
+    border-bottom-right-radius: $yammer-border-radius;
+  }
+
+  .yammer-iframe-content iframe {
+    transition: max-height 400ms ease;
+  }
+}
+
+.yammer-expanded {
+  svg {
+  	transform: translateY(-2px) rotateZ(-180deg);
+  }
+  
+  .yammer-heading {  
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.yammer-iframe-content {
+  padding-right: 1px;
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 15px;
+
+  iframe {
+		flex: 1;
+    border: 0px; 
+    overflow: hidden; 
+    width: 100%;
+  }
+  
+  .btn-yammer {
+  	position: absolute;
+    right: 7px;
+    top: 11px;
+  }
+}
+
+.btn-proceed {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  position: relative;
+  background-color: #0078D4;
+  color: #fff;
+  border: 0;
+  margin: 1.5rem 0;
+  
+  img {
+  	padding: 0px 10px;
+  }
+  
+  &amp;:hover {
+    color: #fff;
+  	background-color: #0358A7;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Copy of Chameleon Yammer Widget</name>
+        <option_schema>[{"hint":"Select the type of the feed.","name":"type","section":"Data","default_value":"initial_page","label":"Type","type":"choice","choices":[{"label":"initial_page","value":"initial_page"},{"label":"community","value":"community"},{"label":"user","value":"user"}]},{"hint":"When type is equal user or community, you should put the ID of your target.","name":"yammer_id","section":"Behavior","label":"Community/User ID","type":"string"},{"hint":"Show/Hide the header of the Yammer","name":"show_header","section":"Presentation","default_value":"true","label":"Show Header","type":"boolean"},{"hint":"Show/Hide the footer of the Yammer","name":"show_footer","section":"Presentation","default_value":"true","label":"Show Footer","type":"boolean"},{"hint":"Choose the theme of the Yammer","name":"theme","section":"Presentation","default_value":"light","label":"Theme","type":"choice","choices":[{"label":"light","value":"light"},{"label":"dark","value":"dark"}]},{"hint":"Choose the placeholder text of the prompt of the user inside the Yammer.","name":"promp_text","section":"Behavior","default_value":"Tell me more about your day","label":"Promp Text","type":"string"},{"hint":"Show/Hide the name of the network (your company)","name":"show_network_name","section":"Presentation","default_value":"true","label":"Show Network Name","type":"boolean"},{"hint":"When the type is community, you can choose to show or hide the feed information.","name":"include_feed_information","section":"Presentation","default_value":"true","label":"Include Feed Information","type":"boolean"},{"hint":"The size of the box (min-value: 400px)","name":"iframe_height","section":"Presentation","default_value":"400","label":"Iframe Height (px)","type":"integer"},{"hint":"The title of the card","name":"title","section":"Presentation","default_value":"Yammer","label":"Title","type":"string"},{"hint":"Select how the widget will be presented to the user.","name":"visual","section":"Presentation","default_value":"dropdown","label":"Visual","type":"choice","choices":[{"label":"card","value":"card"},{"label":"dropdown","value":"dropdown"}]},{"hint":"Control whether or not the widget appears open by default.","name":"default_opened_dropdown","section":"Presentation","default_value":"false","label":"Default Opened? (dropdown)","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    /* populate the 'data' object */
+    /* e.g., data.table = $sp.getValue('table'); */
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-08-22 21:52:31</sys_created_on>
+        <sys_id>9027544e1b347d10ad11eb93b24bcb63</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Copy of Chameleon Yammer Widget</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_9027544e1b347d10ad11eb93b24bcb63</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-08-22 21:52:31</sys_updated_on>
+        <template><![CDATA[<div ng-if="!c.data.isSafari" class="yammer-feed panel panel-default" 
+     ng-class="{'yammer-dropdown': c.options.visual === 'dropdown', 'yammer-expanded': c.expanded}">
+  <div ng-click="c.toggleDropdown()" class="yammer-heading">
+    <h2>
+      {{c.data.title || 'Yammer'}}
+    </h2>
+
+    <svg ng-if="c.options.visual === 'dropdown'" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1.175 0L5 3.81667L8.825 0L10 1.175L5 6.175L0 1.175L1.175 0Z" />
+    </svg>
+  </div>
+
+  <div class="yammer-iframe-content">
+    <a class="btn-yammer" href="https://web.yammer.com/main/feed" title="Proceed to Yammer" target="_blank">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAG8SURBVEiJ7ZUxTFNRFIa/c9/DbixsaKKDyMTkRkLU0NZgYXFgwJE+CGAMZdGVCSZLTEpC68zgwCBtYygVE0cHdggDIR0dHB+x9zhUTH205b3XwcUznnPzf+f/8969Qh/1dP7T/ab5ea/TTHF+1EtT36QfQMqrNkCHu82N2IduPwBjzaOgA0HWgXGApmXwj4PU4v6IWrl7k6jeujyuF55/7zRLepW3AjmFrwITqvaJC5DOlrfVylKYvIyf2AVe9BDPo/YjYo4A3N+bLwlasvDhJoBNXB73Ej8sZdaS2f3HVzNXm9wWAau6e/h+5ksIE39VOlvZUMiJ6FatOL0WnJuogtfEhTciunVQnM51OhP7K0ovlPOqrCrkg5tb41w4qg1rnItYgJRX3VTV1W6xfC4+OwPuQIyIUl51E/R1r1jaK5KDViytzYPikyt7Q46feNdM+K/a/5PQDlqxSEdxAPEHxlSYE39grL0fCjDpVR5EiSUyoF7KnFgYjSoeGnAFiSoeCRC3/gP+PcAVhwYWjMhc0ivHvvwMzCogDo32vgAkvUpBYLnPZUEo1IqZl9cAEP5N7qpt9Ly2M3Ma7P8Cflu4lvxESHgAAAAASUVORK5CYII=">
+    </a>
+    <iframe id="yammerIframe" name="embed-feed" title="Yammer" 
+            ng-src="{{c.src}}" 
+            style="height: {{ c.iframe_height }}px; max-height: {{ !c.expanded ? c.iframe_max_height : c.iframe_height }}px">
+    </iframe>
+  </div>
+</div>
+
+<a ng-if="c.data.isSafari" class="btn btn-primary btn-proceed panel panel-default" href="https://web.yammer.com/main/feed" target="_blank">
+  Proceed to Yammer
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYEAQAAAAa7ikwAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAAAqo0jMgAAAAlwSFlzAAAAYAAAAGAA8GtCzwAAAAd0SU1FB+cIFhI7Nm49z6cAAAG0SURBVEjH3ZU/agJBGMXfjGmFlIKVjdims0kpWgkKHsC4CkoOoUZyB//gAQzYBuIVQsBSL2AX1N1GceelGM0mLtkd1y6v2vl25v2+ecPuABFElkqkbTNQhwPVcBjFH1TDIY10ONx4Xd3eAtksGI/7HIXjAG9vQriuHj8/g1ICZ3PF/T2QSHiFWOzY0eMjleMEd9PtBsdWq5Gue74KVJWK2XY7HTNz1yVXq9MqQfXxAXF3B7gu2G4Di4U/ItsGZrPviH6dh2VB9PuAlIBSQKMB5vMQlcqRvt9r1uvr5YdtWb87r9V0fTLxIjpJTSYXmfPhwTNXimw2PfCVgCDzqwG+WJRl+RsYj/X77fYigIm5BqRSVIMBWSwaA8JiCVgYDohsbgIgq1WzWGIxstcjn57I4y/CDLBeh5nreYWC99UXCqe6DN/iywuwXgOWJeRo9Pe8Hz++H883CJGQ9TpQrxtnfqbwHVypfwGwbQCASKdJGR0oMhlvsNl8l8npFCiV9HA+B5fLy83jcSCX01ek44DJpJDbLQCAKp0mPz/NbjUTtVq+BjRkOiU3m2imux35/k6Wy+feX/9D+5896uK9AAAAAElFTkSuQmCC">
+</a>]]></template>
+    </sp_widget>
+</record_update>

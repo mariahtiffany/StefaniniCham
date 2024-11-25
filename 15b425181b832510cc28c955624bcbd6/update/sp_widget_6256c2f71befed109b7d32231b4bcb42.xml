@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	c.onClickChatWithSophie = function () {
+		SophieChatter.show();
+	};
+
+	c.containerId = Math.random().toString(16).slice(2);
+	c.title = c.options.title || c.data.keys.CallServiceDeskTitle || 'Not Configured';
+	
+	if (c.data.validateKeys.hasEmptyFields) {
+		c.error_message = c.data.validateKeys.message;
+		return;
+	}	
+
+	setTimeout(function () {
+		DowServiceDesk.renderOn(c.containerId, {
+			description: c.options.description || c.data.keys.CallServiceDeskDescription,
+			serverConfig: {
+				domain: c.data.keys.CallServiceDeskDomain,
+				addresses: [c.data.keys.CallServiceDeskAddress],
+			},
+			callConfig: {
+				call: c.data.keys.CallServiceDeskCall,
+				caller: c.data.keys.CallServiceDeskCaller,
+				callerDN: c.data.keys.CallServiceDeskCallerDN,
+			},
+		});
+	}, 10);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.ino-action-it {
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  
+  display: flex;
+  align-items: center;
+
+  gap: 3rem;
+  
+  width: 100%;
+  
+  flex-direction: column;
+  align-items: center;
+  
+  svg {
+  	fill: $primary-color;
+    g {
+    	fill: $primary-color;
+      path {
+      	fill: $primary-color;
+      }
+    }
+  }
+  
+}
+
+.ino-action-it-list {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+
+  flex: 1;
+  gap: 4rem;
+
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ino-action-it-item {
+	display: flex;
+  flex: 1;
+  
+  appearance: none;
+  background-color: #FFF;
+  border: none;
+  min-width: 150px;
+  
+  padding: 8px 16px;
+  box-shadow: 2px 3px 10px 0px rgba(0, 0, 0, .09);
+  align-items: center;
+  
+  min-height: 120px;
+  justify-content: center;
+  
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+
+  img,svg {
+  	width: 32px;
+    height: 32px;
+    margin-right: 12px;
+  }
+  span &gt; img {
+    width: auto;
+    height: auto;
+  }
+  
+  span {
+    width: 45px;
+    text-align: center;
+    line-height: 15px;
+    
+  	span {
+      color: #666;
+      font-size: 1.6rem;
+      b {
+        color: $primary-color;
+        font-size: 1.9rem;
+      }
+    }
+  }
+  
+  p {
+  	font-size: 18px;
+    text-align: left;
+    margin-bottom: 3px;
+    color: rgba(54, 66, 79, 1);
+    
+    b {
+    	font-size: 24px;
+    }
+    
+    @media(max-width: 768px) {
+      text-align: center;
+    }
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_action_bar_it_help</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Action Bar IT Help</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	var chUtil = new ChameleonUtil();
+	var validFields = ['CallServiceDeskDomain', 'CallServiceDeskAddress', 'CallServiceDeskCall', 'CallServiceDeskCaller', 'CallServiceDeskCallerDN'];
+	var currentPortal = $sp.getPortalRecord();
+	var portal = currentPortal.getDisplayValue("url_suffix");
+	
+	data.keys = chUtil.getAllConfigKeys('CallServiceDesk');
+	data.validateKeys = chUtil.validateKeys(data.keys, validFields);
+	
+	//Default values
+	data.yammerTitle = 'askIT';
+	data.yammerTitleHtml = 'ask<b>IT</b>';
+	data.urlYammer = 'ino_ask_it';
+	data.techHubTitle = 'TechHub Midland';
+	data.sophieChatTitle = 'Chat with Sophie';
+	
+	if(portal == 'chameleon_rockwell') {
+		data.yammerTitle = 'Viva Engage';
+		data.yammerTitleHtml = 'viva<br><b>E</b>';
+		data.urlYammer = 'viva_engage';
+	}
+	else if(portal == 'chameleon_consumers_energy') {
+		data.techHubTitle = 'TechHub Jackson';
+	}
+	else if(portal == 'chameleon_sephora') {
+		data.sophieChatTitle = 'Chat with Rouge';
+	}
+	else if(portal == 'chameleon_mcdonalds') {
+		data.sophieChatTitle = 'Chat with Byte';
+	}
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:09:20</sys_created_on>
+        <sys_id>6256c2f71befed109b7d32231b4bcb42</sys_id>
+        <sys_mod_count>127</sys_mod_count>
+        <sys_name>Ino Action Bar IT Help</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_6256c2f71befed109b7d32231b4bcb42</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-08-26 14:11:33</sys_updated_on>
+        <template><![CDATA[<div class="ino-action-it">
+  <h1>
+    ${Get Help Now}
+  </h1>
+  
+  <div class="ino-action-it-list">
+    
+    <button ng-attr-id="{{c.containerId}}" class="ino-action-it-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+        <path id="Icon_material-phone-in-talk" data-name="Icon material-phone-in-talk" d="M34.722,26.722a20.2,20.2,0,0,1-6.347-1.013,1.814,1.814,0,0,0-1.813.427l-3.911,3.911A26.747,26.747,0,0,1,10.936,18.331L14.847,14.4a1.707,1.707,0,0,0,.444-1.778,20.2,20.2,0,0,1-1.013-6.347A1.783,1.783,0,0,0,12.5,4.5H6.278A1.783,1.783,0,0,0,4.5,6.278,30.22,30.22,0,0,0,34.722,36.5,1.783,1.783,0,0,0,36.5,34.722V28.5A1.783,1.783,0,0,0,34.722,26.722ZM32.944,20.5H36.5a16,16,0,0,0-16-16V8.056A12.435,12.435,0,0,1,32.944,20.5Zm-7.111,0h3.556A8.892,8.892,0,0,0,20.5,11.611v3.556A5.326,5.326,0,0,1,25.833,20.5Z" transform="translate(-4.5 -4.5)"/>
+      </svg>
+    	<p>
+        <b>${Call}</b>
+      </p>
+    </button>
+    
+    <a href="?id={{c.data.urlYammer}}" class="ino-action-it-item">
+      <span>
+      	<img src="/x_stefa_chameleon.yammer_brain.png">
+      	<span ng-bind-html="c.data.yammerTitleHtml"></span>
+      </span>
+      
+    	<p>
+        <b>{{c.data.yammerTitle}}</b>
+      </p>
+    </a>
+    
+    <button class="ino-action-it-item" ng-click="c.onClickChatWithSophie()">
+      <!--<img src="/x_stefa_chameleon.ino-chat-sophie.png">-->
+    
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+        <path id="Icon_material-chat" data-name="Icon material-chat" d="M30,3H6A3,3,0,0,0,3.015,6L3,33l6-6H30a3.009,3.009,0,0,0,3-3V6A3.009,3.009,0,0,0,30,3ZM9,13.5H27v3H9ZM21,21H9V18H21Zm6-9H9V9H27Z" transform="translate(-3 -3)" />
+      </svg>
+      
+    	<p>
+        <b>{{c.data.sophieChatTitle}}</b>
+      </p>
+    </button>
+    
+    <a href="?id=ino_techhub_mind" class="ino-action-it-item">
+      <!--<img src="/x_stefa_chameleon.ino-tech-hub.png">-->
+    
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="28.696" viewBox="0 0 30 28.696">
+        <g id="Icon_feather-coffee" data-name="Icon feather-coffee" transform="translate(-1.5)">
+          <path id="Path_1" data-name="Path 1" d="M28.113,23.563H26.806a1.306,1.306,0,1,1,0-2.613h1.306a3.919,3.919,0,1,0,0-7.838H26.806a1.306,1.306,0,1,1,0-2.613h1.306a6.531,6.531,0,1,1,0,13.063Z" transform="translate(-3.144 -1.381)" fill="#d1311f"/>
+          <path id="Path_2" data-name="Path 2" d="M2.806,10.5h20.9a1.306,1.306,0,0,1,1.306,1.306V23.563a6.539,6.539,0,0,1-6.531,6.531H8.031A6.539,6.539,0,0,1,1.5,23.563V11.806A1.306,1.306,0,0,1,2.806,10.5Z" transform="translate(0 -1.398)" fill="#d1311f"/>
+          <path id="Path_3" data-name="Path 3" d="M8.806,6.531A1.306,1.306,0,0,1,7.5,5.225V1.306a1.306,1.306,0,1,1,2.613,0V5.225A1.306,1.306,0,0,1,8.806,6.531Z" transform="translate(-0.783)" fill="#d1311f"/>
+          <path id="Path_4" data-name="Path 4" d="M14.806,6.531A1.306,1.306,0,0,1,13.5,5.225V1.306a1.306,1.306,0,1,1,2.613,0V5.225A1.306,1.306,0,0,1,14.806,6.531Z" transform="translate(-1.567)" fill="#d1311f"/>
+          <path id="Path_5" data-name="Path 5" d="M20.806,6.531A1.306,1.306,0,0,1,19.5,5.225V1.306a1.306,1.306,0,1,1,2.613,0V5.225A1.306,1.306,0,0,1,20.806,6.531Z" transform="translate(-2.35)" fill="#d1311f"/>
+        </g>
+      </svg>
+      
+    	<p>
+        <b>{{c.data.techHubTitle}}</b>
+      </p>
+    </a>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

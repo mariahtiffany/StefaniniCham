@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="Lottie Chameleon">2efb6ea21b668a505a2e113fad4bcb3b</sp_dependency>
+        <sp_widget display_value="Digital Suggestion Box">319c3e291b064e505a2e113fad4bcba6</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-06-05 18:01:06</sys_created_on>
+        <sys_id>120caea21b668a505a2e113fad4bcbe3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Lottie Chameleon.Digital Suggestion Box</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_120caea21b668a505a2e113fad4bcbe3</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-06-05 18:01:06</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

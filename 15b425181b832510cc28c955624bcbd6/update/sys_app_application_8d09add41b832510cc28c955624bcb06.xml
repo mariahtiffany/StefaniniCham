@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="09ff3d105f231000b12e3572f2b4775d" table="sys_app_application">
+    <sys_app_application action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category display_value="Chameleon Menu Category">1136dd3b1b47ad10ad11eb93b24bcbd7</category>
+        <description/>
+        <device_type>browser</device_type>
+        <hint/>
+        <name/>
+        <order/>
+        <roles>x_stefa_chameleon.admin</roles>
+        <sys_class_name>sys_app_application</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-22 17:31:03</sys_created_on>
+        <sys_domain>09ff3d105f231000b12e3572f2b4775d</sys_domain>
+        <sys_domain_path/>
+        <sys_id>8d09add41b832510cc28c955624bcb06</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Chameleon</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_app_application_8d09add41b832510cc28c955624bcb06</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-02 13:08:02</sys_updated_on>
+        <title>Chameleon</title>
+        <view_name/>
+    </sys_app_application>
+</record_update>

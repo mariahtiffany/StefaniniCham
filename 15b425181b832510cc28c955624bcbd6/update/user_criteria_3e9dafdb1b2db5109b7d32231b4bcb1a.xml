@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="user_criteria">
+    <user_criteria action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>true</advanced>
+        <company/>
+        <department/>
+        <group/>
+        <location/>
+        <match_all>false</match_all>
+        <name>Manager User</name>
+        <role/>
+        <script><![CDATA[gs.debug('UserId: ' + gs.getUserID());
+
+var loggedInUser = new GlideRecord('sys_user');
+
+if (!loggedInUser.get(gs.getUserID()))
+{
+	gs.debug('User not found');
+} else {
+	if (loggedInUser.title.toLowerCase().includes('manager')) {
+		answer = true;
+	} else {
+		answer = false;
+	}
+}
+]]></script>
+        <sys_class_name>user_criteria</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-10-03 17:29:24</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>3e9dafdb1b2db5109b7d32231b4bcb1a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Manager User</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>user_criteria_3e9dafdb1b2db5109b7d32231b4bcb1a</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-03 17:40:13</sys_updated_on>
+        <user/>
+    </user_criteria>
+</record_update>

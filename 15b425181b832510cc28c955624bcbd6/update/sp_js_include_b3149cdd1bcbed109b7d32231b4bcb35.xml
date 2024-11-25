@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_js_include">
+    <sp_js_include action="INSERT_OR_UPDATE">
+        <display_name>https://www.googletagmanager.com/gtag/js?id=G-0LPLEJVCCT</display_name>
+        <source>url</source>
+        <sys_class_name>sp_js_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-25 13:54:28</sys_created_on>
+        <sys_id>b3149cdd1bcbed109b7d32231b4bcb35</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>https://www.googletagmanager.com/gtag/js?id=G-0LPLEJVCCT</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_ui_script/>
+        <sys_update_name>sp_js_include_b3149cdd1bcbed109b7d32231b4bcb35</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-25 13:54:28</sys_updated_on>
+        <url>https://www.googletagmanager.com/gtag/js?id=G-0LPLEJVCCT</url>
+    </sp_js_include>
+</record_update>

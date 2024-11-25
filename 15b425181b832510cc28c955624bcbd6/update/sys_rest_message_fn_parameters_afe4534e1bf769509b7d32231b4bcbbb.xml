@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_rest_message_fn_parameters">
+    <sys_rest_message_fn_parameters action="INSERT_OR_UPDATE">
+        <name>accessToken</name>
+        <rest_message_function display_value="Logon Process">a074134e1bf769509b7d32231b4bcbba</rest_message_function>
+        <sys_class_name>sys_rest_message_fn_parameters</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 18:38:59</sys_created_on>
+        <sys_id>afe4534e1bf769509b7d32231b4bcbbb</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>accessToken</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_rest_message_fn_parameters_afe4534e1bf769509b7d32231b4bcbbb</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-04 18:39:24</sys_updated_on>
+        <type>string</type>
+        <value>eyJhbGciOiJSUzI1NiIsImtpZCI6Ilg1ZVhrNHh5b2pORnVtMWtsMll0djhkbE5QNC1jNTdkTzZRR1RWQndhTmsiLCJ0eXAiOiJKV1QifQ.eyJpZHAiOiJMb2NhbEFjY291bnQiLCJvaWQiOiJkMDc5MzZjNi02MmU0LTRkYzktYTY4ZS02MDc4NWIyOWI2NDEiLCJzdWIiOiJkMDc5MzZjNi02MmU0LTRkYzktYTY4ZS02MDc4NWIyOWI2NDEiLCJuYW1lIjoiNTAxODA0MzktMDU1My00MmRhLThmZWItZmFlMzMxN2NjYzJlIFNlcnZpY2UgQWNjb3VudCIsIm5ld1VzZXIiOmZhbHNlLCJleHRlbnNpb25fU2VydmljZUFjY291bnQiOiJTZXJ2aWNlLlN5c1RyYWNrQVBJIiwiZW1haWxzIjpbIjUwMTgwNDM5LTA1NTMtNDJkYS04ZmViLWZhZTMzMTdjY2MyZUBzdGVmYW5pbmkuYXBpIl0sInRmcCI6IkIyQ18xX1JPUENfQXV0aCIsImF6cCI6ImVhYjdhMDExLTM2ZmMtNGMxYi05NGRkLWNiNmYzMTQ3M2ZmMyIsInZlciI6IjEuMCIsImlhdCI6MTY4ODQ5NTk0OCwiYXVkIjoiZWFiN2EwMTEtMzZmYy00YzFiLTk0ZGQtY2I2ZjMxNDczZmYzIiwiZXhwIjoxNjg4NDk5NTQ4LCJpc3MiOiJodHRwczovL3N5c3RyYWNrY2VnbC5iMmNsb2dpbi5jb20vNjVmNjQ1OWItYzMyMy00MTI1LTg5MWItYzFmNTJhZjk5MTI1L3YyLjAvIiwibmJmIjoxNjg4NDk1OTQ4fQ.QlVIU0RbC4XV1F1bySxIJvB41t_TBkLNA9Z7aWBrjJtkyX9g77l3a0BCG_pPx4-Qy54gBlBTR284aRIUWfaI04tFaQEmnh9HbnUutkoHfeADT3QGvIVjm787wa0Xo-Cd6jhsz0xwJX9H7GRG1if6S2NMb63oDmCvvhzBzXZ7zfZqxHfP2JQ93Li1XnEt_0Ix6cCdOdUjO8788Sa_YNp3lJFGnwzC66eJxLr_GgkFvDP55mD2t6wNHtP61WFCgz8U1UxlMN-c7pJxfuf2b1y5UmO4grpVxknanrKiVO9KyEzZu8Fc2U7p49b4tLf_UyjOIwtbmBKn3DuZrGqKrDGUcg</value>
+    </sys_rest_message_fn_parameters>
+</record_update>

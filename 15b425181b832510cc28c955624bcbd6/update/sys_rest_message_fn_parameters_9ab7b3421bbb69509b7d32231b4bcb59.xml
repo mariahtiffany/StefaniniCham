@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_rest_message_fn_parameters">
+    <sys_rest_message_fn_parameters action="INSERT_OR_UPDATE">
+        <name>username</name>
+        <rest_message_function display_value="System User by Login">05673b021bbb69509b7d32231b4bcb23</rest_message_function>
+        <sys_class_name>sys_rest_message_fn_parameters</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 21:10:59</sys_created_on>
+        <sys_id>9ab7b3421bbb69509b7d32231b4bcb59</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>username</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_rest_message_fn_parameters_9ab7b3421bbb69509b7d32231b4bcb59</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-04 21:13:21</sys_updated_on>
+        <type>string</type>
+        <value>TTGLOBAL\kmishra</value>
+    </sys_rest_message_fn_parameters>
+</record_update>

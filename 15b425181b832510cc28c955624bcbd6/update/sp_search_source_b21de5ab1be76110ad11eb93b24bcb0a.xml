@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_search_source">
+    <sp_search_source action="INSERT_OR_UPDATE">
+        <advanced_typeahead_config>false</advanced_typeahead_config>
+        <condition/>
+        <data_fetch_script><![CDATA[(function(query) {
+    var results = [];
+
+    // ignore when is not logged
+    if (!gs.isLoggedIn())
+        return results;
+
+    var chUtil = new ChameleonUtil();
+    var keys = chUtil.getAllConfigKeys('GPTIndexer');
+    var validFields = ['GPTIndexerUrl', 'GPTIndexerKey', 'GPTIndexerHash'];
+    var validateKeys = chUtil.validateKeys(keys, validFields);
+
+    if (validateKeys.hasEmptyFields) {
+        gs.addErrorMessage('Error on GPT Indexer Source: ' + validateKeys.message);
+
+        return results;
+    }
+
+	var prefixQuery = "You will get a question that might not look like a question, maybe it looks like a complaint, but you will have to provide an answer, don't put links in the answer and don't ask any question: ";
+	var escapedQuery = query.replace(/"'/g, '');
+	var askQuestion = prefixQuery + escapedQuery;
+	
+    var restMessage = new sn_ws.RESTMessageV2();
+    restMessage.setEndpoint(keys.GPTIndexerUrl + "/api/v2/index/" + keys.GPTIndexerHash + "/query");
+    restMessage.setRequestHeader("ApiKey", keys.GPTIndexerKey);
+    restMessage.setHttpMethod("post");
+    restMessage.setRequestHeader("Content-Type", "application/json");
+    restMessage.setRequestBody(JSON.stringify(askQuestion));
+
+    try {
+        var response = restMessage.execute();
+        var responseBody = response.getBody();
+        var httpStatus = response.getStatusCode();
+
+        if (httpStatus != 200) {
+            gs.addErrorMessage('Error: The GPT Indexer did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!');
+            gs.error(responseBody);
+
+            return results;
+        }
+
+        var decodedResponse = JSON.parse(responseBody);
+
+		if (decodedResponse.metadata) {
+			var link = null;
+
+			if (decodedResponse.metadata.kb_number) {
+				var kb = new GlideRecord('kb_knowledge');
+				kb.addQuery('number', '=', decodedResponse.kb_number);
+				kb.setLimit(1);
+				kb.query();
+
+				if (kb.next())
+					link = '?id=kb_article_view&sys_kb_id=' + kb.getUniqueValue();
+			}
+
+			var validMetadata = ['kb_author', 'kb_owner', 'kb_full_category', 'kb_number', 'kb_indexed_at'];
+			var labels = Object.keys(decodedResponse.metadata)
+				.filter(meta => validMetadata.includes(meta))
+				.map(meta => meta + ': ' + decodedResponse.metadata[meta]);
+
+			results.push({
+				response: decodedResponse.response,
+				metadata: {
+					link: link,
+					...decodedResponse.metadata,
+				},
+				labels: labels
+			});
+		}
+    } catch (e) {
+        gs.addErrorMessage('Error calling GPT Templates: ' + e.message);
+        gs.error('Error calling GPT Templates: ' + e);
+    }
+
+    return results;
+})(query);]]></data_fetch_script>
+        <display_fields/>
+        <enable_typeahead>false</enable_typeahead>
+        <facet_generation_script><![CDATA[(function(query, facetService, searchResults) {
+	/* Calculate your facets here using facetService */
+	/* var stateFacet = facetService.createFacet('State', 'state'); */
+	/* stateFacet.addFacetItem('Facet Item Label', '123'); */
+
+})(query, facetService, searchResults);]]></facet_generation_script>
+        <id>ino_gpt_indexer</id>
+        <is_scripted_source>true</is_scripted_source>
+        <name>AI Search</name>
+        <page/>
+        <pagination_supported>false</pagination_supported>
+        <primary_display_field/>
+        <roles/>
+        <search_page_template><![CDATA[<div>
+  <div class="h4 text-primary m-b-sm block">
+    <span>${The AI said}:</span>
+  </div>
+  
+  <p ng-bind-html="highlight(item.response, data.q)"></p>
+ 
+  <div style="display: flex; flex-wrap: wrap; gap: 4px;" ng-if="item.labels">
+    <span style="padding: 0px 10px; height: 18px; font-size: 12px; color: white; background-color: black; border-radius: 20px; white-space: nowrap;" ng-repeat="label in item.labels">{{label}}</span>
+  </div>
+  
+  <a ng-if="item.metadata && item.metadata.link && !item.response.toLowerCase().includes('there is no information')" href="{{item.metadata.link}}" class="btn btn-primary">${Learn more}</a>
+</div>]]></search_page_template>
+        <source_table/>
+        <sys_class_name>sp_search_source</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-26 16:49:24</sys_created_on>
+        <sys_id>b21de5ab1be76110ad11eb93b24bcb0a</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>AI Search</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_search_source_b21de5ab1be76110ad11eb93b24bcb0a</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-30 19:03:48</sys_updated_on>
+        <typeahead_glyph/>
+        <typeahead_template/>
+    </sp_search_source>
+    <sys_translated_text action="delete_multiple" query="documentkey=b21de5ab1be76110ad11eb93b24bcb0a"/>
+</record_update>

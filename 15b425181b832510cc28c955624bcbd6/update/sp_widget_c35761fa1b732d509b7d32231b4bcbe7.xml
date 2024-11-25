@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+
+	var currentUrl = window.location.pathname;
+	c.isDebugging = currentUrl.includes('$sp.do') || currentUrl.includes('$spd.do');
+	
+	if (!c.isDebugging) {
+		window.location.href = c.data.redirectUrl;
+	}	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_redirect_home</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Redirect Home</name>
+        <option_schema>[{"hint":"The default home when we don't find any persona matching","name":"default_home_id","section":"Data","default_value":"chameleon_home","label":"Default Home ID","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	var personaHomesGr = new GlideRecord('x_stefa_chameleon_chameleon_persona_home');
+	personaHomesGr.query();
+	
+	var personaHomes = [];
+	
+	while (personaHomesGr.next()) {
+		var spPage = new GlideRecord('sp_page');
+		
+		if (!spPage.get(personaHomesGr.getValue('home'))) {
+			continue;
+		}
+		
+		personaHomes.push({
+			homeId: spPage.getValue('id'),
+			personaId: personaHomesGr.getValue('persona'),
+		});
+	}
+
+	var personas = [].concat(sn_uc.UserCriteriaLoader.getAllUserCriteria(gs.getUserID()));
+		
+	$sp.log(personaHomes);
+	$sp.log(personas);
+	
+	var firstMatchPersona = personaHomes.filter(function (ph) {
+		return personas.includes(ph.personaId);
+	})[0];
+	
+	$sp.log(firstMatchPersona);
+	
+	if (!!firstMatchPersona) {
+		data.redirectUrl = '?id=' + firstMatchPersona.homeId;
+	} else {
+		data.redirectUrl = '?id=' + (options.default_home_id || 'chameleon_home');
+	}	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-06 18:35:43</sys_created_on>
+        <sys_id>c35761fa1b732d509b7d32231b4bcbe7</sys_id>
+        <sys_mod_count>46</sys_mod_count>
+        <sys_name>Ino DOW Redirect Home</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_c35761fa1b732d509b7d32231b4bcbe7</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-08-16 20:12:11</sys_updated_on>
+        <template><![CDATA[<div></div>]]></template>
+    </sp_widget>
+</record_update>

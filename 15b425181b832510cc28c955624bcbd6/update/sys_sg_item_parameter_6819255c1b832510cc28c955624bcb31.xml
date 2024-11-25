@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_item_parameter">
+    <sys_sg_item_parameter action="INSERT_OR_UPDATE">
+        <default_value/>
+        <name>Chameleon Configuration value</name>
+        <parent>a419255c1b832510cc28c955624bcb30</parent>
+        <parent_table>sys_sg_write_back_action_item</parent_table>
+        <sys_class_name>sys_sg_item_parameter</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-22 17:31:17</sys_created_on>
+        <sys_id>6819255c1b832510cc28c955624bcb31</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Chameleon Configuration value</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_sg_item_parameter_6819255c1b832510cc28c955624bcb31</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-22 17:31:17</sys_updated_on>
+        <type>string</type>
+    </sys_sg_item_parameter>
+</record_update>

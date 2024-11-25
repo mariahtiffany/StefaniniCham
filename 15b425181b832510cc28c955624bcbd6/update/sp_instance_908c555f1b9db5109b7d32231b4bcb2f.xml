@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="2">1d01433b1b9d39109b7d32231b4bcb2f</sp_column>
+        <sp_widget display_value="News Feed (Sharepoint)">19ea8d951b5531109b7d32231b4bcbea</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-09-20 20:39:26</sys_created_on>
+        <sys_id>908c555f1b9db5109b7d32231b4bcb2f</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>Latest Retail News</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_908c555f1b9db5109b7d32231b4bcb2f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-09-17 08:24:24</sys_updated_on>
+        <title>Latest Retail News</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"title": {
+		"value": "Latest Retail News",
+		"displayValue": "Latest Retail News"
+	},
+	"sharepoint_site_name": {
+		"value": "CORE",
+		"displayValue": "CORE"
+	},
+	"sharepoint_list_id": {
+		"value": "",
+		"displayValue": ""
+	},
+	"display_quantity": {
+		"value": 5,
+		"displayValue": "5"
+	},
+	"show_description": {
+		"value": "true",
+		"displayValue": "true"
+	},
+	"see_all_link": {
+		"value": "",
+		"displayValue": ""
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=908c555f1b9db5109b7d32231b4bcb2f"/>
+</record_update>

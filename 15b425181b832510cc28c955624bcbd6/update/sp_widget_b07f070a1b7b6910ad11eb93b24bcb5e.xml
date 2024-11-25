@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	c.widgetId = 'swiper_' + Math.random().toString(16).slice(2);
+	var links = (c.options.redirect_links || '').split(',');
+
+	c.articles = [
+		{
+		  image: '/x_stefa_chameleon.article_news_1.png',
+			description: 'How to achieve metrics\nOur comprehensive handbook provides you with all the  essential information about our company\'s...',
+			href: links[0] || '#',
+		},
+		{
+		  image: '/x_stefa_chameleon.article_news_2.png',
+			description: 'Production:\nAccess our interactive training modules designed to equip you with the necessary skills ...',
+			href: links[1] || '#',
+		},
+		{
+		  image: '/x_stefa_chameleon.article_news_3.png',
+			description: 'HR tranning: How to handle conflicts within the team\nBenefit from our  mentorship program, where experienced employees ...',
+			href: links[2] || '#',
+		},
+		{
+		  image: '/x_stefa_chameleon.article_news_4.png',
+			description: 'Products under development:\nEngage in various company culture events, including team-building activities...',
+			href: links[3] || '#',
+		},
+		{
+		  image: '/x_stefa_chameleon.dow_mock_article_5.png',
+			description: 'Leadership Development Program:\nA leadership development program equips employees with the necessary...',
+			href: links[4] || '#',
+		}
+	];
+	
+	setTimeout(function () {
+		var swiperEl = document.getElementById(c.widgetId);
+
+    Object.assign(swiperEl, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+			navigation: {
+				nextEl: '.swiper-button-next-unique',
+				prevEl: '.swiper-button-prev-unique'
+			},
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 4,
+          spaceBetween: 20,
+        },
+      },
+    });
+    swiperEl.initialize();
+	}, 100);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.icon-default-color {
+  fill: $primary-color;
+  g {
+    fill: $primary-color;
+    path {
+      fill: $primary-color;
+    }
+  }
+}
+
+.ino-dow-slider-cards {
+  width: 100%;
+  min-height: 32rem;
+  position: relative;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  box-shadow: $default-box-shadow;
+  background-color: #FFF;
+  
+  swiper-container {
+    width: 100%;
+    height: 100%;
+    margin-top: 32px;
+  }
+
+  swiper-slide {
+    padding: 1rem;
+  }
+
+  .ino-dow-slider-cards-content {
+    padding: 0 4rem;
+    width: 100%;
+    position: relative;
+  }
+
+  .swiper-button-next-unique,
+  .swiper-button-prev-unique {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    height: 80px;
+    width: 40px;
+    top: calc(50% - 2.25rem);
+    position: absolute;
+
+    background: #F7F7F7 0% 0% no-repeat padding-box;
+    border: 1px solid #EAEAEA;
+
+    color: $primary;
+    opacity: 0.7;
+
+    transition: opacity 200ms ease;
+
+    &amp;:focus, &amp;:hover, &amp;:active {
+      opacity: 1;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+  }
+
+  .swiper-button-disabled {
+    color: gray;
+    cursor: not-allowed;
+  }
+
+  .swiper-button-next-unique {
+    right: 0;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .swiper-button-prev-unique {
+    left: 0;
+    border-radius: 0px 5px 5px 0px;
+  }
+
+  .dow-slider-item {
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    box-shadow: 2px 3px 10px 0px #cdcdcd;
+    border-radius: 5px;
+
+    background-color: #FFF;
+  }
+
+  .dow-slider-item-image {
+    height: 22rem;
+    width: 100%;
+
+    img {
+      height: 100%;
+      width: 100%;
+
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      object-fit: cover;
+    }
+  }
+
+  .dow-slider-content {
+    padding: 1.5rem;
+    min-height: 12rem;
+    overflow-y: auto;
+
+    p {
+      font-size: 1.4rem;
+      margin-bottom: 0;
+      color: $text-color;
+      white-space: pre-line;
+    }
+  }
+}
+
+
+
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_manager_slider_news</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Manager Slider News</name>
+        <option_schema>[{"hint":"The links to redirect the user","name":"redirect_links","section":"Presentation","label":"Redirect Links","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 18:15:02</sys_created_on>
+        <sys_id>b07f070a1b7b6910ad11eb93b24bcb5e</sys_id>
+        <sys_mod_count>37</sys_mod_count>
+        <sys_name>Ino DOW Manager Slider News</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_b07f070a1b7b6910ad11eb93b24bcb5e</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-08 18:17:18</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-slider-cards">
+  <div class="panel-heading">
+    <h3>
+      <svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24">
+        <path id="Icon_awesome-newspaper" data-name="Icon awesome-newspaper" d="M34.5,4.5H5.5A1.5,1.5,0,0,0,4,6v.5H1.5A1.5,1.5,0,0,0,0,8V25a3.5,3.5,0,0,0,3.5,3.5H33a3,3,0,0,0,3-3V6A1.5,1.5,0,0,0,34.5,4.5Zm-31,21A.5.5,0,0,1,3,25V9.5H4V25A.5.5,0,0,1,3.5,25.5Zm14.75-1H8.75A.75.75,0,0,1,8,23.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,24.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,24.5Zm-13-6H8.75A.75.75,0,0,1,8,17.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,18.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,18.5Zm0-6H8.75A.75.75,0,0,1,8,11.75V9.25a.75.75,0,0,1,.75-.75h22.5a.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,31.25,12.5Z" transform="translate(0 -4.5)" />
+      </svg>
+      ${Major news and information}
+    </h3>
+  </div>
+  
+  <div class="ino-dow-slider-cards-content">
+    <swiper-container ng-attr-id="{{c.widgetId}}" init="false">
+      <swiper-slide ng-repeat="item in c.articles">
+        <a href="{{item.href}}" class="dow-slider-item">
+          <div class="dow-slider-item-image">
+            <img src="{{item.image}}" alt="The image of the card.">
+          </div>
+          <div class="dow-slider-content">
+            <p>
+              {{item.description}}
+            </p>
+          </div>
+        </a>
+      </swiper-slide>
+    </swiper-container>
+
+    <button class="swiper-button-prev-unique">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.595" viewBox="0 -1 16 15.595">
+        <g filter="url(#swiper_button_prev_unique)">
+          <path fill="currentColor" id="Icon_awesome-arrow-right" data-name="Icon awesome-arrow-right" d="M6.8,3.692,7.6,2.9a.854.854,0,0,1,1.211,0l6.942,6.939a.854.854,0,0,1,0,1.211L8.806,17.99a.854.854,0,0,1-1.211,0L6.8,17.2a.858.858,0,0,1,.014-1.225l4.3-4.1H.857A.855.855,0,0,1,0,11.016V9.873a.855.855,0,0,1,.857-.857H11.12l-4.3-4.1A.852.852,0,0,1,6.8,3.692Z" transform="translate(16 18.242) rotate(180)"/>
+        </g>
+      </svg>
+    </button>
+
+    <button class="swiper-button-next-unique">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.595" viewBox="0 1 16 15.596">
+        <g filter="url(#swiper_button_next_unique)">
+          <path fill="currentColor" id="Icon_awesome-arrow-left" data-name="Icon awesome-arrow-left" d="M6.8,3.692,7.6,2.9a.854.854,0,0,1,1.211,0l6.942,6.939a.854.854,0,0,1,0,1.211L8.806,17.99a.854.854,0,0,1-1.211,0L6.8,17.2a.858.858,0,0,1,.014-1.225l4.3-4.1H.857A.855.855,0,0,1,0,11.016V9.873a.855.855,0,0,1,.857-.857H11.12l-4.3-4.1A.852.852,0,0,1,6.8,3.692Z" />
+        </g>
+      </svg>
+    </button>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

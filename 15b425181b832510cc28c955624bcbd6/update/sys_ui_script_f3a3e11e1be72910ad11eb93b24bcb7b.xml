@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_stefa_chameleon.Load Sophie Chatter</name>
+        <script><![CDATA[var isOnLogin = document.title.toLowerCase().includes('login')
+
+if (!isOnLogin) {
+	//var endpoint = "https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter402";
+	var endpoint = "https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter_EMEA_Portal";
+	SophieChatter.initialize({
+		visuals: {
+			greetingMessage: "Hello"
+		},
+		config: {
+			general: {
+				chatterWebURL: endpoint,
+				tenant: '',
+				voiceRecognitionEnabled: false,
+				translationURL: endpoint + '/Scripts/misc/translations.json',
+				autoCompleteEnabled: true,
+				showLiveAgentButton: false
+
+			}
+		},
+		auth: {
+			login: "User"
+		}
+	});
+}]]></script>
+        <script_name>Load Sophie Chatter</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-22 18:49:22</sys_created_on>
+        <sys_id>f3a3e11e1be72910ad11eb93b24bcb7b</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>x_stefa_chameleon.Load Sophie Chatter</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_ui_script_f3a3e11e1be72910ad11eb93b24bcb7b</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-24 13:20:10</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

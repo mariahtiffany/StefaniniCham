@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.icon-constrast {
+	fill: $primary-color!important;
+  
+  path:first-child {
+  	fill: $primary-color!important;
+  }
+}
+
+.location {
+  .crate {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    
+    a {
+      padding: 20px;
+      display: flex;
+      color: #000!important;
+      font-size: 14px;
+      flex-direction: column;
+      font-weight: 600;
+      
+      strong {
+        color: #DE1317;
+        font-size: 26px;
+      }
+    }
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>your_direct_reports</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Your Direct Reports</name>
+        <option_schema>[{"hint":"If authentication is required, configure the REST Message and set the name here.","name":"rest_message_name","section":"Data","default_value":"","label":"REST Message Name","type":"string"},&#13;
+  {"hint":"Set the method name here.","name":"rest_message_method_name","section":"Data","label":"REST Message Method Name","type":"string"},&#13;
+  {"hint":"else, just set the RSS news feed URL","name":"url","section":"Data","label":"RSS news feed URL","type":"string"},&#13;
+  {"hint":"","name":"show_description","section":"Presentation","default_value":"true","label":"Show description","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	options.show_description = (options.show_description === "true");
+	options.title = gs.getMessage(options.title || 'Your Tickets');
+	
+	data.ticketQtd = {
+		open: 0,
+		pending: 0,
+		closed: 0
+	};
+	
+	var gr = new GlideRecord('incident');
+	gr.addEncodedQuery('caller_idDYNAMIC90d1921e5f510100a9ad2572f2b477fe^active=true');
+	gr.query();
+	
+	data.ticketQtd.open = gr.getRowCount();
+	
+	gr = new GlideRecord('incident');
+	gr.addEncodedQuery('caller_idDYNAMIC90d1921e5f510100a9ad2572f2b477fe^state=3');
+	gr.query();
+	
+	data.ticketQtd.pending = gr.getRowCount();
+	
+	gr = new GlideRecord('incident');
+	gr.addEncodedQuery('caller_idDYNAMIC90d1921e5f510100a9ad2572f2b477fe^active=false');
+	gr.query();
+	
+	data.ticketQtd.closed = gr.getRowCount();
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-04-30 21:36:17</sys_created_on>
+        <sys_id>63048a0f1bbdc2505a2e113fad4bcb6e</sys_id>
+        <sys_mod_count>63</sys_mod_count>
+        <sys_name>Your Direct Reports</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_63048a0f1bbdc2505a2e113fad4bcb6e</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-24 18:19:04</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary location" >
+  <div class="panel-heading">
+    <h2 class="h4 panel-title ng-binding">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30">
+        <g id="Icon_feather-file-text" data-name="Icon feather-file-text" transform="translate(-6 -3)">
+          <g id="Path_634" data-name="Path 634" class="icon-constrast" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21,3H9A3,3,0,0,0,6,6V30a3,3,0,0,0,3,3H27a3,3,0,0,0,3-3V12Z" stroke="none"/>
+            <path d="M 9 6 L 9.000007629394531 6 C 9.000005722045898 6.000001907348633 9.000001907348633 6.000005722045898 9 6 L 9 30 L 27 30 L 27 13.24263954162598 L 19.75736045837402 6 L 9 6 M 9 3 L 21 3 L 30 12 L 30 30 C 30 31.6568489074707 28.6568489074707 33 27 33 L 9 33 C 7.3431396484375 33 6 31.6568489074707 6 30 L 6 6 C 6 4.343149185180664 7.3431396484375 3 9 3 Z" stroke="none" fill="#fff"/>
+          </g>
+          <path id="Path_635" data-name="Path 635" d="M21,3V9.042h6.042" transform="translate(-0.021 2.958)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <path id="Path_636" data-name="Path 636" d="M24,19.5H12" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <path id="Path_637" data-name="Path 637" d="M24,25.5H12" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <path id="Path_638" data-name="Path 638" d="M15,13.5H12" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+      </svg>
+
+
+      {{ c.options.title }}
+    </h2>
+  </div>
+  <div class="crate">
+    <a href="?id=my_open_tickets">
+      <strong>{{c.data.ticketQtd.open}}</strong>
+      <span>Open Tickets</span>
+    </a>
+    <a href="?id=my_pending_tickets">
+      <strong>{{c.data.ticketQtd.pending}}</strong>
+      <span>Pending Tickets</span>
+    </a>
+    <a href="?id=my_closed_tickets">
+      <strong>{{c.data.ticketQtd.closed}}</strong>
+      <span>Closed Tickets</span>
+    </a>
+  </div>
+  
+</div>]]></template>
+    </sp_widget>
+</record_update>

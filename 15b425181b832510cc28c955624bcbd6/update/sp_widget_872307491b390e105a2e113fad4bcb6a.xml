@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	c.goToTicket = function() {
+		alert("You would redirect to the ticket. For demo purposes only.");
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.location {
+  .crate {
+    border-top: 1px solid #E8E5E2;
+    
+    .table {
+    	border-right: 1px solid #E8E5E2;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding-bottom: 15px;
+    	border-bottom: 1px solid #E8E5E2;
+      
+      li {
+      	strong,
+        span {
+          border-top: 1px solid #E8E5E2;
+          flex: 6;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          
+          &amp;:first-child {
+            flex: none;
+            padding-left: 15px;
+            padding-right: 22px;
+          }
+          &amp;:last-child {
+            flex: 2;
+          }
+        }
+      }
+    }
+    
+    ul {
+      margin: 10px;
+      padding: 0;
+      list-style: none;
+      
+      li {
+      	display: flex;
+  			font-size: 16px;
+        
+        span {
+        	font-weight: 600;
+        }
+        
+        strong,
+        span {
+        	padding: 5px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          
+          &amp;:first-child {
+          	min-width: 50px;
+          }
+          
+          strong {
+          	padding: 0 5px 0 0;
+          }
+          
+          i {
+          	font-size: 12px;
+            font-weight: normal;
+          }
+        }
+        
+        
+        &amp;:nth-child(odd) {
+          background-color: transparent;
+        }
+        &amp;:nth-child(even) {
+          background-color: #f1f1f1;
+        }
+        
+        .light {
+        	display: inline-block;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          margin-left: 8px;
+          
+          &amp;.green { background-color: #137D5B; }
+          &amp;.yellow { background-color: #F2B10F; }
+          &amp;.red { background-color: #DE1317; }
+        }
+      }
+      
+      .header {
+      	font-size: 20px;
+        text-transform: uppercase;
+        
+        strong {
+          border: 0;
+        }
+      }
+    }
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>location_performance</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Location Performance</name>
+        <option_schema>[{"hint":"If authentication is required, configure the REST Message and set the name here.","name":"rest_message_name","section":"Data","default_value":"","label":"REST Message Name","type":"string"},&#13;
+  {"hint":"Set the method name here.","name":"rest_message_method_name","section":"Data","label":"REST Message Method Name","type":"string"},&#13;
+  {"hint":"else, just set the RSS news feed URL","name":"url","section":"Data","label":"RSS news feed URL","type":"string"},&#13;
+  {"hint":"","name":"show_description","section":"Presentation","default_value":"true","label":"Show description","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	options.show_description = (options.show_description === "true");
+	options.title = gs.getMessage(options.title || 'Location Performance');
+	
+	//Changing titles per Portal
+	var currentPortal = $sp.getPortalRecord();
+	var portal = currentPortal.getDisplayValue("url_suffix");
+	
+	data.RefrigerationWord = 'Refrigerator';
+	data.hideRefrigerationUnit = false;
+	
+	if(portal == 'chameleon_sephora') {
+		data.RefrigerationWord = 'POS';
+		data.hideRefrigerationUnit = true;
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-04-24 21:04:12</sys_created_on>
+        <sys_id>872307491b390e105a2e113fad4bcb6a</sys_id>
+        <sys_mod_count>89</sys_mod_count>
+        <sys_name>Location Performance</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_872307491b390e105a2e113fad4bcb6a</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-31 19:14:45</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary location" >
+  <div class="panel-heading">
+    <h2 class="h4 panel-title ng-binding">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="27.273" viewBox="0 0 30 27.273">
+        <path d="M5.591,3h8.182a1.364,1.364,0,0,1,1.364,1.364V28.909a1.364,1.364,0,0,1-1.364,1.364H5.591A4.1,4.1,0,0,1,1.5,26.182V7.091A4.1,4.1,0,0,1,5.591,3Zm6.818,2.727H5.591A1.365,1.365,0,0,0,4.227,7.091V26.182a1.365,1.365,0,0,0,1.364,1.364h6.818ZM19.227,3h8.182A4.1,4.1,0,0,1,31.5,7.091v6.818a1.364,1.364,0,0,1-1.364,1.364H19.227a1.364,1.364,0,0,1-1.364-1.364V4.364A1.364,1.364,0,0,1,19.227,3Zm9.545,9.545V7.091a1.365,1.365,0,0,0-1.364-1.364H20.591v6.818ZM19.227,18H30.136A1.364,1.364,0,0,1,31.5,19.364v6.818a4.1,4.1,0,0,1-4.091,4.091H19.227a1.364,1.364,0,0,1-1.364-1.364V19.364A1.364,1.364,0,0,1,19.227,18Zm9.545,2.727H20.591v6.818h6.818a1.365,1.365,0,0,0,1.364-1.364Z" transform="translate(-1.5 -3)" />
+      </svg>
+
+      {{ c.options.title }}
+    </h2>
+  </div>
+  <div class="crate">
+    <ul class="table">
+      <li class="header">
+        <strong>XLA</strong>
+      	<strong>Open Store Requests</strong>
+        <strong>Status</strong>
+      </li>
+      
+      <li ng-click="c.goToTicket()">
+        <span><i class="light green"></i></span>
+      	<span>
+          <b>64690002 - Security Camera Upgrade</b>
+          <i><b>Last interaction</b> Agent: Field service en route for installation.</i>
+        </span>
+      	<span>In Progress</span>
+      </li>
+      <li ng-click="c.goToTicket()">
+        <span><i class="light yellow"></i></span>
+      	<span>
+          <b>13043545 - {{c.data.RefrigerationWord}} Repair</b>
+          <i><b>Last interaction</b> Agent: Repair services have been contacted. Please inform us of the best time to execute the repair.</i>
+        </span>
+        <span>Pending User Information</span>
+      </li>
+      <li ng-click="c.goToTicket()">
+        <span><i class="light green"></i></span>
+      	<span>
+          <b>56540993 - New User</b>
+          <i><b>Last interaction</b> User: New hire starting next Monday.</i>
+        </span>
+        <span>In Progress</span>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="crate">
+    <ul class="table">
+      <li class="header">
+        <strong></strong>
+      	<strong>Key System Status</strong>
+      </li>
+      
+      <li>
+        <span><i class="light yellow"></i></span>
+      	<span>
+          Point of Sale Upload Link 
+          <i>"Our monitoring detected latency in the last 30 minutes."</i>
+        </span>        
+      </li>
+      <li>
+        <span><i class="light green"></i></span>
+        <span>
+          Product Inventory 
+          <i>"All storage is within parameters."</i>
+        </span>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="crate">
+    <ul class="table">
+      <li class="header">
+        <strong></strong>
+      	<strong>Device Health</strong>
+      </li>
+      
+      <li>
+        <span><i class="light red"></i></span>
+      	<span>
+          POS Devices 
+        	<i>"Some devices are experiencing malfunctions."</i>
+        </span>
+      </li>
+      <li ng-hide="c.data.hideRefrigerationUnit">
+        <span><i class="light green"></i></span>
+      	<span>
+          Refrigeration Unit 
+        	<i>"Temperature is 38°F."</i>
+        </span>
+      </li>
+    </ul>
+  </div>
+  
+</div>]]></template>
+    </sp_widget>
+</record_update>

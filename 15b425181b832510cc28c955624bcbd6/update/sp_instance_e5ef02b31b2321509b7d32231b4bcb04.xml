@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">a4ef42b31b2321509b7d32231b4bcb56</sp_column>
+        <sp_widget display_value="Yammer Feed">6941fe731b8bad10ad11eb93b24bcbd4</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 13:51:03</sys_created_on>
+        <sys_id>e5ef02b31b2321509b7d32231b4bcb04</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>Ask IT</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_e5ef02b31b2321509b7d32231b4bcb04</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-06 12:20:12</sys_updated_on>
+        <title>Ask IT</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"type": {
+		"value": "community",
+		"displayValue": "community"
+	},
+	"yammer_id": {
+		"value": "eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIzNzYyMjMzMzQ0MCJ9",
+		"displayValue": "eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIzNzYyMjMzMzQ0MCJ9"
+	},
+	"show_header": {
+		"value": "false",
+		"displayValue": "false"
+	},
+	"show_footer": {
+		"value": "false",
+		"displayValue": "false"
+	},
+	"theme": {
+		"value": "light",
+		"displayValue": "light"
+	},
+	"promp_text": {
+		"value": "",
+		"displayValue": ""
+	},
+	"show_network_name": {
+		"value": "false",
+		"displayValue": "false"
+	},
+	"include_feed_information": {
+		"value": "false",
+		"displayValue": "false"
+	},
+	"iframe_height": {
+		"value": null,
+		"displayValue": ""
+	},
+	"title": {
+		"value": "Ask IT",
+		"displayValue": "Ask IT"
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=e5ef02b31b2321509b7d32231b4bcb04"/>
+</record_update>

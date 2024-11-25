@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_dependency_js_include">
+    <m2m_sp_dependency_js_include action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sp_dependency display_value="Twilio Voice SDK - v2.0.1">0d4677e5dbb98a5018ca174b13961977</sp_dependency>
+        <sp_js_include display_value="https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.0.1/dist/twilio.min.js">b2767be5dbb98a5018ca174b13961933</sp_js_include>
+        <sys_class_name>m2m_sp_dependency_js_include</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-04-26 14:05:48</sys_created_on>
+        <sys_id>e59677e5dbb98a5018ca174b139619a0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Twilio Voice SDK - v2.0.1.https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.0.1/dist/twilio.min.js</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_dependency_js_include_e59677e5dbb98a5018ca174b139619a0</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-04-26 14:05:48</sys_updated_on>
+    </m2m_sp_dependency_js_include>
+</record_update>

@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function (spModal, $scope) {
+  /* widget controller */
+  var c = this
+	
+	if(!c.data.token)
+		return;
+	
+  c.server.get({ action: 'inventory' }).then(function (response) {
+    c.inventory = response.data.inventory;
+		c.inventoryLoaded = true;
+		c.graph.drivesUsageLoaded = true;
+		
+    if (!c.inventory)
+      return;
+
+    //Local drives usage Graph
+    var drivesUsageList = c.inventory.directorysizes
+      ? c.inventory.directorysizes.sort(function (a, b) {
+          return a.CURVAL - b.CURVAL
+        })
+      : []
+
+    var drivesUsageOption = buildOptionGraph('yBar', {
+      title: response.data.title,
+      xName: response.data.descGraph,
+      formatter: '{b}: <br/><strong>{c} GB</strong>',
+      values: drivesUsageList.map(function (o) {
+        return o.DIRTYPE
+      }),
+      series: [
+        {
+          type: 'bar',
+          data: drivesUsageList.map(function (o) {
+            return kbToGb(o.CURVAL)
+          }),
+        },
+      ],
+    })
+
+		buildGraph('drivesUsageGraph', drivesUsageOption)
+  })
+
+  c.server.get({ action: 'health-score' }).then(function (response) {
+    c.healthScore = response.data.healthScore;
+		c.scores = response.data.scores;
+		
+    c.healthScoreLoaded = true;
+		c.graph.healthScoreLoaded = true;
+		c.graph.impactLoaded = true;
+		
+    if (!c.scores)
+      return;
+
+    //Health Score Trend Graph
+    var healthScoreOption = buildOptionGraph('line', {
+      title: response.data.title,
+      legends: [],
+      values: c.scores.map(function (o) {
+        return formatLabelGraph(new Date(new Date(o.buckettime).toISOString().slice(0, -1)))
+      }),
+      series: [
+        {
+          name: response.data.descGraph,
+          type: 'line',
+          data: c.scores.map(function (o) {
+            return (o.healthscore * 100).toFixed(2)
+          }),
+          markLine: {
+            label: { distance: [5, -5] },
+            data: [
+              {
+                name: response.data.averageGraph,
+                type: 'average',
+                label: { formatter: '{b}: {c}', position: 'insideStartTop' },
+              },
+            ],
+          },
+        },
+      ],
+    });
+		buildGraph('healthScoreGraph', healthScoreOption)
+
+    //Total Impact Graph
+    var impactOption = buildOptionGraph('xBar', {
+      title: response.data.impTitle,
+      yName: response.data.impDescGraph,
+      valueFormatter: function (value) {
+        return minToTime(value)
+      },
+      axisLabelFormatter: function (value) {
+        return value / 1000 + 'k'
+      },
+      values: response.data.totalImpact.slice(0, 5).map(function (o) {return o.name}),
+      series: [
+        {
+          type: 'bar',
+          data: response.data.totalImpact.slice(0, 5).map(function (o) {return o.value}),
+        },
+      ],
+    });
+		buildGraph('impactGraph', impactOption)
+  })
+
+  c.logon = { starttime: '-' };
+  c.server.get({ action: 'logon-process' }).then(function (response) {
+    c.logonLoaded = true;
+		c.logon = response.data.logon;
+  });
+
+	c.graph = {};
+  c.server.get({ action: 'cpu-memory-graph' }).then(function (response) {
+    var graphs = response.data.graph;
+		var cpuMemorySeries = [];
+		c.graph.cpuAndMemoryLoaded = true;
+
+    if (!graphs && !graphs.cpu && !graphs.memory)
+      return;
+		
+		c.graph = Object.assign({}, c.graph, graphs); 
+		
+		if (graphs.cpu) {
+			cpuMemorySeries.push({
+          name: graphs.cpu.ctr,
+          data: graphs.cpu.data.map(function (o) {return o.val.toFixed(2)}),
+          type: 'line'
+        });
+		}
+		
+		if (graphs.memory) {
+			cpuMemorySeries.push({
+          name: graphs.memory.ctr,
+          data: graphs.memory.data.map(function (o) {return o.val.toFixed(2)}),
+          type: 'line'
+        });
+		}
+
+    //CPU and Memory Graph
+    var cpuMemoryOption = buildOptionGraph('line', {
+      title: response.data.title,
+      legends: [graphs.cpu.ctr, graphs.memory.ctr],
+      values: graphs.cpu.data.map(function (o) {return formatLabelGraph(o.time)}),
+      series: cpuMemorySeries
+    });
+		
+    buildGraph('cpuMemoryGraph', cpuMemoryOption);
+  })
+
+  c.server.get({ action: 'disk-graph' }).then(function (response) {
+    var graphs = response.data.graph;
+		var diskSeries = [];
+		c.graph.diskLoaded = true;
+
+    if (!graphs && !graphs.diskRead && !graphs.diskWrite)
+      return;
+
+		c.graph = Object.assign({}, c.graph, graphs); 
+		
+		if(graphs.diskRead) {
+			diskSeries.push({
+          name: graphs.diskRead.ctr,
+          data: graphs.diskRead.data.map(function (o) {return o.val.toFixed(2)}),
+          type: 'line',
+        });
+		}
+		
+		if(graphs.diskWrite) {
+			diskSeries.push({
+          name: graphs.diskWrite.ctr,
+          data: graphs.diskWrite.data.map(function (o) {return o.val.toFixed(2)}),
+          type: 'line',
+        });
+		}
+		
+    //Disk Graph
+    var diskOption = buildOptionGraph('line', {
+      title: response.data.title,
+      legends: [graphs.diskRead.ctr, graphs.diskWrite.ctr],
+      values: graphs.diskRead.data.map(function (o) {return formatLabelGraph(o.time)}),
+      series: diskSeries
+    });
+		buildGraph('diskGraph', diskOption);
+  })
+
+  c.topProcessesList = [];
+  c.server.get({ action: 'top-processes-applications' }).then(function (response) {
+    c.blackbox = response.data.blackbox;
+		c.topProcessLoaded = true;
+				
+    if (!c.blackbox)
+      return;
+
+    c.topProcessesList = response.data.blackbox.applications
+      .filter(function (item) {return item.processdata})
+      .sort(function (a, b) {
+        var prop = $scope.selectedTypeProcess
+        if (a.processdata[prop] > b.processdata[prop]) return -1;
+        if (a.processdata[prop] < b.processdata[prop]) return 1;
+        return 0;
+      })
+      .slice(0, 7);
+  });
+	
+	$scope.loadingHTML = function(loaded, value) {
+		return loaded ? value || 'N/A'
+			: '<div class="loading"><div></div><div></div><div></div><div></div></div>';
+	};
+	
+	$scope.hasGraphs = function() {
+		if(!c.graph.drivesUsageLoaded ||
+			!c.graph.healthScoreLoaded ||
+			!c.graph.cpuAndMemoryLoaded ||
+			!c.graph.diskLoaded ||
+			!c.topProcessLoaded)
+			return true;
+		
+		return (c.inventory && c.inventory.directorysizes) || 
+			c.scores || 
+			c.graph.cpu || 
+			c.graph.memory || 
+			c.graph.diskRead || 
+			c.graph.diskWrite ||
+			c.blackbox;
+	}
+
+  $scope.setPercentColor = function (param) {
+    if (param === '-') {
+      return 'grey';
+    }
+
+    var percent = param * 100;
+
+    switch (true) {
+      case percent < 40 || percent == 'red':
+        return '#D3470E'
+      case percent < 60 || percent == 'yellow':
+        return '#F0A800'
+      default:
+        return '#027D5B'
+    }
+  }
+
+  $scope.getTypeProcessValue = function () {
+    switch ($scope.selectedTypeProcess) {
+      case 'cpu':
+        return '%';
+      case 'netTraf':
+        return 'Bytes/sec';
+      default:
+        return 'MB';
+    }
+  }
+
+  $scope.updateListTopProcesses = function () {
+    if (!$scope.selectedTypeProcess) 
+			$scope.selectedTypeProcess = 'cpu';
+
+		if (!c.blackbox)
+			return;
+		
+    c.topProcessesList = c.blackbox.applications
+      .filter(function(item) {return item.processdata})
+      .sort(function(a, b) {
+        var prop = $scope.selectedTypeProcess
+        if (a.processdata[prop] > b.processdata[prop]) return -1;
+        if (a.processdata[prop] < b.processdata[prop]) return 1;
+        return 0;
+      })
+      .slice(0, 7)
+  }
+
+  function formatAMPM(date) {
+    var month = addLeftZero(date.getMonth() + 1);
+    var day = addLeftZero(date.getDate());
+    var hours = date.getHours();
+    var minutes = addLeftZero(date.getMinutes());
+
+    if (hours == 0 && date.getMinutes() == 0) 
+			return month + '/' + day;
+
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    return month + '/' + day + ' ' + hours + ':' + minutes + ' ' + ampm;
+  }
+
+  function formatLabelGraph(value) {
+    return {
+      value: formatAMPM(new Date(value)),
+      textStyle: {
+        fontSize: '0.8rem',
+        fontWeight: 'lighter',
+      },
+    }
+  }
+
+  function addLeftZero(value) {
+    return value < 10 ? '0' + value : value;
+  }
+
+  function kbToGb(value) {
+    return (value / 1073741824).toFixed(2);
+  }
+
+  function minToTime(value) {
+    var timeHours = value / 60;
+    var days = Math.trunc(timeHours / 24);
+    var hours = Math.floor(timeHours - days * 24);
+    var min = Math.trunc((timeHours - Math.floor(timeHours)) * 60);
+    return (
+      (days > 0 ? days + ' Day' + (days > 1 ? 's' : '') : '') +
+      (hours > 0 ? (days > 0 ? (min > 0 ? ', ' : ' and ') : '') + hours + ' Hour' + (hours > 1 ? 's' : '') : '') +
+      (min > 0 ? (hours > 0 ? ' and ' : '') + min + ' Minute' + (min > 1 ? 's' : '') : '')
+    )
+  }
+
+  function buildGraph(id, option) {
+    var theChart = echarts.init(document.getElementById(id));
+
+    theChart.setOption(option);
+
+    window.addEventListener('resize', function () {
+      theChart.resize()
+    });
+  }
+
+  function buildOptionGraph(type, prop) {
+    var option = {
+      textStyle: { fontWeight: 'lighter', color: '#999', fontFamily: 'Arial' },
+      title: {
+        text: prop.title,
+        textStyle: { fontSize: '1.8rem', fontWeight: 'lighter', color: '#999', fontFamily: 'Arial' },
+      },
+      tooltip: { trigger: 'axis' },
+      legend: { right: 0, textStyle: { fontSize: 10 } },
+      grid: { left: '5%', right: '4%', bottom: '5%', containLabel: true },
+      visualMap: [
+        { show: false, seriesIndex: 0, type: 'continuous', min: 0, color: ['#004ba4', '#79c8ff'] },
+        { show: false, seriesIndex: 1, type: 'continuous', min: 0, color: ['#00bc3a', '#79ffa2'] },
+      ],
+      series: prop.series
+    }
+
+    switch (type) {
+      case 'line':
+        option.xAxis = { type: 'category', boundaryGap: false, data: prop.values }
+        option.yAxis = { type: 'value', max: 'dataMax' }
+        break
+      case 'yBar':
+        option.xAxis = { type: 'value', nameLocation: 'middle', nameGap: 25 }
+        option.yAxis = { type: 'category', boundaryGap: true, axisLabel: { interval: 0 }, data: prop.values }
+        break
+      case 'xBar':
+        option.xAxis = { type: 'category', boundaryGap: true, axisLabel: { interval: 0 }, data: prop.values }
+        option.yAxis = { type: 'value', nameLocation: 'middle', nameGap: 25 }
+        break
+    }
+
+    if (prop.legends) option.legend.data = prop.legends;
+    if (prop.xName) option.xAxis.name = prop.xName;
+    if (prop.yName) option.yAxis.name = prop.yName;
+    if (prop.formatter) option.tooltip.formatter = prop.formatter;
+    if (prop.valueFormatter) option.tooltip.valueFormatter = prop.valueFormatter;
+    if (prop.axisLabelFormatter) option.yAxis.axisLabel = { formatter: prop.axisLabelFormatter };
+
+    return option;
+  }
+}
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #ccc!default;
+
+.it-health-principal-information {
+  font-family: 'Arial';
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0rem;
+  padding: 0;
+  
+  .item-pi {
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+    border-right: 1px solid #ccc;
+    padding: 0.5rem 1.5rem 0;
+    min-width: 100px;
+    
+    span, strong {
+    	display: flex;
+    }
+    
+    span {
+    	font-size: 0.9rem;
+      text-transform: uppercase;
+      color: #999;
+    }
+    
+    strong {
+    	font-size: 1.1rem;
+      color: #333;
+      padding-bottom: 0.5rem;
+      
+      &amp;.high {
+      	font-size: 3rem;
+        padding: 0;
+      }
+      
+      .dot {
+      	height: 16px;
+        width: 16px;
+        background-color: grey;
+        border-radius: 50%;
+        margin: 1.5rem 1rem 0 0;
+      }
+    }
+    
+    img {
+      margin-top: 10px;
+    	width: fit-content;
+    }
+    
+    .windows,.linux,.mac,.other {
+      display: none;
+    }
+    
+    &amp;.windows &gt; img.windows,
+    &amp;.linux &gt; img.linux,
+    &amp;.mac &gt; img.mac,
+    &amp;.other &gt; img.other{
+      display: block;
+    }
+    
+    &amp;:last-child {
+  		border: 0 none;
+    }
+    
+    @media (max-width: 1300px) {
+      width: 25%;
+    }
+
+    @media (max-width: 900px) {
+      width: 33.2%;
+    }
+    
+    @media (max-width: 576px) {
+      width: 50%;
+    }
+  }
+}
+
+.panel-graph {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0 0;
+  font-family: 'Arial';
+  color: #333;
+  
+  @media (max-width: 700px) {
+  	flex-direction: column;
+  }
+  
+  .graph, .graphSide {
+  	min-height: 350px;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  
+  .graph {
+    width: 70%;
+    
+    @media (max-width: 1100px) {
+      width: 50%;
+      min-height: 300px;
+    }
+    @media (max-width: 700px) {
+      width: 100%;
+      min-height: 300px;
+    }
+  }
+
+  .graphSide {
+    width: 30%;
+    padding: 5px;
+
+    h4 {
+      font-weight: lighter;
+      font-size: 1.8rem;
+      color: #999;
+    	font-family: 'Arial';
+
+      select {
+        border: 0 none;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        float: right;
+      }
+    }
+    
+    span {
+    	display: flex;
+      font-size: 0.9rem;
+      color: #999;
+      padding: 5px;
+    }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+
+      tr {
+        th, td {
+          padding: 5px;
+          border-bottom: 1px solid #ddd;
+          font-size: 11px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        th {
+          font-weight: bold;
+        }
+        &amp;:last-child &gt; td {
+        	border-bottom: 0 none;
+        }
+      }
+    }
+
+    @media (max-width: 1100px) {
+      width: 50%;
+      min-height: 300px;
+    }
+    @media (max-width: 700px) {
+      width: 100%;
+      min-height: 300px;
+    }
+  }
+}
+
+.disconnect {
+  border: 1px solid #ddd;
+  
+	.dc-rep {
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+
+    @media(max-width: 576px) {
+      flex-direction: column;
+    }
+    
+    .dc-img {
+      display: flex;
+    	position: relative;
+      
+      span {
+        color: red;
+        font-size: 40px;
+        font-family: Arial;
+        font-weight: lighter;
+        position: absolute;
+        bottom: -15px;
+        right: -5px;
+      }
+    }
+    
+    .dc-msg {
+      display: flex;
+      flex-direction: column;
+      gap: 0rem;
+      padding: 15px;
+
+      h3 {
+        margin-top: 0;
+      }
+
+      @media (max-width: 576px) {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.it-health-principal-information {
+	.loading {
+    width: 40px;
+    height: 16px;
+    div {
+      width: 4px;
+      height: 4px;
+      top: 5px;
+    }
+    div:nth-child(1) {
+      left: 4px;
+    }
+    div:nth-child(2) {
+      left: 4px;
+      animation: loadingSm2 0.6s infinite;
+    }
+    div:nth-child(3) {
+      left: 16px;
+      animation: loadingSm2 0.6s infinite;
+    }
+    div:nth-child(4) {
+      left: 28px;
+    }
+  }
+}
+
+.loading {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  
+  div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: $secondary-color;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  
+  div:nth-child(1) {
+    left: 8px;
+    animation: loading1 0.6s infinite;
+  }
+  div:nth-child(2) {
+    left: 8px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(3) {
+    left: 32px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(4) {
+    left: 56px;
+    animation: loading3 0.6s infinite;
+  }
+}
+
+@keyframes loading1 {
+  0% {transform: scale(0);}
+  100% {transform: scale(1);}
+}
+@keyframes loading3 {
+  0% {transform: scale(1);}
+  100% {transform: scale(0);}
+}
+@keyframes loading2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(24px, 0);}
+}
+@keyframes loadingSm2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(12px, 0);}
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>it_health_systrack_device_xray</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>IT Health SysTrack - Device X-Ray</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	//Get current user's email
+	var gr = new GlideRecord('sys_user');
+	gr.get(gs.getUserID());
+	//var userEmail = gr.email;
+	var userEmail = 'vijaykumar.basu@stefanini.com';
+	
+	var cacheKey = 'ithealth-systrack-device-xray-' + userEmail;
+	var cacheExpiryTime = 1200000; //2 minutes
+	var cacheLimitExpiryTime = 604800000; //7 days
+	var compareCacheTime = new Date().getTime() - cacheExpiryTime;
+	var limitCacheTime = new Date().getTime() - cacheLimitExpiryTime;
+	
+	//It will just follow if it has no cache or is expired.
+	var dateScore = new Date(new Date().setHours(new Date().getHours() -3)).toISOString();
+	var startDate12h = new Date(new Date().setHours(new Date().getHours() -12)).toISOString();
+	var startDate24h = new Date(new Date().setHours(new Date().getHours() -24)).toISOString();
+	var startDate30d = new Date(new Date().setDate(new Date().getDate() -30)).toISOString();
+	var endDate = new Date().toISOString();
+
+	//Get token to authenticate to SysTrack
+	data.token = cacheCallbackResult(cacheKey + '-auth', function () {
+    var request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'Authentication');
+		var req = getRequest(request);
+    return req && req.access_token || null;
+  });
+	
+	if(!data.token)
+		return;
+
+	//Get resume logged user data
+  data.user = cacheCallbackResult(cacheKey + '-user', function () {
+    request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'User');
+    request.setStringParameterNoEscape('accessToken', data.token);
+    request.setStringParameterNoEscape('email', userEmail);
+  	var req = getRequest(request);
+    var internalUser = req ? req.data[0] : null;
+
+    if (!internalUser)
+      return null;
+
+    internalUser.username = internalUser.username.replace(/\\\\/g,'\\');
+
+    request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'System User by Login');
+    request.setStringParameterNoEscape('accessToken', data.token);
+    request.setStringParameterNoEscape('username', internalUser.username);
+		req = getRequest(request);
+    var systemUserByLogin = req ? req.data[0] : null;
+
+    systemUserByLogin.account = internalUser.account;
+    systemUserByLogin.email = internalUser.email;
+    systemUserByLogin.fullname = internalUser.fullname;
+    systemUserByLogin.upn = internalUser.upn;
+		
+    return systemUserByLogin;
+  });
+
+  if (!input || !data.user)
+    return;
+	
+  //Get SysTrack Inventory
+  if (input.action === 'inventory') {
+    data.inventory = null;
+		data.title = gs.getMessage("Local Drives Usage");
+		data.descGraph = gs.getMessage("Directory Sizes (GB)");
+		
+    var inventoryClasses = 'system:networkinterface:memory:directorysizes';
+    data.inventory = cacheCallbackResult(cacheKey + '-inventory', function () {
+      request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'Inventory');
+      request.setStringParameterNoEscape('accessToken', data.token);
+      request.setStringParameterNoEscape('userGuid', data.user.guid);
+      request.setStringParameterNoEscape('classes', inventoryClasses);
+      var req = getRequest(request);
+
+      return req ? req.data[0] : [];
+    });
+
+    return;
+  }
+
+  //Get SysTrack Health Score
+  if (input.action === 'health-score') {
+    data.scores = null;
+    data.healthScore = null;
+    data.title = gs.getMessage("Health Score Trend");
+		data.descGraph = gs.getMessage("Health Score");
+		data.averageGraph = gs.getMessage("Average Health Score");
+		data.impTitle = gs.getMessage("Total Impact");
+		data.impDescGraph = gs.getMessage("Minutes");
+		
+    var cachedResult = cacheCallbackResult(cacheKey + '-health-score', function () {
+      request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'Health Score');
+      request.setStringParameterNoEscape('accessToken', data.token);
+      request.setStringParameterNoEscape('userGuid', data.user.guid);
+      request.setStringParameterNoEscape('startDate', startDate30d);
+      req = getRequest(request);
+
+      var totalImpact = [];
+      var result = {
+        totalImpact: totalImpact
+      };
+
+      function updateImpactValues(key, param, obj) {
+        var index = totalImpact.map(function(o) { return o.name; }).indexOf(key);
+        if(index < 0) 
+          totalImpact.push({'name': key, 'value': obj[param]});
+        else 
+          totalImpact[index].value = totalImpact[index].value + obj[param];
+      }      
+      
+      result.scores = req ? req.data : null;
+  
+      if(result.scores) {
+        result.healthScore = ((result.scores[result.scores.length - 1]).healthscore * 10).toFixed(1);
+        result.scores.forEach(function(item) {
+          updateImpactValues('CPU', 'cpucostsum', item);
+          updateImpactValues('Disk', 'diskcostsum', item);
+          updateImpactValues('Memory', 'memcostsum', item);
+          updateImpactValues('Network', 'netcostsum', item);
+          updateImpactValues('Latency', 'latencycostsum', item);
+          updateImpactValues('Startup', 'startupcostsum', item);
+          updateImpactValues('Virtual Memory', 'vmcostsum', item);
+          updateImpactValues('Virtual Machine', 'virtcostsum', item);
+          updateImpactValues('Software Install', 'installcostsum', item);
+          updateImpactValues('Software Update', 'updatecostsum', item);
+          updateImpactValues('Events', 'eventcostsum', item);
+          updateImpactValues('Faults', 'faultcostsum', item);
+          updateImpactValues('Hardware', 'hwproblemcostsum', item);
+        });
+
+        result.totalImpact.sort(function(a, b){return b.value-a.value});
+      }
+      return result;
+    });
+		
+    data.scores = cachedResult.scores;
+    data.healthScore = cachedResult.healthScore;
+    data.totalImpact = cachedResult.totalImpact;
+    return;
+  }
+
+	//Get Systrack Logon Process
+  if (input.action === 'logon-process') {
+		
+    data.logon = cacheCallbackResult(cacheKey + '-logon-process', function () {
+      request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'Logon Process');
+      request.setStringParameterNoEscape('accessToken', data.token);
+      request.setStringParameterNoEscape('startTime', endDate);
+      request.setStringParameterNoEscape('userGuid', data.user.guid);
+      req = getRequest(request);
+
+      return req ? req.data[0].applications[0] : null;
+    });
+
+    return;
+  }
+
+  data.graph = {};
+
+  if (input.action === 'cpu-memory-graph') {
+		data.title = gs.getMessage("CPU and Memory");
+		
+    //Get CPU Graph
+    var cpuGraphId = 80;
+    data.graph.cpu = cacheCallbackResult(cacheKey + '-cpu-graph', function () { 
+      return getGraphData(cpuGraphId, null);
+    });
+
+	  //Get Memory Graph
+    var memoryGraphId = 265;
+    data.graph.memory = cacheCallbackResult(cacheKey + '-memory-graph', function () { 
+      return getGraphData(memoryGraphId, null);
+    });
+
+    return;
+  }
+
+  if (input.action === 'disk-graph') {
+		data.title = gs.getMessage("Disk");
+		
+    //Get Disk Read Graph
+    var diskReadGraphId = 294;
+    data.graph.diskRead = cacheCallbackResult(cacheKey + '-disk-read-graph', function () { 
+      return getGraphData(diskReadGraphId, 'C');
+    });
+
+	  //Get Disk Write Graph
+    var diskWriteGraphId = 295;
+    data.graph.diskWrite = cacheCallbackResult(cacheKey + '-disk-write-graph', function () { 
+      return getGraphData(diskWriteGraphId, 'C');
+    });
+
+    return;
+  }
+		
+	//Get Top Processes of Applications
+  if (input.action === 'top-processes-applications') {
+    var blackBoxProperties = 'applications';
+    data.blackbox = cacheCallbackResult(cacheKey + '-top-processes-applications', function () { 
+      request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'BlackBox');
+      request.setStringParameterNoEscape('accessToken', data.token);
+      request.setStringParameterNoEscape('userGuid', data.user.guid);
+      request.setStringParameterNoEscape('dateTime', endDate);
+      request.setStringParameterNoEscape('properties', blackBoxProperties);
+      var req = getRequest(request);
+      
+      return req ? req.data[0] : null;
+    });
+
+    return;
+  }
+
+	function setUserCache(key, value) {
+		const item = {
+			value: value,
+			registeredTime: new Date().getTime()
+		}
+		gs.getSession().putClientData(key, JSON.stringify(item));
+		return item;
+	}
+	
+	function cacheCallbackResult(key, callback) {
+		var cachedValueJson = gs.getSession().getClientData(key);
+		var cacheValue = JSON.parse(cachedValueJson);
+
+		if(cacheValue) {
+			//...and is less than 2 minutes, give that back.
+			if(cacheValue.registeredTime > compareCacheTime) {
+				return cacheValue.value;
+			}
+
+			// Limit time to clear cache
+			if(cacheValue.registeredTime < limitCacheTime) {
+				setUserCache(key, {});
+			}
+		}
+
+		var valueToBeCached = callback();
+
+		setUserCache(key, valueToBeCached);
+		
+		return valueToBeCached
+	}
+	
+	function getRequest(req) {
+		try {
+			var response = req.execute();
+			return response.getStatusCode() == 200 ? JSON.parse(response.getBody()) : null;
+		} catch(ex){
+			$sp.log('Get Request - ' + ex.getMessage());
+			return null;
+		}
+	}
+
+	function getGraphData(graphId, instance) {
+		var request = new sn_ws.RESTMessageV2('x_stefa_chameleon.D3 Lakeside Systrack', 'Graphing');
+		request.setStringParameterNoEscape('accessToken', data.token);
+		request.setStringParameterNoEscape('userGuid', data.user.guid);
+		request.setStringParameterNoEscape('startTime', startDate12h);
+		request.setStringParameterNoEscape('endTime', endDate);
+		request.setStringParameterNoEscape('graphId', graphId);
+		if(instance)
+			request.setStringParameterNoEscape('instance', instance);
+		
+		var req = getRequest(request);
+		return req ? req.data[0] : null;
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-30 19:04:13</sys_created_on>
+        <sys_id>0a54fa3c1b3725509b7d32231b4bcbf8</sys_id>
+        <sys_mod_count>554</sys_mod_count>
+        <sys_name>IT Health SysTrack - Device X-Ray</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_0a54fa3c1b3725509b7d32231b4bcbf8</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-12 21:20:19</sys_updated_on>
+        <template><![CDATA[<div>
+  <div class="panel-heading">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24">
+        <path id="Icon_material-computer" data-name="Icon material-computer" d="M30,27a3,3,0,0,0,2.985-3L33,9a3.009,3.009,0,0,0-3-3H6A3.009,3.009,0,0,0,3,9V24a3.009,3.009,0,0,0,3,3H0v3H36V27ZM6,9H30V24H6Z" transform="translate(0 -6)" fill="#d1311f"/>
+      </svg>
+      ${DEVICE X-RAY}
+    </h3>
+  </div>
+  <div class="panel-body" ng-show="c.data.user">
+    {{c.data.user.mem}} 
+    ({{c.data.user.chassis}})
+  </div>
+  
+  <div class="panel-body it-health-principal-information" ng-show="c.data.user">
+    <div class="item-pi">
+      <span>${Stability Index}</span>
+      <strong class="high">
+        <span class="dot" ng-style="{'background-color': setPercentColor(c.healthScore)}"></span>
+        <b ng-bind-html="loadingHTML(c.healthScoreLoaded, c.healthScore)"></b>
+      </strong>
+    </div>
+    <div class="item-pi" ng-class="c.data.user.ostype.toLowerCase()">
+      <span>${Operation System}</span>
+      <strong>{{c.data.user.os}}</strong>
+      <span>${CPU}</span>
+      <strong>{{c.data.user.cpu}}</strong>
+    </div>
+    <div class="item-pi">
+      <span>${Last Boot}</span>
+      <strong ng-bind-html="loadingHTML(c.logonLoaded, (c.logon.starttime | date: 'MMM dd, hh:mm a'))"></strong>
+      <span>${Business Location}</span>
+      <strong ng-bind-html="loadingHTML(c.inventoryLoaded, c.inventory && c.inventory.system[0].SYTIMEZONE)"></strong>
+    </div>
+    <div class="item-pi">
+      <span>${Manufacturer}</span>
+      <strong>{{c.data.user.mfgr || '-'}}</strong>
+      <span>${Model}</span>
+      <strong>{{c.data.user.model || '-'}}</strong>
+    </div>
+    <div class="item-pi">
+      <span>${IP Address}</span>
+      <strong>{{c.data.user.ip || '-'}}</strong>
+      <span>${Subnet Mask}</span>
+      <strong ng-bind-html="loadingHTML(c.inventoryLoaded, c.inventory && c.inventory.networkinterface[0].IPSUBNET)"></strong>
+    </div>
+    <div class="item-pi">
+      <span>${DNS Servers}</span>
+      <strong ng-bind-html="loadingHTML(c.inventoryLoaded, c.inventory && c.inventory.networkinterface[0].IPDNSSVR)"></strong>
+      <span>${MAC Address}</span>
+      <strong ng-bind-html="loadingHTML(c.inventoryLoaded, c.inventory && c.inventory.networkinterface[0].MACADRES)"></strong>
+    </div>
+    <div class="item-pi">
+      <span>${Connected User}</span>
+      <strong>{{c.data.user.username || '-'}}</strong>
+      <span>${FQDN}</span>
+      <strong>{{c.data.user.fqdn || '-'}}</strong>
+    </div>
+  </div>
+  
+  <div class="panel-body" ng-show="hasGraphs()">
+    <div class="panel-graph">
+      <div class="graph" ng-attr-id="healthScoreGraph">
+      	<div class="loading" ng-hide="c.graph.healthScoreLoaded"><div></div><div></div><div></div><div></div></div>
+      </div>
+      <div class="graphSide" ng-attr-id="impactGraph">
+      	<div class="loading" ng-hide="c.graph.impactLoaded"><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+    
+    <div class="panel-graph">
+      <div class="graph" ng-attr-id="cpuMemoryGraph">
+      	<div class="loading" ng-hide="c.graph.cpuAndMemoryLoaded"><div></div><div></div><div></div><div></div></div>
+      </div>
+      <div class="graphSide">
+        <div class="loading" ng-hide="c.topProcessLoaded"><div></div><div></div><div></div><div></div></div>
+        <div ng-show="c.topProcessLoaded">
+          <h4>
+            ${Top Processes}
+            <select ng-model="selectedTypeProcess" ng-init="updateListTopProcesses()" ng-change="updateListTopProcesses()">
+              <option value="cpu">${Total CPU}</option>
+              <option value="mem">${Total Memory}</option>
+              <option value="paged">${Paged Memory}</option>
+              <option value="nonpaged">${NonPaged Memory}</option>
+              <option value="vm">${Virtual Memory}</option>
+              <option value="netTraf">${Network Traffic}</option>
+            </select>
+          </h4>
+
+          <span>
+            ${Recorded At}: 
+            {{c.blackbox && c.blackbox.recordtime.time | date: 'MM/dd/yyyy hh:mm a' || '-'}}
+          </span>
+
+          <table>
+            <tr>
+              <th>${Application}</th>
+              <th>${Process}</th>
+              <th>${Value}</th>
+            </tr>
+            <tr ng-repeat="data in c.topProcessesList">
+              <td ng-attr-title="{{data.packagename || data.app}}">
+                {{data.packagename || data.app}}
+              </td>
+              <td ng-attr-title="{{data.app}}">{{data.app}}</td>
+              <td ng-attr-title="{{data.processdata[selectedTypeProcess]}}">
+                {{data.processdata[selectedTypeProcess]}} 
+                {{getTypeProcessValue()}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+    <div class="panel-graph">
+      <div class="graph" ng-attr-id="diskGraph">
+      	<div class="loading" ng-hide="c.graph.diskLoaded"><div></div><div></div><div></div><div></div></div>
+      </div>
+      <div class="graphSide" ng-attr-id="drivesUsageGraph">
+      	<div class="loading" ng-hide="c.graph.drivesUsageLoaded"><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<div ng-show="(c.data.user && !hasGraphs()) || !c.data.token" class="panel-graph disconnect">
+  <div class="dc-rep">
+    <div class="dc-img">
+      <span>X</span>
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBklEQVR4nO3ZwW3DQAxEUXXH1txZylALroBJA3vKCIa5+x6gs6GP4UW+LgC2Va+f3yef6zQl4DMB73dHz/ELvAX8HwsMCRgSMCRgSMCQgCEBQwKGBAwJGBJwWsDdPv+UgEMD7vL5pwTMCBgSMCRgSMCQgCEBQwKGBAwJGBIwJGBIwJCAIQFDAoYEDG0bsD7034uALwG/YunbnvC9ye9s+2IlYAu4YoFDllFOuAVcscAhyygn3AKuWOCQZZQTbgFXLHDIMsoJt4ArFjhkGeWEW8AVCxyyjHLCLeCKBQ5ZRjnhFnDFAocso5xwC7higUOWUU64BTxygU891yG/s+2L1acDAlzn+AMjpqIlmb9TiwAAAABJRU5ErkJggg==">
+    </div>
+    <div class="dc-msg">
+      <h3>${Disconnected}</h3>
+      ${Unable to connect to the D3 Lakeside system.}<br/>
+      ${The system may be off or there may be network issues.}
+    </div>
+  </div>
+</div>
+
+<div ng-show="!c.data.user && c.data.token" class="panel-graph disconnect">
+  <div class="dc-rep">
+    <div class="dc-img">
+      <span>X</span>
+      <img src="data:image/png;base64,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">
+    </div>
+    <div class="dc-msg">
+      <h3>${User not found}</h3>
+      ${Please make sure the user has a registered account in Lakeside Systrack.}
+    </div>
+  </div>
+</div>
+  ]]></template>
+    </sp_widget>
+</record_update>

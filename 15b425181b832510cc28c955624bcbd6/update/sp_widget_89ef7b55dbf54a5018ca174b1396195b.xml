@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  var c = this;
+	var Device = Twilio.Device;
+	c.showControllers = false;
+	
+	// Properties
+	var agentLanguage = 'English';
+
+	// Data definitions
+	var ongoingcall = false;
+	var device = null;
+	var call = null;
+	
+	function getVoiceTokenAndInitializeDevice() {
+		if (c.data.token) {
+			device = new Device(c.data.token, {
+				codecPreferences: ['opus', 'pcmu'],
+			});
+		}
+	}
+	
+	c.callToAgent = function () {
+		c.showControllers = true;
+		c.makeOutgoingCall();
+	}
+
+	// Função para fazer uma chamada de saída
+	c.makeOutgoingCall = async function() {
+		var params = {
+			// Obtenha o número de telefone para ligar do DOM
+			//To: "chameleon",
+			To: "multiflow_demo",
+			From: c.data.email,
+			Language: agentLanguage
+		};
+		
+		try {
+			if (device) {
+				c.callDescription = 'Attempting to call...';
+				console.log("Attempting to call " + params.To + " ...");
+				call = await device.connect({ params });
+
+				call.on('accept', function() {
+					c.showControllers = true;
+					c.callDescription = 'Call accepted.';
+					console.log('Call accepted.');
+					ongoingcall = true;
+					muted = false;
+				});
+				call.on('disconnect', function() {
+					c.showControllers = false;
+					c.callDescription = 'Call ended.';
+					console.log('Call ended.');
+					ongoingcall = false;
+				});
+				call.on('cancel', function() {
+					c.showControllers = false;
+					c.callDescription = 'Call canceled.';
+					console.log('Call canceled.')
+					ongoingcall = false;
+				});
+				call.on('reject', function() {
+					c.showControllers = false;
+					c.callDescription = 'Call rejected.';
+					console.log('Call rejected.')
+					ongoingcall = false;
+				});
+			} else {
+				c.showControllers = false;
+				c.callDescription = 'Unable to make call.';
+				console.log('Unable to make call.');
+			}
+		} catch(ex) {
+			c.showControllers = false;
+			c.callDescription = 'Unable to make call.';
+			console.log('Error - ' + ex);
+		} 
+	}
+
+	// Função para desligar a chamada
+	c.hangup = function() {
+		if (call) {
+			c.showControllers = false;
+			console.log('Hanging up ...');
+			call.disconnect();
+			
+			setTimeout(function (){
+				c.callDescription = '';
+			}, 1000);
+		}
+	}
+
+	c.mute = function() {
+		if (call) {
+			c.muted = !c.muted;
+			call.mute(c.muted);
+		}
+	}
+
+	// Inicialization
+	getVoiceTokenAndInitializeDevice();
+
+	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sophie-voice {
+  .content {
+    display: flex;
+    flex-direction: row;
+    
+    .click-to-call {
+      padding: 20px;
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      button {
+        border: 0 none;
+        background: none;
+        position: relative;
+        
+        &amp;:focus {
+          outline: none;
+          box-shadow: inherit;
+        }
+
+        svg {
+          .mic-color {
+            fill: #000;
+
+            &amp;.muted {
+              fill: #999;
+            }
+          }
+        }
+        
+        i {
+          position: absolute;
+          top: 0px;
+          left: 15px;
+          font-size: 24px;
+          color: #999;
+          font-weight: bold;
+        }
+      }
+
+      .callToMcByte {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 140px;
+
+        img {
+          border-radius: 50%;
+          border: 2px solid #52aa0e;
+          width: 80px;
+          height: 80px;
+          background-image: var(--sophie-background-image, url("/x_stefa_chameleon.consumers_energy_sophie_logo.png"));
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        strong {
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        span {
+          font-size: 12px;
+        }
+        
+        svg {
+        	margin-top:5px;
+        }
+      }
+
+      .controllers {
+        button {
+          &amp;:focus {
+            outline: none;
+            box-shadow: inherit;
+          }
+        }
+      }
+    }
+    
+    .note {
+      background-color: #ffdead;
+      display: flex;
+      flex: 2;
+      box-shadow: -2px 0px 2px 2px #666;
+      position: relative;
+      padding: 20px;
+      flex-direction: column;
+      margin: 20px 20px 20px 0;
+      border-right: 1px solid black;
+      
+      .triangle {
+        text-shadow: -3px 4px 3px #333;
+        color: #ffdead;
+        font-size: 36px;
+        position: absolute;
+        top: 30px;
+        left: -22px;
+        rotate: 20deg;
+      }
+      
+      strong {
+      	font-size: 20px;
+        text-transform: uppercase;
+        color: black;
+      }
+      
+      ol {
+        margin: 0;
+        padding: 5px 20px 0;
+        font-size: 18px;
+        
+        li {
+          padding: 4px;
+          font-weight: 600;
+        }
+      }
+    }
+    
+  }
+}
+
+
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>sophie_voice_mcdonalds</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Sophie Voice (MC Donalds)</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	var gr = new GlideRecord('sys_user');
+	gr.get(gs.getUserID());
+	data.email = gr.email;
+	
+	options.show_description = (options.show_description === "true");
+	options.title = gs.getMessage(options.title || 'Report an issue');
+	
+	//GET Twilio Token
+	var request = new sn_ws.RESTMessageV2('x_stefa_chameleon.Chameleon Twilio', 'Token');
+
+	var response = request.execute();
+	var responseBody = response.getBody();
+	var httpStatus = response.getStatusCode();
+
+	if(httpStatus) {
+		data.token = responseBody;
+	}	
+	
+	//Changing titles per Portal
+	var currentPortal = $sp.getPortalRecord();
+	var portal = currentPortal.getDisplayValue("url_suffix");
+	
+	data.tellToSophieTitle = 'TELL Sophie'
+	
+	if(portal == 'chameleon_mcdonalds') {
+		data.tellToSophieTitle = 'TELL Byte';
+	}
+	else if(portal == 'chameleon_sephora') {
+		data.tellToSophieTitle = 'TELL Rouge'
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-04-25 20:07:58</sys_created_on>
+        <sys_id>89ef7b55dbf54a5018ca174b1396195b</sys_id>
+        <sys_mod_count>275</sys_mod_count>
+        <sys_name>Sophie Voice (MC Donalds)</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_89ef7b55dbf54a5018ca174b1396195b</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-08-26 14:09:45</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary sophie-voice">
+  <div class="panel-heading">
+    <h2 class="h4 panel-title ng-binding">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32.727" height="30" viewBox="0 0 32.727 30">
+        <g clip-path="url(#clip-path)">
+          <path d="M0,23.524A7.181,7.181,0,0,1,.221,22.6a10.377,10.377,0,0,1,.66-1.519Q6.05,12.066,11.244,3.068a5.745,5.745,0,0,1,5.968-3,5.651,5.651,0,0,1,4.247,2.949q5.222,9.056,10.429,18.12a5.8,5.8,0,0,1-.882,7.132A5.628,5.628,0,0,1,27.2,29.988c-.159.01-.319.009-.479.009Q16.354,30,5.987,30a5.741,5.741,0,0,1-4.65-2.13A5.868,5.868,0,0,1,.068,25.047c-.017-.1-.045-.2-.068-.306V23.524m16.327,3.818q5.145,0,10.29,0A3.376,3.376,0,0,0,28.9,26.6a3.268,3.268,0,0,0,.673-4.2c-2.687-4.627-5.345-9.271-8.016-13.907-.857-1.487-1.687-2.99-2.592-4.447A2.9,2.9,0,0,0,16.13,2.673a3.11,3.11,0,0,0-2.594,1.718Q9.01,12.263,4.472,20.129c-.505.877-1.034,1.743-1.5,2.643a3.169,3.169,0,0,0,.761,3.788,3.351,3.351,0,0,0,2.332.783q5.129-.009,10.258,0" transform="translate(0 0)"/>
+          <path d="M67.563,42.254q-.193,3.18-.384,6.359c-.018.309-.011.619-.018.928a1.289,1.289,0,0,1-1.251,1.347,1.275,1.275,0,0,1-1.3-1.329q-.206-3.611-.433-7.222a1.925,1.925,0,0,1,.934-1.987,1.658,1.658,0,0,1,2.433,1.328c.014.191,0,.383,0,.575h.012" transform="translate(-49.53 -30.959)" />
+          <path d="M64.348,93.815a1.683,1.683,0,0,1,1.687-1.679,1.655,1.655,0,0,1,1.642,1.715,1.684,1.684,0,0,1-1.646,1.659,1.705,1.705,0,0,1-1.683-1.694" transform="translate(-49.664 -71.05)"/>
+        </g>
+      </svg>
+
+      {{ c.options.title }}
+    </h2>
+  </div>
+  <div class="content">
+    <div class="click-to-call">
+      <button class="callToMcByte" ng-click="c.callToAgent()">
+        <img />
+        <strong>{{data.tellToSophieTitle}}</strong>
+        <span>{{c.callDescription}}</span>
+        <svg ng-hide="c.showControllers" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#52aa0e"/>
+          <path d="M29.4697 24.6574C27.9442 24.6574 26.4682 24.4093 25.0914 23.9628C24.6573 23.814 24.1736 23.9256 23.8387 24.2605L21.8914 26.7039C18.3814 25.0295 15.0946 21.8667 13.3457 18.2326L15.7643 16.1736C16.0992 15.8264 16.1984 15.3426 16.062 14.9085C15.6031 13.5318 15.3674 12.0558 15.3674 10.5302C15.3674 9.86047 14.8093 9.30233 14.1395 9.30233H9.84804C9.17827 9.30233 8.37207 9.6 8.37207 10.5302C8.37207 22.0527 17.9597 31.6279 29.4697 31.6279C30.3504 31.6279 30.6977 30.8465 30.6977 30.1643V25.8853C30.6977 25.2155 30.1395 24.6574 29.4697 24.6574Z" fill="white"/>
+        </svg>
+      </button>
+      
+      <div class="controllers" ng-show="c.showControllers">
+        <button ng-click="c.mute()">
+          <i ng-show="c.muted">/</i>
+          <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16.5" cy="16.5" r="16.5" class="mic-color" ng-class="{'muted': c.muted}" />
+            <path d="M16.7044 18.5398C15.8965 18.5398 15.2099 18.257 14.6444 17.6916C14.0789 17.1261 13.7962 16.4394 13.7962 15.6316V9.81518C13.7962 9.00735 14.0789 8.32069 14.6444 7.75521C15.2099 7.18972 15.8965 6.90698 16.7044 6.90698C17.5122 6.90698 18.1989 7.18972 18.7644 7.75521C19.3298 8.32069 19.6126 9.00735 19.6126 9.81518V15.6316C19.6126 16.4394 19.3298 17.1261 18.7644 17.6916C18.1989 18.257 17.5122 18.5398 16.7044 18.5398ZM16.7044 25.3256C16.4297 25.3256 16.1996 25.2325 16.0142 25.0464C15.828 24.8609 15.735 24.6308 15.735 24.3562V22.3204C14.2324 22.1266 12.956 21.5045 11.9059 20.4543C10.8557 19.4042 10.2175 18.1439 9.99129 16.6737C9.94282 16.399 10.0155 16.1567 10.2094 15.9466C10.4033 15.7366 10.6618 15.6316 10.9849 15.6316C11.2111 15.6316 11.4131 15.7162 11.5908 15.8856C11.7685 16.0555 11.8816 16.2617 11.9301 16.504C12.1401 17.635 12.6895 18.5802 13.5781 19.3395C14.4667 20.0989 15.5088 20.4786 16.7044 20.4786C17.9 20.4786 18.9421 20.0989 19.8307 19.3395C20.7193 18.5802 21.2686 17.635 21.4787 16.504C21.5271 16.2617 21.6444 16.0555 21.8306 15.8856C22.0161 15.7162 22.2219 15.6316 22.4481 15.6316C22.7551 15.6316 23.0055 15.7366 23.1994 15.9466C23.3932 16.1567 23.4659 16.399 23.4175 16.6737C23.1913 18.1439 22.5531 19.4042 21.5029 20.4543C20.4527 21.5045 19.1764 22.1266 17.6738 22.3204V24.3562C17.6738 24.6308 17.581 24.8609 17.3956 25.0464C17.2094 25.2325 16.979 25.3256 16.7044 25.3256Z" fill="white"/>
+            <rect x="13.0465" y="24.5581" width="6.90698" height="0.767442" fill="white"/>
+            <rect x="12.2791" y="25.3256" width="8.44186" height="0.767442" fill="white"/>
+          </svg>
+        </button>
+
+        <button ng-click="c.hangup()">
+          <svg class="keypad_table_digit_off" width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16.5" cy="16.5" r="16.5" fill="#E80033"></circle>
+            <g clip-path="url(#clip0_435_421)">
+              <g clip-path="url(#clip1_435_421)">
+                <path d="M22.4917 15.7666C23.3667 16.1916 24.1917 16.7249 24.9583 17.3583L24.0667 18.2499C23.5833 17.8583 23.0583 17.5083 22.5 17.1916V15.7666M11.5 15.7666V17.1833C10.9583 17.4916 10.4333 17.8416 9.94167 18.2416L9.05 17.3499C9.80833 16.7249 10.6333 16.1999 11.5 15.7666ZM17 12.8333C13.2167 12.8333 9.78333 14.3166 7.24167 16.7249C7.09167 16.8749 7 17.0833 7 17.3166C7 17.5499 7.09167 17.7583 7.24167 17.8999L9.30833 19.9666C9.45833 20.1166 9.66667 20.2083 9.9 20.2083C10.125 20.2083 10.3333 20.1249 10.4833 19.9749C11.1417 19.3666 11.8833 18.8416 12.7 18.4333C12.975 18.2999 13.1667 18.0083 13.1667 17.6833V15.0999C14.375 14.7083 15.6667 14.4999 17 14.4999C18.3333 14.4999 19.625 14.7083 20.825 15.1083V17.6916C20.825 18.0249 21.0167 18.3083 21.2917 18.4416C22.1083 18.8499 22.8583 19.3666 23.5167 19.9833C23.6667 20.1249 23.875 20.2166 24.1 20.2166C24.3333 20.2166 24.5417 20.1249 24.6917 19.9749L26.7583 17.9083C26.9083 17.7583 27 17.5499 27 17.3166C27 17.0833 26.9083 16.8749 26.7583 16.7249C24.2167 14.3166 20.7833 12.8333 17 12.8333Z" fill="white"></path>
+              </g>
+            </g>
+            <defs>
+              <clipPath id="clip0_435_421"><rect width="20" height="20" fill="white" transform="translate(7 7)"></rect></clipPath>
+              <clipPath id="clip1_435_421"><rect width="20" height="20" fill="white" transform="translate(7 7)"></rect></clipPath>
+            </defs>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="note">
+      <span class="triangle">&#9650;</span>
+      <strong>Resolve your issues fast!</strong>
+      <ol>
+        <li>Click to call now</li>
+        <li>Leave a message</li>
+        <li>Your ticket is created</li>
+      </ol>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

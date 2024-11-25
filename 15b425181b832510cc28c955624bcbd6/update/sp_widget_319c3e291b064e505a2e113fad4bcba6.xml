@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope) {
+  /* widget controller */
+  var c = this;
+
+	c.state = 'first-time';
+	c.modalOpened = false;
+	
+	c.server.get({
+		action: 'get-state',
+		url: window.location.href,
+	}).then(function (response) {
+		c.state = response.data.alreadySuggested ? 'try-again' : 'first-time';
+	});
+	
+	c.sendLottieHidden = true;
+	c.suggestion = '';
+	c.rating = '';
+	c.sendAnonymously = false;
+	c.categories = null;
+	
+	if(c.options.category_list && c.options.category_list.trim().length > 0){
+		c.categories = c.options.category_list.trim().split(",");
+		c.categories = c.categories.map(function(item){return item.trim();});
+	}
+	
+	c.goToOpen = function() {
+		c.modalOpened = true;
+	};
+	
+	c.closeModal = function() {
+		c.modalOpened = false;
+	};
+
+	c.goToTryAgain = function() {
+		c.sendLottieHidden = false;
+
+		var lottiePlayer = document.getElementById('dsb-lottie-player');	
+		lottiePlayer.stop();
+		lottiePlayer.seek('0%');
+
+		var currentLocation = new URLSearchParams(window.location.search).get('id') || window.location.pathname
+
+		c.server.get({
+			action: 'add-suggestion',
+			suggestion: c.suggestion,
+			rating: +c.rating,
+			sendAnonymously: c.sendAnonymously,
+			location: currentLocation,
+			url: window.location.href,
+			category: c.selectedCategory
+		}).then(function () {
+			lottiePlayer.play();
+			lottiePlayer.addEventListener('complete', function () {
+				c.state = 'try-again';
+				c.modalOpened = false;
+				c.sendLottieHidden = true;
+				c.suggestion = '';
+				c.rating = '';
+				c.selectedCategory = '';
+
+				$scope.$apply();
+			});
+	  });
+	};
+
+	setTimeout(function () {			
+		var lottiePlayer = document.getElementById('dsb-lottie-player');
+		var lottieAnimation = {"nm":"Email 2","ddd":1,"h":1500,"w":1500,"meta":{"g":"@lottiefiles/toolkit-js 0.26.1"},"layers":[{"ty":4,"nm":"poof","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":-45,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":1},{"ty":4,"nm":"poof 2","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":-90,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":2},{"ty":4,"nm":"poof 3","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":-135,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":3},{"ty":4,"nm":"poof 4","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":180,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":4},{"ty":4,"nm":"poof 5","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":135,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":5},{"ty":4,"nm":"poof 6","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":90,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":6},{"ty":4,"nm":"poof 7","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":45,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":7},{"ty":4,"nm":"poof 8","sr":1,"st":31,"op":141,"ip":123,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[196,196,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.1,748.06,0],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":false,"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[20,-35],[1,-1]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":6,"ix":5},"c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[0,0],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"tm","bm":0,"hd":false,"mn":"ADBE Vector Filter - Trim","nm":"Trim Paths 1","ix":2,"e":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":123},{"s":[0],"t":136}],"ix":2},"o":{"a":0,"k":0,"ix":3},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[100],"t":125},{"s":[0],"t":138}],"ix":1},"m":1}],"ind":8},{"ty":3,"nm":"flight null","sr":1,"st":80,"op":126,"ip":-22,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":1,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":0.751},"s":[100,100,100],"t":71},{"s":[3,3,100],"t":123}],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.165,"y":0},"i":{"x":0.657,"y":0},"s":[759,1032,0],"t":57,"ti":[185.333,260,0],"to":[346.667,-177.333,0]},{"o":{"x":0.167,"y":0.174},"i":{"x":0.085,"y":0},"s":[1183,376,0],"t":94,"ti":[376.667,-270.667,0],"to":[-185.333,-260,0]},{"o":{"x":0.167,"y":0.152},"i":{"x":0.349,"y":0.714},"s":[199,396,0],"t":110,"ti":[-88,269.333,0],"to":[-376.667,270.667,0]},{"s":[751,869.9999999999999,0],"t":123}],"ix":2},"r":{"a":0,"k":27,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":0,"ix":11}},"ef":[],"ind":9},{"ty":4,"nm":"Top open evlope 3","sr":1,"st":19,"op":30,"ip":0,"hd":false,"ddd":1,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[6,404,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[752.605,785.01,0],"ix":2},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11},"rx":{"a":1,"k":[{"o":{"x":0.167,"y":-0.177},"i":{"x":0.46,"y":1},"s":[169.912],"t":3},{"s":[0],"t":30}],"ix":8},"ry":{"a":0,"k":0,"ix":9},"rz":{"a":0,"k":0,"ix":10},"or":{"a":0,"k":[0,0,359.909],"ix":7}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-399.348,246.688],[1.333,-0.823]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3373,0.5608,0.9216],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":10},{"ty":4,"nm":"Top open evlope 5","sr":1,"st":34,"op":124,"ip":58,"hd":false,"ddd":1,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[6,404,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[-6,-247,0],"ix":2},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11},"rx":{"a":1,"k":[{"o":{"x":0.001,"y":0.284},"i":{"x":0.432,"y":0.821},"s":[0],"t":45},{"s":[169.912],"t":53}],"ix":8},"ry":{"a":0,"k":0,"ix":9},"rz":{"a":0,"k":0,"ix":10},"or":{"a":0,"k":[0,0,0],"ix":7}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-399.348,246.688],[1.333,-0.823]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-150.348,-2.312],[-171.667,-141.823]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3373,0.5608,0.9216],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":11,"parent":9},{"ty":4,"nm":"Top open evlope 2","sr":1,"st":34,"op":58,"ip":45,"hd":false,"ddd":1,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[6,404,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[752.696,784.959,0],"ix":2},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11},"rx":{"a":1,"k":[{"o":{"x":0.001,"y":0.284},"i":{"x":0.432,"y":0.821},"s":[0],"t":45},{"s":[169.912],"t":53}],"ix":8},"ry":{"a":0,"k":0,"ix":9},"rz":{"a":0,"k":0,"ix":10},"or":{"a":0,"k":[0,0,359.906],"ix":7}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-399.348,246.688],[1.333,-0.823]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-150.348,-2.312],[-171.667,-141.823]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3373,0.5608,0.9216],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":12},{"ty":4,"nm":"lieftside 2","sr":1,"st":31,"op":124,"ip":58,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[16,156,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[-26,2,0],"ix":2},"r":{"a":0,"k":180,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[399.348,246.688],[1.333,-0.823]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[82.348,-78.688],[307.348,152.687],[-396.667,248.177]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.2118,0.4941,0.9412],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":13,"parent":9},{"ty":4,"nm":"lieftside","sr":1,"st":31,"op":58,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[16,156,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[733.103,1033.992,0],"ix":2},"r":{"a":0,"k":179.906,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[399.348,246.688],[1.333,-0.823]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[82.348,-78.688],[307.348,152.687],[-396.667,248.177]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3294,0.5294,0.851],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":14},{"ty":4,"nm":"Botom fold 2","sr":1,"st":31,"op":124,"ip":58,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[-10,-162,0],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[399.348,246.688],[-399.348,246.688]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[57.348,224.688],[-87.348,78.688]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":15,"parent":9},{"ty":4,"nm":"Botom fold","sr":1,"st":31,"op":58,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[748.835,869.966,0],"ix":2},"r":{"a":0,"k":-0.094,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.407,"y":0},"i":{"x":0.586,"y":1},"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[399.348,246.688],[-399.348,246.688]]}],"t":47},{"s":[{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,-246.688],[57.348,224.688],[-87.348,78.688]]}],"t":69}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.302,0.5608,0.9686],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":16},{"ty":4,"nm":"Paper","sr":1,"st":31,"op":53,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[747.433,89.967,0],"t":32,"ti":[-0.245,-136.666,0],"to":[0.245,136.666,0]},{"s":[748.9,909.966,0],"t":47}],"ix":2},"r":{"a":0,"k":-0.094,"ix":10},"sa":{"a":0,"k":0},"o":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[0],"t":32},{"s":[100],"t":44}],"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"rc","bm":0,"hd":false,"mn":"ADBE Vector Shape - Rect","nm":"Rectangle Path 1","d":1,"p":{"a":0,"k":[0,0],"ix":3},"r":{"a":0,"k":0,"ix":4},"s":{"a":0,"k":[641.516,354.195],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[1,1,1],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-1.242,127.098],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":17},{"ty":4,"nm":"Top open evlope 6","sr":1,"st":19,"op":45,"ip":30,"hd":false,"ddd":1,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[6,404,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[752.605,785.01,0],"ix":2},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11},"rx":{"a":1,"k":[{"o":{"x":0.167,"y":-0.177},"i":{"x":0.46,"y":1},"s":[169.912],"t":3},{"s":[0],"t":30}],"ix":8},"ry":{"a":0,"k":0,"ix":9},"rz":{"a":0,"k":0,"ix":10},"or":{"a":0,"k":[0,0,359.909],"ix":7}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-399.348,246.688],[1.333,-0.823]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3373,0.5608,0.9216],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":18},{"ty":4,"nm":"Back of evelope","sr":1,"st":31,"op":53,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[749.358,1189.965,0],"ix":2},"r":{"a":0,"k":179.906,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Rectangle 1","ix":1,"cix":2,"np":3,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[399.348,246.688],[-399.348,246.688],[1.333,-0.823]]},"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":0,"ix":5},"c":{"a":0,"k":[0,0,0],"ix":3}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fill 1","c":{"a":0,"k":[0.3294,0.5294,0.851],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[-0.652,158.688],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":19}],"v":"5.5.9","fr":60,"op":120,"ip":0,"assets":[]};
+
+		lottiePlayer.load(lottieAnimation);
+	}, 500);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$dsb-banner-background-color: #f00b36 !default;&#13;
+$dsb-banner-text-color: #FFFFFF !default;&#13;
+&#13;
+$dsb-modal-background-color: #FFFFFF !default;&#13;
+$dsb-modal-text-color: #36424F !default;&#13;
+&#13;
+$dsb-box-shadow: 0rem 0.5rem 1.2rem 0rem rgba(0, 0, 0, .25) !default;&#13;
+&#13;
+$dsb-letter-color: #FFFFFF !default;&#13;
+&#13;
+$dsb-input-border-color: $dsb-modal-text-color !default;&#13;
+&#13;
+$dsb-button-primary-background-color: #00a397 !default;&#13;
+$dsb-button-primary-color: white !default;&#13;
+&#13;
+$dsb-button-height: 34px !default;&#13;
+&#13;
+.digital-suggestion-box {&#13;
+	width: 100%;&#13;
+  &#13;
+  background-color: $dsb-banner-background-color;&#13;
+  &#13;
+  position: relative;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--content {&#13;
+  width: 100%;&#13;
+  &#13;
+ 	display: flex;&#13;
+  flex-direction: column;&#13;
+  align-items: center;&#13;
+&#13;
+  padding: 52px;&#13;
+  &#13;
+  svg {&#13;
+  	color: $dsb-letter-color;&#13;
+  }&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--link-button {&#13;
+  margin-top: 8px;&#13;
+  &#13;
+  padding: 4px;&#13;
+  &#13;
+	background-color: transparent;&#13;
+  color: $dsb-banner-text-color;&#13;
+  appearance: none;&#13;
+  border: none;&#13;
+  &#13;
+  font-size: 18px;&#13;
+&#13;
+  white-space: pre;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--mail {&#13;
+	position: absolute;&#13;
+  &#13;
+  top: 8px;&#13;
+  right: 24px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--open {&#13;
+	position: absolute;&#13;
+  &#13;
+  top: 0;&#13;
+  left: calc(50%);&#13;
+  padding: 2.4rem;&#13;
+&#13;
+  width: 50rem;&#13;
+  max-width: 100vw;&#13;
+  &#13;
+  z-index: 1000;&#13;
+&#13;
+  background-color: #FFFFFF;&#13;
+  &#13;
+  transition: opacity ease 300ms, transform ease 300ms;&#13;
+  &#13;
+  opacity: 1;&#13;
+  &#13;
+  transform: scale(1) translateY(calc(-100% - 16px)) translateX(-50%);&#13;
+&#13;
+  h3, p, label {&#13;
+  	text-color: $dsb-modal-text-color;&#13;
+    margin-top: 0;&#13;
+  }&#13;
+  &#13;
+  h3, p {&#13;
+    padding-right: 32px;&#13;
+  }&#13;
+&#13;
+  p {&#13;
+  	margin-bottom: 16px;&#13;
+  }&#13;
+&#13;
+  h3 {&#13;
+  	font-size: 25px;&#13;
+    font-weight: bold;&#13;
+  }&#13;
+&#13;
+  p {&#13;
+  	font-size: 16px;&#13;
+  }&#13;
+  &#13;
+  select {&#13;
+    padding: 5px;&#13;
+    width: 35rem;&#13;
+    margin-bottom: 20px;&#13;
+  }&#13;
+&#13;
+  textarea {&#13;
+    width: 100%;&#13;
+    max-width: 100%;&#13;
+    min-width: 100%;&#13;
+    min-height: 60px;&#13;
+    max-height: 300px;&#13;
+    &#13;
+  	padding: 16px;&#13;
+    border: 1px solid $dsb-input-border-color !important;&#13;
+    &#13;
+    color: $dsb-text-color;&#13;
+    &#13;
+    border-radius: 5px;&#13;
+    &#13;
+    font-size: 14px;&#13;
+  }&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--open.ng-hide {&#13;
+	opacity: 0;&#13;
+  transform: scale(0.4) translateY(calc(-140% - 16px)) translateX(-90%);&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--open:after {&#13;
+  content: "";&#13;
+&#13;
+  position: absolute;&#13;
+&#13;
+  width: 0;&#13;
+  height: 0;&#13;
+&#13;
+  border-left: 8px solid transparent;&#13;
+  border-right: 8px solid transparent;&#13;
+  border-top: 16px solid $dsb-modal-background-color;&#13;
+&#13;
+  bottom: -16px;&#13;
+  left: calc(50% - 4px);&#13;
+  &#13;
+  &amp;.ng-hide {&#13;
+  	content: unset;&#13;
+  }&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--emojis {&#13;
+	display: flex;&#13;
+&#13;
+  gap: 24px;&#13;
+&#13;
+  margin-bottom: 16px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--emoji {&#13;
+	position: relative;&#13;
+&#13;
+  height: 30px;&#13;
+  width: 30px;&#13;
+&#13;
+  input {&#13;
+  	opacity: 0;&#13;
+&#13;
+    position: absolute;&#13;
+&#13;
+    top: 0;&#13;
+    left: 0;&#13;
+&#13;
+    height: 100%;&#13;
+    width: 100%;&#13;
+&#13;
+    z-index: 10;&#13;
+&#13;
+    cursor: pointer;&#13;
+  }&#13;
+&#13;
+  svg {&#13;
+  	height: 100%;&#13;
+    width: 100%;&#13;
+    &#13;
+    transition: transform ease 300ms;&#13;
+  }&#13;
+&#13;
+  input:checked ~ svg {&#13;
+  	transform: scale(1.4);&#13;
+  }&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--inputs {&#13;
+	margin-bottom: 24px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--inputs-button {&#13;
+	display: flex;&#13;
+  gap: 16px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--send-lottie {&#13;
+	position: absolute;&#13;
+&#13;
+  top: -19px;&#13;
+  right: calc(50% - 31px);&#13;
+  height: 60px;&#13;
+  width: 62px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--button {&#13;
+	border-radius: 5px;&#13;
+  border: none;&#13;
+&#13;
+  height: $dsb-button-height;&#13;
+&#13;
+  color: $dsb-button-primary-color;&#13;
+  background-color: $dsb-button-primary-background-color;&#13;
+&#13;
+  font-size: 18px;&#13;
+&#13;
+  position: relative;&#13;
+  padding: 0 48px;&#13;
+}&#13;
+&#13;
+.digital-suggestion-box--button-outline {&#13;
+	border-radius: 5px;&#13;
+  border: 1px solid $dsb-button-primary-background-color;&#13;
+&#13;
+  height: $dsb-button-height;&#13;
+&#13;
+  color: $dsb-button-primary-background-color;&#13;
+  background-color: transparent;&#13;
+&#13;
+  font-size: 18px;&#13;
+&#13;
+  position: relative;&#13;
+  padding: 0 32px;&#13;
+}&#13;
+&#13;
+.hide-text {&#13;
+	color: transparent !important;&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>digital_suggestion_box</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Digital Suggestion Box</name>
+        <option_schema>[{"hint":"The title of the opened card","name":"title","section":"Presentation","default_value":"What do you think?","label":"Title","type":"string"},{"hint":"The description about what the user will answer/write about.","name":"description","section":"Presentation","default_value":"Let us know what you think about this page, did you like it? It could be improved with your suggestions.","label":"Description","type":"string"},{"hint":"The placeholder for the input","name":"input_placeholder","section":"Presentation","default_value":"Write here your suggestions and thoughts for this page.","label":"Input (placeholder)","type":"string"},{"displayValue":"User","hint":"Select the user that will be responsible to receive and read the suggestions.","name":"who_will_be_notified","section":"Data","label":"Who will be notified?","type":"reference","value":"sys_user","ed":{"reference":"sys_user"}},{"hint":"The text of the button when the card is closed","name":"button_text_closed","section":"Presentation","default_value":"Do you have any suggestion?","label":"Button Text (closed)","type":"string"},{"hint":"The text of the button when the card is open","name":"button_text_open","section":"Presentation","default_value":"Send","label":"Button Text (open)","type":"string"},{"hint":"The text of the button to send again another suggestion","name":"button_text_send_again","section":"Presentation","default_value":"Do you have more suggestions?","label":"Button Text (send again)","type":"string"},{"hint":"The text above the emojis","name":"rating_description","section":"Presentation","default_value":"How did you feel while navigating through this page?","label":"Rating Description","type":"string"},{"hint":"Establish a category list, allowing users to designate the category to which their suggestion belongs. Example categories: Layout, Infrastructure, HR.","name":"category_list","section":"Presentation","label":"Category List","type":"string"},{"name":"show_anonymous_field","section":"Presentation","default_value":"false","label":"Show the 'Anonymous' field.","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	data.title = gs.getMessage(options.title);
+	data.rating_description = gs.getMessage(options.rating_description);
+	data.description = gs.getMessage(options.description);
+	data.input_placeholder = gs.getMessage(options.input_placeholder);
+	data.button_text_open = gs.getMessage(options.button_text_open);
+	data.button_text_closed = gs.getMessage(options.button_text_closed);
+	data.button_text_send_again = gs.getMessage(options.button_text_send_again);
+
+	var localInput = input;
+
+	if (!localInput)
+		return;
+	
+  var url = localInput.url;
+	
+	if (localInput.action === 'add-suggestion') {
+		var suggestion = localInput.suggestion;
+		var sendAnonymous = localInput.sendAnonymously;
+		var rating = localInput.rating;
+		var location = localInput.location;
+		var category = localInput.category;
+
+		var record = new GlideRecord('x_stefa_chameleon_suggestion');
+		record.newRecord();
+		record.short_description = '[' + location + ']: New Suggestion';
+		record.description = suggestion;
+		record.assigned_to = options.who_will_be_notified;
+		record.u_url = url;
+		record.u_rating = rating;
+		record.u_isanonymous = sendAnonymous;
+		record.u_category = category;
+		
+		if (sendAnonymous) {
+			record.autoSysFields(false);
+		}
+
+		var newId = record.insert();
+		
+		if (sendAnonymous) {
+			record.initialize();
+			record.autoSysFields(false);
+			record.get(newId);
+			record.opened_by = '';
+			record.update();
+		}
+	}
+	
+	if (localInput.action === 'get-state') {
+		var alreadySuggested = new GlideRecord('x_stefa_chameleon_suggestion');
+		alreadySuggested.addQuery('opened_by', '=', gs.getUserID());
+		alreadySuggested.addQuery('u_url', '=', url);
+		alreadySuggested.setLimit(1);
+		alreadySuggested.query();
+		
+		data.alreadySuggested = alreadySuggested.hasNext();
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-08 20:08:06</sys_created_on>
+        <sys_id>319c3e291b064e505a2e113fad4bcba6</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Digital Suggestion Box</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_319c3e291b064e505a2e113fad4bcba6</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-09 14:53:32</sys_updated_on>
+        <template><![CDATA[<div class="digital-suggestion-box">
+  <form ng-submit="c.goToTryAgain()"
+        ng-show="c.modalOpened"
+        class="digital-suggestion-box--open"
+        style="filter: drop-shadow(rgba(0,0,0,.5) 0px 0px 12px)">
+    <svg class="digital-suggestion-box--mail" width="40" height="35" viewBox="0 0 40 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+	    <path d="M40 12.2917C40 10.9584 39.3331 9.72 38.1901 9.05366L20 0L1.80991 9.05366C0.761696 9.72 0 10.9584 0 12.2917V30.4762C0 32.5716 1.71402 34.2857 3.80946 34.2857H36.1905C38.286 34.2857 40 32.5716 40 30.4762V12.2917ZM20 21.4286L4.6992 11.4286L20 3.80955L35.3008 11.4286L20 21.4286Z" fill="#36424F"/>
+    </svg>
+
+    <h3>
+      {{c.data.title}}
+    </h3>
+    
+    <div ng-if="c.categories != null">
+      <p>${Choose the category that best suits your suggestion.}</p>
+      <select ng-model="c.selectedCategory" ng-required="c.categories != null">
+        <option value="">${Select a category}</option>
+        <option ng-repeat="category in c.categories" value="{{category}}">
+          {{category}}
+        </option>
+      </select>
+    </div>
+    
+    <p>
+      {{c.data.rating_description}}
+    </p>
+    
+    <div class="digital-suggestion-box--emojis">
+      <div class="digital-suggestion-box--emoji">
+        <input ng-model="c.rating" type="radio" name="emoji" value="5" required>
+
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 15.0038C30 23.2951 23.307 29.988 15.0157 29.988C6.72446 29.988 0.0314941 23.2951 0.0314941 15.0038C0.0314941 6.7125 6.72446 0.0195312 15.0157 0.0195312C23.307 0.0195312 30 6.7125 30 15.0038Z" fill="#FFDD67"/>
+          <path d="M29.9001 5.61255C29.6503 4.26397 28.9011 3.16512 27.6524 2.81549C26.3039 2.46585 25.1051 2.96533 23.9563 4.16407C23.307 2.36596 22.3081 1.01738 20.7097 0.318112C19.1114 -0.381153 17.5131 0.118322 16.5142 1.36701C15.4653 2.66564 15.0657 4.71349 16.1645 7.36071C17.2134 9.85809 21.8585 14.8528 22.0084 15.0027C22.2082 14.9028 27.4027 11.6562 28.6514 10.0579C29.9001 8.5095 30.1498 6.96113 29.9001 5.61255ZM13.5173 1.36701C12.5184 0.118322 10.92 -0.381153 9.32171 0.318112C7.72339 1.01738 6.72444 2.36596 6.07512 4.16407C4.87638 3.01528 3.67764 2.46585 2.32906 2.86543C1.13032 3.21507 0.331161 4.31391 0.0814234 5.6625C-0.168314 6.96113 0.131371 8.55945 1.33011 10.1078C2.62875 11.6562 7.82329 14.9028 8.02308 15.0027C8.17292 14.8528 12.818 9.85809 13.8669 7.36071C14.9658 4.71349 14.5662 2.71559 13.5173 1.36701Z" fill="#F46767"/>
+          <path d="M23.5067 18.0478C23.5067 17.6482 23.257 17.1488 22.6076 16.9989C20.8595 16.6493 18.3121 16.3496 15.0156 16.3496C11.7191 16.3496 9.17175 16.6992 7.42359 16.9989C6.72433 17.1488 6.52454 17.6482 6.52454 18.0478C6.52454 21.694 9.3216 25.3402 15.0156 25.3402C20.7096 25.2902 23.5067 21.644 23.5067 18.0478Z" fill="#664E27"/>
+          <path d="M21.359 18.1499C20.2602 17.9501 17.9626 17.6504 15.0157 17.6504C12.0688 17.6504 9.7712 17.9501 8.67235 18.1499C8.02303 18.2498 7.97309 18.4995 8.02304 18.8991C8.07298 19.0989 8.07298 19.3986 8.17288 19.6982C8.22282 19.9979 8.32272 20.1478 8.8222 20.0978C9.7712 19.9979 20.3101 19.9979 21.2591 20.0978C21.7586 20.1478 21.8085 19.9979 21.9084 19.6982C21.9584 19.3986 22.0083 19.1488 22.0583 18.8991C22.0583 18.4995 22.0083 18.2498 21.359 18.1499Z" fill="white"/>
+        </svg>
+      </div>
+
+      <div class="digital-suggestion-box--emoji">
+        <input ng-model="c.rating" type="radio" name="emoji" value="4" required>
+
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30Z" fill="#FFDD67"/>
+          <path d="M9.25 13.75C10.6307 13.75 11.75 12.6307 11.75 11.25C11.75 9.86929 10.6307 8.75 9.25 8.75C7.86929 8.75 6.75 9.86929 6.75 11.25C6.75 12.6307 7.86929 13.75 9.25 13.75Z" fill="#664E27"/>
+          <path d="M20.7502 13.75C22.131 13.75 23.2502 12.6307 23.2502 11.25C23.2502 9.86929 22.131 8.75 20.7502 8.75C19.3695 8.75 18.2502 9.86929 18.2502 11.25C18.2502 12.6307 19.3695 13.75 20.7502 13.75Z" fill="#664E27"/>
+          <path d="M23.5001 18.0008C23.5001 17.6008 23.2501 17.1008 22.6001 16.9508C20.8501 16.6008 18.3001 16.3008 15.0001 16.3008C11.7001 16.3008 9.15012 16.6508 7.40012 16.9508C6.75012 17.1008 6.50012 17.6008 6.50012 18.0008C6.50012 21.6508 9.30012 25.3008 15.0001 25.3008C20.7001 25.3008 23.5001 21.6508 23.5001 18.0008Z" fill="#664E27"/>
+          <path d="M21.35 18.1523C20.25 17.9523 17.95 17.6523 15 17.6523C12.05 17.6523 9.74998 17.9523 8.64998 18.1523C7.99998 18.2523 7.94998 18.5023 7.99998 18.9023C8.04998 19.1023 8.04998 19.4023 8.14998 19.7023C8.19998 20.0023 8.29998 20.1523 8.79998 20.1023C9.74998 20.0023 20.3 20.0023 21.25 20.1023C21.75 20.1523 21.8 20.0023 21.9 19.7023C21.95 19.4023 22 19.1523 22.05 18.9023C22.05 18.5023 22 18.2523 21.35 18.1523Z" fill="white"/>
+        </svg>
+      </div>
+
+      <div class="digital-suggestion-box--emoji">
+        <input ng-model="c.rating" type="radio" name="emoji" value="3" required>
+
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30Z" fill="#FFDD67"/>
+          <path d="M9.25 15.75C10.6307 15.75 11.75 14.6307 11.75 13.25C11.75 11.8693 10.6307 10.75 9.25 10.75C7.86929 10.75 6.75 11.8693 6.75 13.25C6.75 14.6307 7.86929 15.75 9.25 15.75Z" fill="#664E27"/>
+          <path d="M20.75 15.75C22.1307 15.75 23.25 14.6307 23.25 13.25C23.25 11.8693 22.1307 10.75 20.75 10.75C19.3693 10.75 18.25 11.8693 18.25 13.25C18.25 14.6307 19.3693 15.75 20.75 15.75Z" fill="#664E27"/>
+        </svg>
+      </div>
+
+      <div class="digital-suggestion-box--emoji">
+        <input ng-model="c.rating" type="radio" name="emoji" value="2" required>
+
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30Z" fill="#FFDD67"/>
+          <path d="M9.25 14.7988C10.6307 14.7988 11.75 13.6795 11.75 12.2988C11.75 10.9181 10.6307 9.79883 9.25 9.79883C7.86929 9.79883 6.75 10.9181 6.75 12.2988C6.75 13.6795 7.86929 14.7988 9.25 14.7988Z" fill="#664E27"/>
+          <path d="M20.75 14.7988C22.1307 14.7988 23.25 13.6795 23.25 12.2988C23.25 10.9181 22.1307 9.79883 20.75 9.79883C19.3693 9.79883 18.25 10.9181 18.25 12.2988C18.25 13.6795 19.3693 14.7988 20.75 14.7988Z" fill="#664E27"/>
+          <path d="M10.5001 22.7984C13.4001 20.3984 16.6001 20.3984 19.5001 22.7984C19.8501 23.0984 20.1501 22.5984 19.9001 22.1484C19.0001 20.4484 17.2501 18.8984 15.0001 18.8984C12.7501 18.8984 10.9501 20.4484 10.1001 22.1484C9.85007 22.5984 10.1501 23.0984 10.5001 22.7984Z" fill="#664E27"/>
+        </svg>
+      </div>
+
+      <div class="digital-suggestion-box--emoji">
+        <input ng-model="c.rating" type="radio" name="emoji" value="1" required>
+
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30Z" fill="#FFDD67"/>
+          <path d="M10.2999 8.1013C8.69994 9.4513 6.54994 10.0513 4.44994 9.6513C4.14994 9.6013 3.89994 10.6513 4.24994 10.7513C6.64994 11.2013 9.14994 10.5013 10.9999 8.9513C11.2499 8.7013 10.4999 7.9013 10.2999 8.1013ZM25.5499 9.6013C23.4499 9.9513 21.2999 9.4013 19.6999 8.0513C19.4999 7.8513 18.6999 8.6513 18.9999 8.9013C20.8499 10.5013 23.3499 11.1513 25.7499 10.7013C26.0999 10.6013 25.8499 9.5513 25.5499 9.6013Z" fill="#917524"/>
+          <path d="M22.2999 20.2001C22.0499 19.9001 21.5499 19.8001 21.1999 20.0501L19.0999 21.4501C18.7499 21.7001 18.1999 21.6501 17.8999 21.4001L15.5999 19.4501C15.2999 19.2001 14.7999 19.2001 14.4499 19.4501L12.1499 21.4001C11.8499 21.6501 11.2999 21.7001 10.9499 21.4501L8.79994 20.0501C8.44994 19.8001 7.94994 19.9001 7.69994 20.2001L5.49994 22.8001C5.24994 23.1001 5.29994 23.2001 5.64994 23.0001L7.54994 21.9501C7.89994 21.7501 8.44994 21.8001 8.74994 22.1001L11.0499 24.3501C11.3499 24.6501 11.8499 24.6501 12.1999 24.4001L14.4499 22.7001C14.7999 22.4501 15.2999 22.4501 15.6499 22.7001L17.8499 24.4001C18.1999 24.6501 18.6999 24.6001 18.9999 24.3501L21.2999 22.1001C21.5999 21.8001 22.1499 21.7501 22.4999 21.9501L24.3999 23.0001C24.7499 23.2001 24.8499 23.1001 24.5499 22.8001L22.2999 20.2001ZM24.8499 13.0501C25.1499 13.2001 24.9999 13.5501 24.7499 13.6001C23.3999 13.8001 21.9999 14.0501 20.5999 14.8001C22.5999 15.1501 24.1999 16.1501 25.0999 17.2001C25.2999 17.4501 25.0499 17.7501 24.8499 17.7001C22.4499 16.8501 19.9999 16.3501 16.9499 16.7001C16.6999 16.7001 16.4999 16.6001 16.5499 16.3501C17.3499 12.7001 21.9999 11.3501 24.8499 13.0501ZM5.14994 13.0501C4.84994 13.2001 4.99994 13.5501 5.24994 13.6001C6.59994 13.8001 7.99994 14.0501 9.39994 14.8001C7.39994 15.1501 5.79994 16.1501 4.89994 17.2001C4.69994 17.4501 4.94994 17.7501 5.14994 17.7001C7.54994 16.8501 9.99994 16.3501 13.0499 16.7001C13.2999 16.7001 13.4999 16.6001 13.4499 16.3501C12.6499 12.7001 7.99994 11.3501 5.14994 13.0501Z" fill="#664E27"/>
+        </svg>
+      </div>
+    </div>
+    
+    <div class="digital-suggestion-box--inputs">
+      <p>
+        {{c.data.description}}
+      </p>
+    
+      <textarea ng-model="c.suggestion"
+                placeholder="{{c.data.input_placeholder}}" ng-Required="c.rating < 3"></textarea>
+      
+      <div ng-if="c.options.show_anonymous_field == 'true'">
+      	<input id="dsb_send_anonymous" 
+             ng-model="c.sendAnonymously"
+             type="checkbox">
+      	<label for="dsb_send_anonymous">${Send Anonymously}</label>
+    	</div>
+
+    </div>
+    
+    <div class="digital-suggestion-box--inputs-button">
+      <button type="submit" 
+              ng-disabled="!c.sendLottieHidden"
+              class="digital-suggestion-box--button"
+              ng-class="{'hide-text': !c.sendLottieHidden}"
+              >
+        {{c.data.button_text_open}}
+
+        <lottie-player id="dsb-lottie-player"
+                       ng-show="!c.sendLottieHidden"
+                       mode="normal"
+                       class="digital-suggestion-box--send-lottie"
+                       ></lottie-player>
+      </button>
+
+      <button class="digital-suggestion-box--button-outline"
+              ng-click="c.closeModal()"
+              type="button">
+        ${Cancel}
+      </button>
+    </div>
+  </form>
+  
+  
+	<div ng-if="c.state === 'first-time'" class="digital-suggestion-box--content">
+    <svg width="80" height="64" viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M68.9654 22.069C75.0596 22.069 79.9999 17.1287 79.9999 11.0345C79.9999 4.94031 75.0596 0 68.9654 0C62.8712 0 57.9309 4.94031 57.9309 11.0345C57.9309 17.1287 62.8712 22.069 68.9654 22.069Z" fill="currentColor"/>
+      <path d="M60.5 24.0337L38.6207 38.6199L8.27587 18.3958V11.0337L38.6207 31.2578L56.0518 19.6371C54.4138 17.1716 53.4483 14.2061 53.4483 11.0337C53.4483 7.9992 54.3276 5.15437 55.8449 2.75781H7.36207C3.31035 2.75781 0 6.06816 0 10.1199V56.1027C0 60.1544 3.31035 63.4647 7.36207 63.4647H69.8966C73.9483 63.4647 77.2587 60.1544 77.2587 56.1027V24.1544C74.8621 25.6716 72.0173 26.5509 68.9828 26.5509C65.8449 26.5509 62.9311 25.6199 60.5 24.0337Z" fill="currentColor"/>
+    </svg>
+
+    <button class="digital-suggestion-box--link-button"
+            ng-click="c.goToOpen()">
+      {{c.data.button_text_closed}}<br>
+      ${Click here}
+    </button>
+  </div>
+  
+	<div ng-if="c.state === 'try-again'" class="digital-suggestion-box--content">
+    <svg width="80" height="64" viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M68.9654 22.069C75.0596 22.069 79.9999 17.1287 79.9999 11.0345C79.9999 4.94031 75.0596 0 68.9654 0C62.8712 0 57.9309 4.94031 57.9309 11.0345C57.9309 17.1287 62.8712 22.069 68.9654 22.069Z" fill="currentColor"/>
+      <path d="M60.5 24.0337L38.6207 38.6199L8.27587 18.3958V11.0337L38.6207 31.2578L56.0518 19.6371C54.4138 17.1716 53.4483 14.2061 53.4483 11.0337C53.4483 7.9992 54.3276 5.15437 55.8449 2.75781H7.36207C3.31035 2.75781 0 6.06816 0 10.1199V56.1027C0 60.1544 3.31035 63.4647 7.36207 63.4647H69.8966C73.9483 63.4647 77.2587 60.1544 77.2587 56.1027V24.1544C74.8621 25.6716 72.0173 26.5509 68.9828 26.5509C65.8449 26.5509 62.9311 25.6199 60.5 24.0337Z" fill="currentColor"/>
+    </svg>
+
+    <button class="digital-suggestion-box--link-button"
+            ng-click="c.goToOpen()">
+      {{c.data.button_text_send_again}}<br>
+      ${Click here}
+    </button>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

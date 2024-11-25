@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_stefa_chameleon.ChameleonUtil</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>A class containing multiple useful functions to use in Chameleon</description>
+        <name>ChameleonUtil</name>
+        <script><![CDATA[var ChameleonUtil = Class.create();
+ChameleonUtil.prototype = {
+    initialize: function() {
+    },
+	
+	// Get a key value from the configuration table
+	getConfigKey: function(key) {
+		var gr = new GlideRecord("x_stefa_chameleon_configuration");
+		gr.get('key', key);
+
+		if(gs.nil(gr.number))
+			return null;
+		
+		return {
+			"number": gr.getValue('number'),
+			"key": gr.getValue('key'),
+			"value": gr.getValue('type') == 'plain' ? gr.getValue('value') : gr.encrypted_value.getDecryptedValue(),
+		};
+	},
+	
+	// Get all key values from the configuration table that contains the term passed by parameter
+	getAllConfigKeys: function(key) {
+		var keys = {};
+		var gr = new GlideRecord("x_stefa_chameleon_configuration");
+		gr.addQuery('key','CONTAINS', key);
+		gr.query();
+		while(gr.next()){
+			
+			if(gs.nil(gr.number))
+			continue;
+			
+			keys[gr.key] = gr.getValue('type') == 'plain' ? gr.getValue('value') : gr.encrypted_value.getDecryptedValue();
+		}
+		return keys;
+	},
+	
+	// Passing your keys you can validate if it exists in the configuration table
+	validateKeys: function(keys, validFields) {
+		var emptyFields = validFields.filter(function (field) {
+			return !keys[field];
+		});
+
+		return {
+			'hasEmptyFields': emptyFields.length > 0,
+			'message': emptyFields.length > 0
+				? 'One or more fields was not configured: ' + emptyFields.join(', ')
+				: null
+		};
+	},
+	
+    type: 'ChameleonUtil'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-23 17:13:17</sys_created_on>
+        <sys_id>71ba2ee81b076d109b7d32231b4bcbc9</sys_id>
+        <sys_mod_count>43</sys_mod_count>
+        <sys_name>ChameleonUtil</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_script_include_71ba2ee81b076d109b7d32231b4bcbc9</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-23 18:30:37</sys_updated_on>
+    </sys_script_include>
+</record_update>

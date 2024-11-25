@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($rootScope, $scope, spModal, $http, $window) {
+    /* widget controller */
+    var c = this;
+	$scope.collapse = function() {
+		$rootScope.$emit('sp-navbar-collapse');
+	}
+	
+	var xsScreenSize = isXSScreenSize();
+	$scope.showXSAvatar = isXSScreenSize()&& c.options.show_xs_avatar;
+	$scope.showAvatar = !isXSScreenSize();
+	$scope.profile_url = c.options.profile_url || "?id=user_profile&sys_id="+$scope.user.sys_id;
+	
+	function isXSScreenSize() {
+		return $window.matchMedia('(max-width: 767px)').matches;
+	}
+	
+	angular.element($window).on('resize', function () {
+		if(xsScreenSize !== isXSScreenSize()){
+			if(!$scope.showXSAvatar && c.options.show_xs_avatar)
+				$scope.showXSAvatar = true;
+			if(!$scope.showAvatar)
+				$scope.showAvatar = true;
+		}
+	});
+	
+	$rootScope.$on('sp.avatar_changed', function(evt, obj) {
+		$scope.userID = "";
+		$scope.newAvatarId = obj.newAvatarId;
+		$timeout(function(){
+			$scope.userID = $scope.user.sys_id;
+			$("#profile-dropdown .sub-avatar").css("background-image", 'url("' + $scope.newAvatarId + '.iix?t=small")');
+		});
+	});
+
+    $scope.impersonate = function() {
+        spModal.open({
+            title: c.data.modalTitle,
+            widget: 'impersonate-user',
+            scope: scope,
+			buttons:[]
+        })
+    };
+	$scope.endImpersonate = function() {
+		var userName = c.data.realUser;
+        //If we don't have a user we can't impersonate
+        if (!userName) {
+            return;
+        }
+        //Call to the impersonation api with username/sys_id
+        $http.post("/api/now/ui/impersonate/" + userName, {}).success(function() {
+            $scope.showError = false;
+            $window.location.href = $scope.portal.url_suffix;
+        }).error(function(response) {
+            if (response.error) {
+                $scope.showError = true;
+                $scope.error = response.error;
+            }
+        });
+    };
+
+	if (window.IntersectionObserver) {
+		setTimeout(function () {
+			var profileImage = document.getElementById('profile-dropdown');
+
+			var avatarImage = document.getElementById('navbar-avatar-image');
+			var avatarText = document.getElementById('navbar-avatar-text');
+
+			avatarImage.style.display = 'none';
+			avatarText.style.display = 'none';
+
+			var homePageSearch = document.getElementById('homepage-search');
+			var homePageTitle = document.getElementById('homepage-search-text');
+
+			var intersecting = true;
+
+			var getTransformPosition = function () {
+				var xDiff, yDiff;
+				
+				if (intersecting) {
+					var avatarTextBoundary = avatarText.getBoundingClientRect();
+
+					xDiff = avatarTextBoundary.x;
+					yDiff = avatarTextBoundary.y;
+				} else {
+					var homeTitleBoundary = homePageTitle.getBoundingClientRect();
+					xDiff = -(homeTitleBoundary.width / 2) - 48;
+					yDiff = 0;
+				}
+
+				return 'translate(' + xDiff + 'px,'+yDiff+'px)'	
+			}
+			
+			var moveImage = function() {
+				if (intersecting) {
+					avatarImage.style.transform = getTransformPosition();
+					avatarImage.classList.remove('not-visible');
+				} else {
+					avatarImage.classList.add('not-visible');
+					avatarImage.style.transform = getTransformPosition();
+				}
+			}
+			
+			moveImage();
+			
+			window.addEventListener('resize', function () {
+				moveImage();
+			});
+
+			if (homePageSearch) {
+				var callback = function (entries) {
+					var entry = entries[0];
+					intersecting = entry.isIntersecting;
+
+					moveImage();
+				};
+
+				var observer = new IntersectionObserver(callback, {
+					root: null,
+					rootMargin: "30px",
+					threshold: 1.0,
+				});
+
+				observer.observe(homePageSearch);
+			}
+		}, 50);
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino-profile-with-drop-down</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+    var prevFocusIndex = -1; // This is used for prev focus of nav-bar(avatar) drop down items when its visible.
+    $(document).keyup(function(event) {
+        if (event.which == 9 || event.which == 37 || event.which == 39) { //tab key handler + arrow keys
+            if ($(event.target).parents(".dropdown-menu").length == 0) { //if we are NOT inside a dropdown...
+                //close the dropdowns
+                $(".dropdown").removeClass("open");
+                $("[data-toggle='dropdown']").attr("aria-expanded", "false");
+                prevFocusIndex = -1;
+            }
+        } else if (event.which == 38 || event.which == 40) {
+            var parent = $(event.target).parents('.dropdown-menu');
+            if (parent.length) {
+                var items = $(parent).find('li a');
+                if (!items.length)
+                    return;
+
+                var index = items.index(items.filter(':focus'));
+                if (index == -1) return;
+
+                if (prevFocusIndex == index) {
+                    if (index == 0)
+                        index = items.length - 1;
+                    else if (index == items.length - 1)
+                        index = 0;
+
+                    items[index].focus();
+                }
+                prevFocusIndex = index;
+
+            }
+        }
+        // on esc/close of the menu, reset the index
+        if (event.which == 27)
+            prevFocusIndex = -1;
+
+        if (event.which == 13 || event.which == 32)
+            $(event.target).parent(".dropdown.open").find("ul.dropdown-menu li:first-child a").focus();
+    });
+
+}]]></link>
+        <name>Ino Profile With Drop Down</name>
+        <option_schema>[{"name":"isimpersonationenabled","section":"Behavior","default_value":"true","label":"IsImpersonationEnabled","type":"boolean"},{"name":"showUsername","section":"Behavior","default_value":"false","label":"Show User Name","type":"boolean"},{"name":"profile_url","section":"other","label":"Profile Url","type":"string"},{"name":"show_xs_avatar","section":"other","default_value":"true","label":"Show XS Avatar","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    /* populate the 'data' object */
+    /* e.g., data.table = $sp.getValue('table'); */
+    data.canImpersonate = new GlideImpersonate().canImpersonate(gs.getUserID());
+    data.isImpersonating = new GlideImpersonate().isImpersonating();
+    data.realUser = gs.getImpersonatingUserName();
+    data.profileBtnMsg = gs.getMessage("User options");
+    data.modalTitle = gs.getMessage("Impersonate user");
+    data.isimpersonationenabled = options.isimpersonationenabled && gs.getProperty('glide.ui.impersonate_button.enable', 'true')=='true' ? true : false;
+
+    /*Checking if employee profile plugin is active to show preferences*/
+    if(GlidePluginManager.isActive('sn_employee'))
+        /*true if employee profiles is opted*/
+        data.isEmployeeProfilesEnabled = GlideApplicationProperty.getValue('sn_employee.employee_profile_enabled')=='true' ? true : false;
+    else 
+        data.isEmployeeProfilesEnabled = false;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-13 15:12:52</sys_created_on>
+        <sys_id>c41c34011b4c7510ad11eb93b24bcb39</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Ino Profile With Drop Down</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_c41c34011b4c7510ad11eb93b24bcb39</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-13 15:18:59</sys_updated_on>
+        <template><![CDATA[<ul ng-if="user.logged_in" class="nav navbar-nav" role="menubar">
+  <!-- chat, avatar, and logout -->
+  <li ng-if="showAvatar" class="hidden-xs dropdown" role="presentation">
+    <a href class="toggle-dropdown" data-toggle="dropdown" aria-expanded="false" title="{{::data.profileBtnMsg}}" aria-label="{{::data.profileBtnMsg}}: {{::user.name}}" id="profile-dropdown"  role="menuitem" aria-haspopup="true">
+      <span class="navbar-avatar" aria-hidden="true">
+        <span id="navbar-avatar-text">
+          {{c.data.initials}}
+        </span>
+
+        <span id="navbar-avatar-image">
+       		<sn-avatar class="avatar-small-medium" primary="user.sys_id"></sn-avatar>
+        </span>
+      </span>
+      <span ng-if="options.showUsername == true" class="visible-lg-inline">{{::user.name}}</span>
+      <i ng-if="options.showUsername != true" class="m-l-xs fa fa-caret-down"></i>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-label="{{::data.profileBtnMsg}}">
+      <li class="header-menu-item" role="presentation"><a tabindex="-1" ng-href="{{::profile_url}}" role="menuitem">${Profile}</a></li>
+      <li class="header-menu-item" ng-if="data.isimpersonationenabled && data.isImpersonating">
+        <a tabindex="-1" href="javascript:void(0)" ng-click="endImpersonate()">${End Impersonation}</a>
+      </li>
+      <li class="header-menu-item" ng-if="data.isEmployeeProfilesEnabled">
+        <a tabindex="-1" ng-href="?id=preferences">${Preferences}</a>
+      </li>
+      <li class="header-menu-item" ng-if="data.isimpersonationenabled && (data.canImpersonate || data.isImpersonating)">
+        <a tabindex="-1" href="javascript:void(0)" ng-click="impersonate()">${Impersonate}</a>
+      </li>
+      <li class="header-menu-item" ng-if="::!(isViewNative || isViewNativeTablet)" role="presentation"><a tabindex="-1" href="{{::portal.logoutUrl}}" role="menuitem">${Logout}</a></li>
+    </ul>
+  </li>
+  <li ng-if="showXSAvatar" class="visible-xs-block" role="presentation"><a role="menuitem" ng-href="{{::profile_url}}" ng-click="collapse()">
+    <span class="navbar-avatar"><sn-avatar class="avatar-small-medium" primary="avatarProfile"></sn-avatar></span>{{::user.name}}</a>
+  </li>
+  <li class="visible-xs-block" ng-if="data.isEmployeeProfilesEnabled">
+     <a ng-href="?id=preferences">${Preferences}</a>
+  </li>
+  <li class="visible-xs-block" ng-if="options.isimpersonationenabled && data.isImpersonating">
+    <a href="javascript:void(0)" ng-click="endImpersonate()">${End Impersonation}</a>
+  </li>
+  <li class="visible-xs-block" ng-if="options.isimpersonationenabled && (data.canImpersonate || data.isImpersonating)">
+    <a href="javascript:void(0)" ng-click="impersonate()">${Impersonate}</a>
+  </li>
+  <li ng-if="::!(isViewNative || isViewNativeTablet)" class="visible-xs-block" role="presentation"><a role="menuitem" ng-href="{{::portal.logoutUrl}}" ng-click="collapse()">${Logout}</a></li>
+</ul>
+]]></template>
+    </sp_widget>
+</record_update>

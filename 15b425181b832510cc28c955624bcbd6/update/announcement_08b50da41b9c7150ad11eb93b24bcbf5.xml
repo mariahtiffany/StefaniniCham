@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="announcement">
+    <announcement action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <click_target/>
+        <details/>
+        <details_link_text/>
+        <details_page/>
+        <details_url/>
+        <dismiss_options>session_dismissible</dismiss_options>
+        <display_first>false</display_first>
+        <display_style display_value="Normal">704dedd6e7d4030075c2a117c2f6a91b</display_style>
+        <from>2023-07-24 12:53:54</from>
+        <glyph/>
+        <glyph_alt_text/>
+        <name>Good morning!</name>
+        <public>false</public>
+        <roles/>
+        <show_for_unauthenticated_users_only>false</show_for_unauthenticated_users_only>
+        <sn_communities_announcement_type/>
+        <sn_communities_forums/>
+        <sn_communities_notification>false</sn_communities_notification>
+        <sn_communities_notification_sent>false</sn_communities_notification_sent>
+        <sn_communities_portals>5b49418bdb4aa200b1f6f78eaf96195f</sn_communities_portals>
+        <sn_communities_selected_forums/>
+        <summary/>
+        <sys_class_name>announcement</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-24 12:54:23</sys_created_on>
+        <sys_id>08b50da41b9c7150ad11eb93b24bcbf5</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>Good morning!</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>announcement_08b50da41b9c7150ad11eb93b24bcbf5</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-05 20:50:11</sys_updated_on>
+        <title>Good morning!</title>
+        <to>2025-01-01 13:54:00</to>
+        <type>67eaf134e7a3320075c2a117c2f6a9d2</type>
+    </announcement>
+    <sys_translated_text action="delete_multiple" query="documentkey=08b50da41b9c7150ad11eb93b24bcbf5"/>
+</record_update>

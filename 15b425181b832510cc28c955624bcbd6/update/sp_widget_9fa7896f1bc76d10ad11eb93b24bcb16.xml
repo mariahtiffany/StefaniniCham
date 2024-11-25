@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	c.ticketCountOpened = 0;
+	c.requestCountOpened = 0;
+	c.requestCountApprovalOpened = 0;
+
+	setTimeout(function () {
+		c.server.get({
+				action: 'get_ticket_count',
+			}).then(function (response) {
+				c.ticketCountOpened = +response.data.ticketCountOpened;
+			});
+		
+		c.server.get({
+				action: 'get_requests_count',
+			}).then(function (response) {
+				c.requestCountOpened = +response.data.requestCountOpened;
+			});
+		
+		c.server.get({
+				action: 'get_approval_requests_count',
+			}).then(function (response) {
+				c.requestCountApprovalOpened = +response.data.requestCountApprovalOpened;
+			});
+	}, 10);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$ticket-overview-number-color: #e80033 !default;&#13;
+$ticket-overview-header-color: #0b1641 !default;&#13;
+&#13;
+.to-item-list {&#13;
+	display: flex;&#13;
+&#13;
+  @media(max-width: 576px) {&#13;
+  	flex-direction: column;&#13;
+    align-content: flex-start;&#13;
+    flex-wrap: wrap;&#13;
+  }&#13;
+}&#13;
+&#13;
+.to-item {&#13;
+  padding: 0 2rem 0 2rem;&#13;
+  &#13;
+  @media(max-width: 576px) {&#13;
+  	flex-direction: column;&#13;
+    &#13;
+  	padding: 0 2rem 0 0rem;&#13;
+    &#13;
+    margin-bottom: 2rem;&#13;
+    &#13;
+    &amp;:last-child {&#13;
+    	margin-bottom: 0;&#13;
+    }&#13;
+  }&#13;
+  &#13;
+  h3 {&#13;
+  	margin-top: 0;&#13;
+    margin-bottom: 1rem;&#13;
+    color: $ticket-overview-header-color;&#13;
+    font-weight: bold;&#13;
+    position: relative;&#13;
+    font-size: 2rem;&#13;
+    &#13;
+    &amp;:hover {&#13;
+    	color: #006bd3;&#13;
+    }&#13;
+    &#13;
+    span {&#13;
+    	position: absolute;&#13;
+      top: 0;&#13;
+      right: -2rem;&#13;
+      font-weight: normal;&#13;
+    }&#13;
+  }&#13;
+  &#13;
+  p {&#13;
+  	margin: 0;&#13;
+    &#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+  &#13;
+    strong {&#13;
+      color: $ticket-overview-number-color;&#13;
+      font-size: 2.5rem;&#13;
+&#13;
+      margin-right: 4px;&#13;
+    }&#13;
+  }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ticket Overview</name>
+        <option_schema>[]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+	gs.info("Ticket Overview");
+	var user = gs.getUser();
+	
+	data.somethingWrongLink = options.something_wrong_link || '?id=my_open_tickets';
+	data.needSomething = options.need_something || '?id=my_requests';
+	data.approvalNeeded = options.approval_needed || '?id=requests_to_approve';
+		
+	gs.info('Filter by: ' + user.email);
+	gs.info('Filter by: ' + user.getID())
+	
+	var localInput = input;
+	
+	if (!localInput)
+		return;
+
+	gs.info('Current Action: ' + localInput.action);
+	
+	if (localInput.action == 'get_ticket_count') {
+		// Create an aggregate object  
+		var aggTickets = new GlideAggregate('ticket');
+
+		// Add query parameters
+		aggTickets.addEncodedQuery('sys_created_by=' +user.email+ '^ORassigned_to=' + user.getID());
+
+		// Add Aggregate  
+		aggTickets.addAggregate('COUNT');
+
+		// Execute query 
+		aggTickets.query();
+		aggTickets.next();
+
+		data.ticketCountOpened = aggTickets.getAggregate('COUNT') || 0;
+
+		gs.info('Count Opened Tickets: ' + data.ticketCountOpened);
+	}
+		
+	if (localInput.action == 'get_requests_count') {
+		// Create an aggregate object  
+		var aggRequests = new GlideAggregate('sc_req_item');
+
+		// Add query parameters
+		aggRequests.addQuery('active', '=', true);
+		aggRequests.addEncodedQuery('opened_byDYNAMIC90d1921e5f510100a9ad2572f2b477fe^ORrequested_forDYNAMIC90d1921e5f510100a9ad2572f2b477fe');
+
+		// Add Aggregate  
+		aggRequests.addAggregate('COUNT');
+
+		// Execute query 
+		aggRequests.query();
+		aggRequests.next();
+
+		data.requestCountOpened = aggRequests.getAggregate('COUNT') || 0;
+
+		gs.info('Count Opened Requests: ' + data.requestCountOpened);
+	}
+
+	if (localInput.action == 'get_approval_requests_count') {
+		// Create an aggregate object  
+		var aggApprovalRequests = new GlideAggregate('sc_req_item');
+
+		// Add query parameters
+		aggApprovalRequests.addQuery('active', '=', true);
+		aggApprovalRequests.addQuery('state', 'IN', [-5,1]);
+		aggApprovalRequests.addQuery('requested_for', '!=', user.getID());
+
+		// Add Aggregate  
+		aggApprovalRequests.addAggregate('COUNT');
+
+		// Execute query 
+		aggApprovalRequests.query();
+		aggApprovalRequests.next();
+
+		data.requestCountApprovalOpened = aggApprovalRequests.getAggregate('COUNT') || 0;
+
+		gs.info('Count Approval Opened Requests: ' + data.requestCountApprovalOpened);
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-01 17:25:38</sys_created_on>
+        <sys_id>9fa7896f1bc76d10ad11eb93b24bcb16</sys_id>
+        <sys_mod_count>25</sys_mod_count>
+        <sys_name>Ticket Overview</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_9fa7896f1bc76d10ad11eb93b24bcb16</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:51:40</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default to-item-card">
+	<div class="panel-heading">
+    NOT IN A RUSH?
+  </div>
+
+  <div class="panel-body to-item-list">
+    <div class="to-item">
+      <a href="{{ data.somethingWrongLink }}">
+        <h3>
+          SOMETHING WRONG?
+          <span>></span>
+        </h3>
+      </a>
+
+      <p>
+        <strong>{{c.ticketCountOpened}}</strong>
+        Open Tickets
+      </p>
+    </div>
+
+    <div class="to-item">
+      <a href="{{ data.needSomething }}">
+        <h3>
+          NEED SOMETHING?
+
+          <span>></span>
+        </h3>
+      </a>
+
+      <p>
+        <strong>{{c.requestCountOpened}}</strong>
+        Open Requests
+      </p>
+    </div>
+
+    <div class="to-item">
+      <a href="{{ data.approvalNeeded }}">
+        <h3>
+          APPROVAL NEEDED?
+
+          <span>></span>
+        </h3>
+      </a>
+
+      <p>
+        <strong>{{c.requestCountApprovalOpened}}</strong>
+        Requests to Approve
+      </p>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

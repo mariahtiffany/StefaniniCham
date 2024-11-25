@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.list-group-item {
+  span {
+    font-size: 1.1rem;
+  }
+  a &gt; h5 {
+  	margin-top: 5px;
+  }
+}
+
+.alert-msg {
+  display: flex;
+  align-items: center;
+  
+  img {
+  	margin: 10px;
+  }
+}
+
+.icon-default-color {
+  fill: $primary-color;
+  g {
+    fill: $primary-color;
+    path {
+      fill: $primary-color;
+    }
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>rss_portal</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>RSS Portal</name>
+        <option_schema>[{"hint":"If authentication is required, configure the REST Message and set the name here.","name":"rest_message_name","section":"Data","default_value":"","label":"REST Message Name","type":"string"},&#13;
+  {"hint":"Set the method name here.","name":"rest_message_method_name","section":"Data","label":"REST Message Method Name","type":"string"},&#13;
+  {"hint":"else, just set the RSS news feed URL","name":"url","section":"Data","label":"RSS news feed URL","type":"string"},&#13;
+  {"hint":"","name":"show_description","section":"Presentation","default_value":"true","label":"Show description","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	var request;
+	data.show_message = false;
+	data.no_have_items = false;
+	
+	//Testing
+	//options.url = 'https://www.google.com/'
+	//options.url = 'https://stefanini.com/en/feed';
+	//options.url = 'https://rockwell2023tf.q4web.com/rss/pressrelease.aspx';
+	
+	try {
+		options.show_description = (options.show_description === "true");
+		options.title = gs.getMessage(options.title || 'News Feed');
+		
+		if(options.rest_message_name && options.rest_message_method_name) {
+			request = new sn_ws.RESTMessageV2(options.rest_message_name, options.rest_message_method_name);
+		}
+		else if (options.url) {
+			request = new sn_ws.RESTMessageV2();
+			request.setHttpMethod('GET');
+			request.setEndpoint(options.url);
+		}
+		else {
+			data.show_message = true;
+			data.message = gs.getMessage("You need to configure the REST Message Method or URL in this Widget's options first!");
+			return;
+		}
+		
+		var response = request.execute();
+		var responseBody = response.getBody();
+		var httpStatus = response.getStatusCode();
+
+		var xmlString = responseBody.toString().replace(/<\?xml(.*?)>|<rss(.|\s)*?>|<\/rss>|[\r\n\t]/g, '');
+		var rss = gs.xmlToJSON(xmlString);
+		
+		if(!rss) {
+			data.show_message = true;
+			data.message = gs.getMessage("This web address does not follow the expected RSS format.");
+			return;
+		}
+		
+		data.items = rss.channel ? rss.channel.item : [];
+		
+		if(data.items.length == 0){
+			data.no_have_items = true;
+			return;
+		}
+		
+		data.items.forEach(item => {
+			item.pubDate = new Date(item.pubDate);
+		});
+
+	}
+	catch(ex) {
+		var message = ex.message;
+		$sp.log('ERROR: ' + message);
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-08-18 18:13:53</sys_created_on>
+        <sys_id>f48dfee41bb0f5109b7d32231b4bcb96</sys_id>
+        <sys_mod_count>161</sys_mod_count>
+        <sys_name>RSS Portal</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_f48dfee41bb0f5109b7d32231b4bcb96</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-07 13:50:17</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary" >
+  <div class="panel-heading">
+    <h2 class="h4 panel-title ng-binding">
+      <svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24">
+        <path id="Icon_awesome-newspaper" data-name="Icon awesome-newspaper" d="M34.5,4.5H5.5A1.5,1.5,0,0,0,4,6v.5H1.5A1.5,1.5,0,0,0,0,8V25a3.5,3.5,0,0,0,3.5,3.5H33a3,3,0,0,0,3-3V6A1.5,1.5,0,0,0,34.5,4.5Zm-31,21A.5.5,0,0,1,3,25V9.5H4V25A.5.5,0,0,1,3.5,25.5Zm14.75-1H8.75A.75.75,0,0,1,8,23.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,24.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,24.5Zm-13-6H8.75A.75.75,0,0,1,8,17.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,18.25,18.5Zm13,0h-9.5a.75.75,0,0,1-.75-.75v-.5a.75.75,0,0,1,.75-.75h9.5a.75.75,0,0,1,.75.75v.5A.75.75,0,0,1,31.25,18.5Zm0-6H8.75A.75.75,0,0,1,8,11.75V9.25a.75.75,0,0,1,.75-.75h22.5a.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,31.25,12.5Z" transform="translate(0 -4.5)" />
+      </svg>
+      {{ c.options.title }}
+    </h2>
+  </div>
+  <div ng-if="!c.data.show_message || !c.data.no_have_items" class="list-group">
+    <div ng-repeat="item in data.items | limitTo: 5" class="list-group-item">
+      <span>{{ item.pubDate | date:"MM/dd/yyyy" }}</span>
+      <a ng-href={{item.link}} target="_blank">
+        <h5>{{ item.title }}</h5></a>
+      <div ng-hide="!c.options.show_description" class="item-content" ng-bind-html="item.description"></div>
+    </div>
+  </div>
+  <div ng-if="c.data.show_message" class="list-group alert-msg">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABgklEQVR4nO2VT0sCQRjGB8J3Khcx7eBXKOjQqWv37NAH6EPoB6gPUd4LQkiIoEyECmcW8tS1P1Ad6hAdtCCCiMon3Gpa111da2ch2BcemNvz25n5zTIWTTT/dVBiQxC0DEFL7XX4AILykBxWTMqFW15nKQjeVACSP6BmjIcHIKlgK/8KFcIpN2kSkr92A/A3iNiUfgBBVZfyzwg61F0+71n+cyGzesqPWQyCn38XnaylsTg7Y+VsPW2/C5eoMB48gEk5+5debIwpgKtiyrkLOd3a4XozqQBuSknnUQSrJVy0u91KKIC77QS0aQkP7Ro7hgK4LxvQpiU8tHusxBXAUzWuR0v00O55f1QBvByMBK8lHNo58y6GFUCr1utt+KWWcGj3pwyqJVy0c6YlOI5WMqivZqx1H4jBtITr364zp7aXsL3uvxM+tYSgCY+/XUeauwbyC9NW2msfR+FPSwheDuzsu7PnZ/sb+gCo0R/ApCwkL0LyUsApQtKcr3sQTTQsxPkAurBRuTwmdHUAAAAASUVORK5CYII=">
+    <div>{{ c.data.message }}</div>
+  </div>
+  <div ng-if="c.data.no_have_items" class="list-group alert-msg">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEj0lEQVR4nO2X/VNUZRTHN3Wm95r+gqYf+sUZm2mapqnfq1HepLBwSprAgV22XVZgkYVVKHCgxEkopEAjnZU3U5iA2NRGGIPGzBfMUkAm46VVWO/ec+5lpKK+zbl5aQCZ9pr4U2fm+WHv7vN8P8855/k+d222/yPKYOaVqqquJ6IsVVVdzJwUiUQesy1lALiXiHKZeZiZsci4yMwZAJbfVnEiepaIRkTk+3ND+Ki6DW77Tmx4tQQpyaXY9FYV6nd3YGjwZwOEiC4pirLqtohrmvYKEU2Pjoaw1bcb69YWo+C9DvibhpDfeQ2+jgn4Gy9ic2krEmP92F7WgMmJawKiT01Nxd2OnU//cH4YyS8Vo6CiC77uGWT3AJ5jC0fO4evwFjUj9fUyXP5pzIAgouf+S81HRkd+McT99aex4zvg1FVg24mbA5jDX/UV0lLKEZ40MjEYCoXuv5Xd50o9Je2y88rTwMkr/y5ujuyCAHZ9cMhsTr9lAGYeloYzat4zgzMTwNt90YnLyAtqiF9dgCuhCWnK8wAesCK+Usil26XhAheA5oHoxWdH3qdo/axbAGaI6JmoATRNSxYAt6MS/uYhHB/7J/X25hDiU2vh/nJ6Vsj5OSEhtRbONmUOQGFNL97dFjCPpjtqACLyyCQ55/kdkzg7AXhvdL5jEQB5ltkamduMjQPIzao2AcqiBlD/tlfDZOScV5y8hfQfA7Y0XIDXMwtQHjUAMyfJJHE4MZn5C8vu13lbkWjfa4xkfxeyjs4s+F1hdQ8qyhvMk5AXNYCiKI/KJLFXcbj5C6/NqEdGw9js5417BpDkaVnwO5enDl+098rufyOi2KgBJORiEW8Xe809cn3Owo4DVxeIzX/m6wwjYU2BYctEdErX9SdtVoKZMyQL4u1ir1brb3fVYc/H7Wb6m1RVfcQSAIDlcqvJDsTbxV6jBqi9hDfS6pEUX4TBgcuGD+i67rVZDUVRVsmFIheLeLvYqzeoLSqc3xmGw1WHlNR6ePzdeDM9YLjh2TMDAvEnM1dZhiCiWGbW5GIRb5cFxeHEZAoCP6JQRnUPnFm1Rs0l7UkJRYa4QKQ5WhDzvA+9x/vNcgQALLMEoarqU8w8IAuIt7cd7EF5aQAeZyVy3B9ie9l+o9tvvAcYaReYjZktBkS6+5ABEez8xvhe07QggLstQYyPj9+n6/pmZu4not/nv44R0a/M3EdETUT0x7n+QcS84EO666ABkZnTibjVW9AYOGLOOREOhx+yWBCbbXJy8kFVVZ9m5kwiKo1EImXinEQUo2naE4qiPKzrep7UvO/rfgPCvqndgHDmBZEQU4ydFQdmIQCssC1F6Lq+Q0Qk7bEvFsLpDRoQrvzDSIwvwd5PugyIqakp+5IASOi6HhCRpv1HEb9mqyEuEI7sDiS/XGJmYZ/lpow2ZGFmDopQTXUbEuPegT27Ha+l1CLbvcvsnRoA90S9qNWQbpdai5ikXXYu4uZLq67rGwDctWQAEtKYzPztvFMTIaISInrcdicCwAppOFVV9zHz+5qmrV/yv3O2m4Mss2xCdyr+Aq/u8Xaw94xBAAAAAElFTkSuQmCC">
+    <div>${No items have been registered in the news feed.}</div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

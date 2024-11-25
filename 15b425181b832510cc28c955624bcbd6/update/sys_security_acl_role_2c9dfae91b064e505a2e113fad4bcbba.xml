@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-08 20:12:23</sys_created_on>
+        <sys_id>2c9dfae91b064e505a2e113fad4bcbba</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_stefa_chameleon_suggestion.x_stefa_chameleon.suggestion_user</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_security_acl display_value="x_stefa_chameleon_suggestion">e09dfae91b064e505a2e113fad4bcbb6</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_2c9dfae91b064e505a2e113fad4bcbba</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-08 20:12:23</sys_updated_on>
+        <sys_user_role display_value="x_stefa_chameleon.suggestion_user" name="x_stefa_chameleon.suggestion_user">949df6a91b064e505a2e113fad4bcb8d</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

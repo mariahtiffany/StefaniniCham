@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="Banner Management">9f0ea33cdb0a8a9018ca174b13961967</child>
+        <cloned>2023-12-13 18:00:31</cloned>
+        <last_validated>2023-12-13 18:00:31</last_validated>
+        <parent display_value="ISC Banner">85b3ea5453602300a8ed21fac2dc34b4</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;custom&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function() {
+	/* widget controller */
+	var c = this;
+	c.minmaxToolTip = "";
+	handleMaxMinBanner();
+	
+	$('#isc_banner').carousel({
+		interval: 10000, cycle: true
+	});
+	
+	$(document.body).on('focus', '#isc_banner *',function(){
+		$('#isc_banner').carousel('pause');
+	}).on('blur', '#isc_banner *',function(){
+		$('#isc_banner').carousel('cycle');
+	})
+	
+	$(document.body).on('click','.carousel-indicators button',function(){
+		setTimeout(function(){ $('.item.active &gt; div &gt; div &gt; a').focus(); }, 750);
+	});
+	
+	c.minmaxBanner = function(){
+		//debugger;
+		c.data.maximize = !c.data.maximize;
+		handleMaxMinBanner();
+		c.server.update();
+	}
+	
+	function handleMaxMinBanner(){
+		if(c.data.maximize){
+			c.minmaxToolTip = "Minimize";
+			$('#min-max-banner &gt; button').addClass('icon-chevron-up');
+			$('#min-max-banner &gt; button').removeClass('icon-chevron-down');
+			$('#isc_banner').css('height',"250px");
+		}
+		else{
+			c.minmaxToolTip = "Maximize";
+			$('#min-max-banner &gt; button').removeClass('icon-chevron-up');
+			$('#min-max-banner &gt; button').addClass('icon-chevron-down');
+			$('#isc_banner').css('height',"135px");
+		}
+	}
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;#isc_banner {height:250px;};
+.carousel-inner{height:100%;}
+.carousel-inner &amp;gt; .item &amp;gt; img{
+ 	height:100%; 
+}
+.carousel-inner &amp;gt; .active {
+    height:100%;
+}
+.carousel-caption{
+	bottom: 0;
+  padding-top: 0;
+  top:10px;
+  text-shadow:none;
+  text-align:left;
+}
+
+.item{height:100%;}
+.banner-container &amp;gt; p{color:#ccc; font-size:16px;};
+
+.img-icon{
+  	position: absolute;
+    top: 0;
+    left: 20%;
+    opacity: 0.9;
+}
+.img-hero{
+    width: 100%;  
+  	
+}
+.carousel-indicators button {
+    margin: 5px;
+    background-color: transparent;
+  	border: 1px solid white;
+    height: 12px;
+    width: 12px;
+    border-radius: 12px;
+}
+
+.carousel-indicators .active {
+    margin: 5px;
+    background-color: #fff;
+}
+
+#min-max-banner{
+	bottom: -20px;
+  right: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+#min-max-banner &amp;gt; button{
+	height: 20px!important;
+  width:40px!important;
+  padding:0px!important;
+  border-radius: 0 0 5px 5px!important;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;true&lt;/has_preview&gt;&lt;id&gt;isc_banner&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link&gt;&lt;![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]&gt;&lt;/link&gt;&lt;name&gt;ISC Banner&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles&gt;admin,security_dashboard_user&lt;/roles&gt;&lt;script&gt;&lt;![CDATA[(function () {
+	var constants = new ISCConstants();
+	var gr = new GlideRecordSecure(constants.tables.ISC_BANNER_CONFIG);
+	if (input) {
+		gr.addQuery('user', gs.getUserID());
+		gr.query();
+		if (gr.next()) {
+			gr.show = input.maximize;
+			gr.update();
+		}
+	} else {
+		gr = new GlideRecordSecure(constants.tables.ISC_BANNER_CONFIG);
+		gr.addQuery('user', gs.getUserID());
+		gr.query();
+		if (gr.next()) {
+			if (gr.getValue("show") == "false") {
+				data.maximize = false;
+			} else {
+				data.maximize = true;
+			}
+
+		} else {
+			gr.initialize();
+			gr.show = true;
+			gr.user = gs.getUserID();
+			gr.insert();
+			data.maximize = true;
+		}
+
+		var flag = true;
+		data.list = [];
+		gr = new GlideRecordSecure(constants.tables.SECURITY_UPDATE);
+		gr.query();
+		while (gr.next()) {
+			var banner = {};
+			banner.sec_title = gr.getDisplayValue('sec_title');
+			banner.sec_description = gr.getDisplayValue('sec_description');
+			banner.sec_link = gr.getDisplayValue('sec_link');
+			banner.sec_type = gr.getValue('sec_type');
+			banner.sys_id = gr.getValue('sys_id');
+			if (flag) {
+				banner.active = "active";
+			}
+			flag = false;
+			data.list.push(banner);
+		}
+	}
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;false&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2018-09-10 21:41:15&lt;/sys_created_on&gt;&lt;sys_id&gt;85b3ea5453602300a8ed21fac2dc34b4&lt;/sys_id&gt;&lt;sys_mod_count&gt;269&lt;/sys_mod_count&gt;&lt;sys_name&gt;ISC Banner&lt;/sys_name&gt;&lt;sys_package display_value="Instance Security Center" source="com.glide.instance_sec_center"&gt;2df0e7fb1b013010ad11eb93b24bcb41&lt;/sys_package&gt;&lt;sys_policy&gt;read&lt;/sys_policy&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_85b3ea5453602300a8ed21fac2dc34b4&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;maint&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2022-09-26 20:36:05&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div id="isc_banner" class="carousel slide" data-ride="carousel" data-pause="hover"&gt;
+  &lt;!-- Indicators --&gt;
+  
+  &lt;ol class="carousel-indicators" role="tablist"&gt;
+    &lt;button class="{{banner.active}} btn btn-xs m-5" role="tab" tabindex=0 data-target="#isc_banner" ng-repeat="banner in data.list" aria-controls="tabpanel-0-{{$index}}" data-slide-to="{{$index}}"  title="{{banner.sec_title}}" aria-label="{{banner.sec_title}}"&gt;  
+      &lt;span class="sr-only"&gt;
+          {{banner.sec_title}}
+        &lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/ol&gt;
+  
+  &lt;!-- Wrapper for slides --&gt;
+  &lt;div class="carousel-inner"&gt; 
+    
+    &lt;div class="item {{banner.active}}" ng-repeat="banner in data.list" role="tabpanel" id="tabpanel-0-{{$index}}"&gt;
+      &lt;img ng-src="{{banner.sec_type}}.jpg" class="img-hero" alt="{{banner.sec_title}}"/&gt;
+      &lt;img ng-src="{{banner.sec_type}}.svg" ng-show="c.data.maximize" width="140" height="140" class="img-icon hidden-xs hidden-sm" alt="{{banner.sec_title}}"/&gt;
+      &lt;div class="carousel-caption"&gt; 
+        &lt;div class="banner-container col-md-offset-3 col-xs-offset-right-9"&gt;
+          &lt;h2 class="banner-title"&gt;{{banner.sec_title}}&lt;/h2&gt; 
+          &lt;p class="hidden-xs" ng-show="c.data.maximize"&gt;{{banner.sec_description}}&lt;/p&gt;
+          &lt;a ng-href="{{banner.sec_link}}" ng-show="c.data.maximize" target="_blank" class="btn btn-primary" aria-label="Read more about {{banner.sec_title}}" tabindex=0&gt;
+            &lt;span ng-if="banner.sys_id =='1f0a58f3d8821110f8777885aa2607c6'"&gt;
+              Go to ServiceNow Store
+            &lt;/span&gt;
+            &lt;span ng-if="banner.sys_id !='1f0a58f3d8821110f8777885aa2607c6'"&gt;
+              Read More
+            &lt;/span&gt;
+          &lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt; 
+    &lt;/div&gt;
+  &lt;/div&gt; 
+ 
+  &lt;!-- Carousel Left controls --&gt;
+  &lt;a class="left carousel-control" href="#isc_banner" data-slide="prev" title="Previous" aria-label="Navigate to previous Carousel slide" role="button" tabindex=0&gt;
+    &lt;span class="glyphicon glyphicon-chevron-left"&gt;&lt;/span&gt;
+    &lt;span class="sr-only"&gt;Previous&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;!-- Carousel right controls --&gt;
+  &lt;a class="right carousel-control" href="#isc_banner" data-slide="next" title="Next" aria-label="Navigate to next Carousel slide" role="button" tabindex=0&gt;
+    &lt;span class="glyphicon glyphicon-chevron-right"&gt;&lt;/span&gt;
+    &lt;span class="sr-only"&gt;Next&lt;/span&gt;
+  &lt;/a&gt;
+  
+&lt;/div&gt;
+  &lt;div class="" id="min-max-banner"&gt;
+    &lt;button class="btn btn-xs btn-primary" ng-class="c.data.maximize ? 'icon-chevron-up' : 'icon-chevron-down'" ng-click="c.minmaxBanner()" aria-label="Click to minimize or maximize banner" title="{{c.minmaxToolTip}}"&gt;
+      
+    &lt;/button&gt;
+  &lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-06 15:48:46</sys_created_on>
+        <sys_id>1b0ea33cdb0a8a9018ca174b1396196b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>9f0ea33cdb0a8a9018ca174b13961967</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_1b0ea33cdb0a8a9018ca174b1396196b</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-06 15:48:46</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

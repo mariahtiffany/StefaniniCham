@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_row">
+    <sp_row action="INSERT_OR_UPDATE">
+        <class_name/>
+        <order>2</order>
+        <sp_column display_value="2">91d0870e1b3b6910ad11eb93b24bcb7a</sp_column>
+        <sp_container/>
+        <sys_class_name>sp_row</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 17:12:27</sys_created_on>
+        <sys_id>bf110b0e1b3b6910ad11eb93b24bcb86</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>2</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_row_bf110b0e1b3b6910ad11eb93b24bcb86</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-06 20:54:02</sys_updated_on>
+    </sp_row>
+</record_update>

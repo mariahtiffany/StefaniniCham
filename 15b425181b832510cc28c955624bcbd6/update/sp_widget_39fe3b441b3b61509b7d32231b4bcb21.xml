@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope) {
+  /* widget controller */
+  var c = this;
+	
+	var savedFiles = {};
+	
+	c.backHome = function () {
+		var home = document.referrer || '/';
+		
+		window.location.href = home;
+	}
+	
+	var requiredDocuments = [
+		{ key: 'INO_DOW_DRIVER_LICENSE', name: 'Driver\'s license'  },
+		{ key: 'INO_DOW_RESIDENCE_CHECKING', name: 'Residence checking' },
+	];
+
+	requiredDocuments.filter(function (doc) {
+		doc.filename = localStorage.getItem(doc.key);
+
+		return !doc.filename;
+	})
+	
+	c.documents = requiredDocuments;
+	
+	c.onViewFile = function (doc) {
+		var element = document.getElementById(doc.key);
+		var file = element.files[0];
+		
+		if (!file) {
+			return;
+		}
+		
+		var previewUrl = URL.createObjectURL(file);
+		
+		window.open(previewUrl, '_blank', 'noreferrer noopener')
+	}
+	
+	c.onClearFile = function (doc) {
+		doc.filename = '';
+		doc.file = null;
+		
+		savedFiles[doc.key] = null;
+	}
+	
+	c.submit = function() {
+		var keys = Object.keys(savedFiles);
+		
+		for (var i = 0; i < keys.length; i++) {
+			var key = keys[i];
+			var value = savedFiles[key];
+			
+			if (value === null)
+				localStorage.removeItem(key);
+			else
+				localStorage.setItem(key, value);
+			
+			c.backHome();
+		}
+	}
+
+	$scope.onFileChange = function(fileInput) {
+		var docKey = fileInput.id;
+		var doc = c.documents.find(function (d) { return d.key === docKey });
+		
+		doc.file = fileInput.files[0]
+		doc.filename = doc.file.name;
+		
+		savedFiles[doc.key] = doc.filename;
+		
+		$scope.$apply();
+	}
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.document-card-input {
+	margin-top: 2rem;
+  
+  padding: 2rem;
+  
+  box-shadow: $default-box-shadow;
+}
+
+.document-card-input {
+  .document-card-input-container {
+    width: 100%;
+    
+    gap: 2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type=file] {
+    width: 100%;
+    max-width: 100%;
+    color: #444;
+    padding: 5px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid $primary;
+  }
+
+  input[type=file]::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: $primary;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+  }
+
+  input[type=file]::file-selector-button:hover {
+    background: $secondary-color;
+  }
+}
+
+.submit-buttons {
+	display: flex;
+  justify-content: space-between;
+}
+
+.pud-submit {
+	margin-top: 32px;
+  height: 45px;
+  
+  padding: 0 32px;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_progress_upload_documents</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Progress Upload Documents</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-28 16:34:47</sys_created_on>
+        <sys_id>39fe3b441b3b61509b7d32231b4bcb21</sys_id>
+        <sys_mod_count>87</sys_mod_count>
+        <sys_name>Ino DOW Progress Upload Documents</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_39fe3b441b3b61509b7d32231b4bcb21</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-07 12:31:33</sys_updated_on>
+        <template><![CDATA[<div class="panel">
+	<div class="panel-heading">
+    <h2 class="panel-title">
+      ${Submit required documents}
+    </h2>
+  </div>  
+
+  <div class="panel-body">
+    <p>
+      ${Below, the necessary documents required}:
+    </p>
+    
+    <div ng-repeat="doc in c.documents" class="document-card-input">
+      <label for="{{doc.key}}">{{ doc.name }}</label>
+      
+      <div class="document-card-input-container">
+        <input type="file"
+               id="{{doc.key}}"
+               onchange="angular.element(this).scope().onFileChange(this)"
+               value="{{doc.filename}}"
+               accept="application/pdf" required>
+        
+        <svg ng-if="doc.filename" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#0fa397" d="M17 0C7.616 0 0 7.616 0 17C0 26.384 7.616 34 17 34C26.384 34 34 26.384 34 17C34 7.616 26.384 0 17 0ZM17 30.6C9.503 30.6 3.4 24.497 3.4 17C3.4 9.503 9.503 3.4 17 3.4C24.497 3.4 30.6 9.503 30.6 17C30.6 24.497 24.497 30.6 17 30.6ZM24.803 9.486L13.6 20.689L9.197 16.303L6.8 18.7L13.6 25.5L27.2 11.9L24.803 9.486Z" fill="white"/>
+        </svg>
+        
+        <button ng-if="doc.filename" class="btn btn-primary" ng-click="c.onViewFile(doc)">
+          ${View File}
+        </button>
+        
+        <button ng-if="doc.filename" class="btn btn-primary" ng-click="c.onClearFile(doc)">
+          ${Clear File}
+        </button>
+      </div>
+      
+      <small ng-if="doc.filename">${Previous Uploaded}: {{doc.filename}}</small>
+    </div>
+
+    <div class="submit-buttons">
+      <button class="btn btn-primary pud-submit" ng-click="c.backHome()">
+        ${Back}
+      </button>
+
+      <button class="btn btn-primary pud-submit" ng-click="c.submit()">
+        ${Submit}
+      </button>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

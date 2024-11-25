@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">9501433b1b9d39109b7d32231b4bcb14</sp_column>
+        <sp_widget display_value="News Feed (Sharepoint)">19ea8d951b5531109b7d32231b4bcbea</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-09-22 17:24:53</sys_created_on>
+        <sys_id>4623cf7b1b9d39109b7d32231b4bcbba</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Top News</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_4623cf7b1b9d39109b7d32231b4bcbba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-09-17 08:23:33</sys_updated_on>
+        <title>Top News</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"title": {
+		"value": "Top News",
+		"displayValue": "Top News"
+	},
+	"see_all_link": {
+		"value": "",
+		"displayValue": ""
+	},
+	"sharepoint_site_name": {
+		"value": "Intranet",
+		"displayValue": "Intranet"
+	},
+	"sharepoint_list_id": {
+		"value": "",
+		"displayValue": ""
+	},
+	"display_quantity": {
+		"value": null,
+		"displayValue": ""
+	},
+	"show_description": {
+		"value": "true",
+		"displayValue": "true"
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=4623cf7b1b9d39109b7d32231b4bcbba"/>
+</record_update>

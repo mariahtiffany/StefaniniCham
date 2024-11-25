@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_stefa_chameleon.Enabled Tag Manager - </name>
+        <script><![CDATA[/*window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-0LPLEJVCCT');*/]]></script>
+        <script_name>Enabled Tag Manager - G-0LPLEJVCCT</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-25 14:00:46</sys_created_on>
+        <sys_id>e48514511b0fed109b7d32231b4bcbcf</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>x_stefa_chameleon.Enabled Tag Manager - </sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_ui_script_e48514511b0fed109b7d32231b4bcbcf</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-01-31 15:04:23</sys_updated_on>
+        <ui_type>0</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

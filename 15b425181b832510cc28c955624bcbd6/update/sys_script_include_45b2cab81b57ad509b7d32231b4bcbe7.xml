@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_stefa_chameleon.GetUserPersonas</api_name>
+        <caller_access>2</caller_access>
+        <client_callable>true</client_callable>
+        <description/>
+        <name>GetUserPersonas</name>
+        <script><![CDATA[var GetUserPersonas = Class.create();
+GetUserPersonas.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+    type: 'GetUserPersonas',
+	
+	getBackgroundImage: function () {
+		try {
+			var personaBackgrounds = new GlideRecord('x_stefa_chameleon_chameleon_persona_background');
+
+			gs.info('UserID:');
+			gs.info(gs.getUserID());
+			var personaIds = new sn_uc.UserCriteriaLoader.getAllUserCriteria(gs.getUserID());
+			gs.info('Persona IDs:');
+			gs.info(personaIds);
+
+			personaBackgrounds.addQuery('persona', 'IN', personaIds);
+			personaBackgrounds.query();
+			personaBackgrounds.next();
+
+			gs.info('Background Image:');
+			gs.info(personaBackgrounds.background_image);
+			return personaBackgrounds.background_image && personaBackgrounds.background_image.getDisplayValue() || '/x_stefa_chameleon.chameleon-bg.jpg';
+		} catch(e) {
+			gs.info('Error happens' + e.message);
+			gs.info(e);
+			
+			return '/x_stefa_chameleon.chameleon-bg.jpg';
+		}
+	},
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-05 18:58:08</sys_created_on>
+        <sys_id>45b2cab81b57ad509b7d32231b4bcbe7</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>GetUserPersonas</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_script_include_45b2cab81b57ad509b7d32231b4bcbe7</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-06 14:07:15</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description>Open Sophie in external link</description>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_stefa_chameleon.Sophie (MC Donalds)</name>
+        <script><![CDATA[var SophieChatter = (function (window, document, test) {
+
+    var sophieAgentSrc = 'https://assistant.aks.sai-labs.com/mcdonalds/';
+	
+	var cssFiles = [
+        "/Scripts/css/chatter.css",
+        "/Scripts/css/SophieChatter.css"
+    ];
+
+    var cssFilesIE = [
+        "/Scripts/css/chatter_ie.css"
+    ];
+
+    var jsFiles = [
+        "/Scripts/js/config.js",
+        "/Scripts/js/authenticationManager.js",
+        "/Scripts/js/chatterRenderer.js",
+        "/Scripts/js/chatter.js"
+    ];
+
+    var sophieSrc = "https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter_EMEA_Portal";
+	var chatterRenderer = null;
+    var authenticationManager = null;
+    var chatter = null;
+	
+	function initialize(options) {
+        insertStyles();
+        insertScripts(function () {
+            options = normalizeOptions(options);
+            insertHtml(options.visuals.greetingMessage);
+        });
+    }
+
+    function insertStyles() {
+        if (detectIE()) {
+            for (var i = 0; i < cssFilesIE.length; i++) {
+                document.head.appendChild(createLinkElement(sophieSrc + cssFilesIE[i]));
+            }
+        }
+
+        for (var i = 0; i < cssFiles.length; i++) {
+            document.head.appendChild(createLinkElement(sophieSrc + cssFiles[i]));
+        }
+    }
+
+    function insertScripts(doneCallback) {
+        var scriptLoader = function (src, handler) {
+            var script = createScriptElement(sophieSrc + src);
+            script.onload = script.onreadystatechange = function () {
+                script.onreadystatechange = script.onload = null;
+                handler();
+            };
+
+            (document.head || document.body).appendChild(script);
+        }
+
+        var doLoad = function (idx) {
+            if (idx >= jsFiles.length) {
+                if (typeof doneCallback === "function") {
+                    doneCallback();
+                }
+                return;
+            }
+
+            scriptLoader(jsFiles[idx], function () {
+                doLoad(idx + 1);
+            });
+        };
+
+        doLoad(0);
+    }
+
+    function insertHtml(greetingMessage) {
+        var html = " \
+            <div class=\"sophie-chatter-window\"> \
+                <button type=\"button\" class=\"sophie-close-window\"> \
+                    <span class=\"fa fa-window-minimize\"></span> \
+                </button> \
+                <div id=\"sophie-chatter\"></div> \
+            </div> \
+            <div class=\"sophie-button-container\"> \
+				\
+                <button type=\"button\" class=\"sophie-button\"> \
+                </button> \
+            </div> \
+        ";
+
+        $("body").append($(html));
+
+        $(".sophie-close-window").on("click", function() {
+            SophieChatter.hide();
+        });
+
+        $(".sophie-button").on("click", function() {
+            openChat(); 
+        });
+
+        $(".sophie-button-tooltip").delay(1000).stop(true, false).fadeIn(500);
+        $(".sophie-button-tooltip").on("click", function () {
+            $(this).delay(500).stop(true, false).fadeOut(1000);
+        });
+				
+		var sophieButtonStyle = $(".sophie-button").get(0).style;
+		
+		sophieButtonStyle.height = 'var(--sophie-height, 70px)';
+		sophieButtonStyle.width = 'var(--sophie-width, 70px)';
+		sophieButtonStyle.backgroundImage = 'var(--sophie-background-image, url("https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter402/Scripts/images/icon-sophie-chat.svg"))';
+		sophieButtonStyle.backgroundSize = 'var(--sophie-background-size, contain)';
+		sophieButtonStyle.backgroundColor = 'var(--sophie-background-color, #009ac9)';
+		sophieButtonStyle.borderRadius = 'var(--sophie-border-radius, 50%)';
+		sophieButtonStyle.boxShadow = 'rgb(0 0 0 / 0) 0px 0px 0px';
+		sophieButtonStyle.filter = 'drop-shadow(var(--sophie-box-shadow, rgb(0 0 0 / 24%) 0px 3px 8px))';
+    }
+
+    function detectIE() {
+        var ua = window.navigator.userAgent;
+
+        var msie = ua.indexOf('MSIE ');
+        if (msie > 0) {
+            // IE 10 or older => return version number
+            return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+        }
+
+        var trident = ua.indexOf('Trident/');
+        if (trident > 0) {
+            // IE 11 => return version number
+            var rv = ua.indexOf('rv:');
+            return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+        }
+
+        // other browser
+        return false;
+    }
+
+    function createLinkElement(href) {
+        var cssElem = document.createElement("link");
+        cssElem.setAttribute("rel", "stylesheet");
+        cssElem.setAttribute("href", href);
+
+        return cssElem;
+    }
+
+    function createScriptElement(src) {
+        var scriptElem = document.createElement("script");
+        scriptElem.setAttribute("type", "text/javascript");
+        scriptElem.setAttribute("src", src);
+
+        return scriptElem;
+    }
+
+    function normalizeOptions(options) {
+        var getDefaultOptions = function () {
+            return {
+                visuals: {
+                    // greetingMessage: "Hello, need some help?"
+                },
+                config: {}
+            };
+        };
+
+        return $.extend(true, getDefaultOptions(), options);
+    }
+
+	function openChat() {
+		var options = 'width=600px,height=600px';
+		window.open(sophieAgentSrc, 'SophieChatter', options);
+	}
+
+	function showSophieChatter() {
+        openChat();
+
+		// hide broken image
+		setTimeout(function () {
+			$('[src="https://sophie.chat/img/powered-stefanininew.png"]').hide();
+		}, 100);
+    }
+
+    function hideSophieChatter() {
+        $(".sophie-chatter-window").hide();
+        $(".sophie-button-container").show();
+    }
+
+    return {
+        // Expose functions
+        initialize: initialize,
+        show: showSophieChatter,
+        hide: hideSophieChatter,
+
+        // Expose properties
+        chatterRenderer: chatterRenderer,
+        authenticationManager: authenticationManager,
+        chatter: chatter
+    };
+})(window, document);
+]]></script>
+        <script_name>Sophie (MC Donalds)</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-29 14:29:09</sys_created_on>
+        <sys_id>d968f5941bea02505a2e113fad4bcb85</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>x_stefa_chameleon.Sophie (MC Donalds)</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_ui_script_d968f5941bea02505a2e113fad4bcb85</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-29 14:29:35</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

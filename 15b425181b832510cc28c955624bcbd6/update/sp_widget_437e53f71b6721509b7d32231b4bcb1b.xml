@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+	function buildCircleProgressBar(id, progress, text, color, fontSize) {
+		var option = {
+			color: [color, '#d4d4d4'],
+			title: {
+				 text: text,
+				 left: 'center',
+				 top: 'center',
+				 textStyle: {
+					 color: color,
+					 fontSize: fontSize
+				 },
+			},
+			tooltip: {
+				trigger: 'item'
+			},
+			legend: {
+				top: '5%',
+				left: 'center',
+				show: false
+			},
+			series: [
+				{
+					name: 'Progress Bar',
+					type: 'pie',
+					radius: ['50%', '70%'],
+					avoidLabelOverlap: false,
+					label: {
+						show: false
+					},
+					tooltip: {
+						show: false
+					},
+					emphasis: {
+						label: {
+							show: false
+						}
+					},
+					labelLine: {
+						show: false
+					},
+					data: [
+						{ value: progress, name: '0_Fill' },
+						{ value: 100 - progress, name: '1_Empty' },
+					]
+				}
+			]
+		}
+		
+		var theChart = echarts.init(
+			document.getElementById(id)
+		);
+		
+		theChart.setOption(option);
+		
+		window.addEventListener('resize', function() {
+			theChart.resize();
+		});
+	}
+
+	/* widget controller */
+  var c = this;
+	
+	c.data.SystrackUser = angular.copy(c.options.shared);
+
+	if (!c.data.SystrackUser || !c.data.SystrackUser.scores)
+		return;
+	
+	var healthScore = getFixed(c.data.SystrackUser.scores.healthscore * 100);
+	
+	setTimeout(function () {
+		buildCircleProgressBar('healthScoreIndicator', healthScore,  healthScore + '%', setPercentColor(healthScore), 20);
+		
+		c.data.SystrackUser.sensors.forEach(function(sensor) {
+			var targetToPercent = sensor.target ? getFixed((sensor.main_value / sensor.target) * 100) : 100;
+			buildCircleProgressBar(sensor.sensor_id, targetToPercent, getFixed(sensor.main_value), setPercentColor(sensor.icon_color), 14);
+		});
+	}, 10);
+	
+	function getFixed(value) {
+		if(typeof value === 'number' &&
+			!Number.isNaN(value) &&
+			!Number.isInteger(value)) {
+			return (value || 0).toFixed(1);
+		}
+		return (value || null);
+	}
+	
+	function setPercentColor(param) {
+		switch(true){
+			case (param < 40 || param == 'red'):
+				return '#D3470E';
+			case (param < 60 || param == 'yellow'):
+				return '#F0A800';
+			default:
+				return '#027D5B';
+		}
+	}	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ith-body {
+	display: flex;
+  align-items: center;
+  
+  @media(max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.ith-body-main {
+	&amp; &gt; div {
+  	min-height: 240px;
+  	min-width: 260px;
+
+    width: 100%;
+    max-width: 100%;
+    
+    @media (max-width: 576px) {
+      min-height: 240px;
+      min-width: 260px;
+    }
+  }
+
+  @media (max-width: 576px) {
+  	width: 100%;
+  }
+}
+
+.ith-body-aside {
+	width: 70%;
+  
+  max-height: 400px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+
+  @media (max-width: 576px) {
+  	width: 100%;
+  }
+}
+
+.ith-aside-item {
+	display: flex;
+  align-items: center;
+  position: relative;
+  
+  &amp; &gt; div {
+    min-width: 80px;
+    min-height: 80px;
+  	width: 80px;
+  	height: 80px;
+  }
+  
+  p {
+  	margin:0 20px 0 0;
+  }
+  
+  img {
+  	position: absolute;
+    top: 28px;
+    left: 28px;
+  }
+}
+
+.glyphicon {
+	right: 0;
+  position: absolute;
+  top: 50%;
+  margin-top: -5px;
+  font-size: 10px;
+  color: #aaa;
+}
+
+.details {
+  transition: all .5s ease-in-out;
+  line-height: 1.5;
+  padding: 1em;
+  opacity: 1;
+  border-bottom: 1px solid #d9d9d9;
+}
+ 
+.details.ng-hide {
+  line-height: 0;
+  padding: 0 1em;
+  opacity: 0;
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>it_health_systrack_details</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>IT Health SysTrack - Details</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 19:34:23</sys_created_on>
+        <sys_id>437e53f71b6721509b7d32231b4bcb1b</sys_id>
+        <sys_mod_count>155</sys_mod_count>
+        <sys_name>IT Health SysTrack - Details</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_437e53f71b6721509b7d32231b4bcb1b</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-19 14:54:38</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-body ith-body" ng-show="c.data.SystrackUser.scores">
+    <div class="ith-body-main">
+      <div ng-attr-id="healthScoreIndicator"></div>
+    </div>
+    
+    <div class="ith-body-aside">
+      
+      
+      <div ng-repeat="sensor in c.data.SystrackUser.sensors">
+        <div class="ith-aside-item" ng-click="sensor.sensor_id = !sensor.sensor_id">
+          <img ng-disabled="!sensor.icon_image" src="{{sensor.icon_image}}" />
+          <div ng-attr-id="{{sensor.sensor_id}}"></div>
+          <p ng-bind-html="sensor.titleFormatter"></p>
+          <span ng-show="sensor.sensor_id" class="glyphicon glyphicon-chevron-down"></span>
+          <span ng-hide="sensor.sensor_id" class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        <div class="details" ng-hide="sensor.sensor_id" ng-bind-html="sensor.detail"></div>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

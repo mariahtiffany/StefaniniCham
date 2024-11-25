@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance_table">
+    <sp_instance_table action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <display_field/>
+        <field_list>number,sys_class_name,short_description,priority,requested_for,opened_by,due_date</field_list>
+        <filter table="sc_req_item">active=true^stateIN-5,1^requested_for!=javascript:gs.getUserID()<item endquery="false" field="active" goto="false" newquery="false" operator="=" or="false" value="true"/>
+            <item display_value="-5,1" endquery="false" field="state" goto="false" newquery="false" operator="IN" or="false" value="-5,1"/>
+            <item endquery="false" field="requested_for" goto="false" newquery="false" operator="!=" or="false" value="javascript:gs.getUserID()"/>
+        </filter>
+        <glyph/>
+        <id/>
+        <maximum_entries>10</maximum_entries>
+        <order>1</order>
+        <order_by/>
+        <order_direction>desc</order_direction>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">9dfad7c11b1fed509b7d32231b4bcbb3</sp_column>
+        <sp_page/>
+        <sp_widget display_value="Data Table from Instance Definition">38058ff1cb11020000f8d856634c9c8c</sp_widget>
+        <sys_class_name>sp_instance_table</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-06 20:00:04</sys_created_on>
+        <sys_id>1afa17c11b1fed509b7d32231b4bcbb7</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>Requests To Approve</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_table_1afa17c11b1fed509b7d32231b4bcbb7</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-06 20:20:15</sys_updated_on>
+        <table>sc_req_item</table>
+        <title>Requests To Approve</title>
+        <url/>
+        <widget_parameters/>
+    </sp_instance_table>
+    <sys_translated_text action="delete_multiple" query="documentkey=1afa17c11b1fed509b7d32231b4bcbb7"/>
+</record_update>

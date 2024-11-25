@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <before>false</before>
+        <description/>
+        <name>Chameleon Widget - IT Health</name>
+        <record_for_rollback>true</record_for_rollback>
+        <script><![CDATA[var gr = new GlideRecord('x_stefa_chameleon_it_health_sensors');
+
+var sensors = [
+	{'sensor_name':'Reboot Status', 				'sensor_id':'f29b932b-a2da-42de-9c16-5901936a949c', 'priority':'true', 'main_variable': 'Days_Since_Last_Reboot', 			'target': null, 'title':'Days since you last restarted your PC.<br>Please restart to apply the latest updates.', 'icon_color':'red', 'icon_image':null},
+	{'sensor_name':'AD Password Expiration', 		'sensor_id':'f694a299-4d48-45d3-bee0-e32086aa16d2', 'priority':'true', 'main_variable': 'Days_Till_Expiration', 			'target': 5, 	'title':'Days until your password expires.<br>Please change your password.', 'icon_color':'red', 'icon_image':null},
+	{'sensor_name':'Possible Battery Issues', 		'sensor_id':'5580616e-46be-469d-a35e-f562f990c875', 'priority':'true', 'main_variable': 'BatteryChargeCapacityThreshold', 	'target': 100, 	'title':'Percent of remaining battery charge as per designed capacity.', 'icon_color':'red', 'icon_image':null},
+	{'sensor_name':'C Drive Low Disk Space', 		'sensor_id':'646e3a6b-e223-40d7-978c-a5cf9e7b92fd', 'priority':'true', 'main_variable': 'FREE_SPACE_C', 					'target': 20, 	'title':'GB of space remaining in the C: drive.', 'icon_color':'red', 'icon_image':null},
+	{'sensor_name':'Teams Latency Impact', 			'sensor_id':'51064f37-9006-4a3e-8a4e-48befa0c8fc3', 'priority':'false','main_variable': null, 								'target': null,	'title':'Microsoft Teams is showing high latency values which could be impacting user experience.', 'icon_color':'red', 'icon_image':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAACBUlEQVR4nGNgGFGgpulNZU3Tqw0gmuqGVzW9ul/d/Po/DIP4VDO8pulNJbLhCEveloPkAyNOeAdEnnziH3HycUD4KU+SLahserUJmwUgcZA82ODIk/8h+MQjki2oanpbjs8HRFkQEX/4aHj8wf+hsQf+B0fv/x8Ute9/QMSe//5hu//7huz67x28839Y7BGscQAKFoglJx4FRpz0wGoBIcO9Anf89/Df9h+UimAuJwnADA+N3f9/xZp7/5evvvt/2aq7/5euvPPfN2Qn2HA3v63/GcgFMJcHRe393zf5yv/jJ1+CcfeES/+9AreDDXf12fI/p+Q8ajw0vv4fk3YZGv4Q7B9x8jCGBejBAvLB8lV34C4HGe7stRnDAhBOy7uFYgEIY1iAHuYgw5etvI1iuKPnRvItQI9QkOFLV95GMdzBfQP5FqCnltLqE/9Lqo6jGG7nup58C5ANRw8WB6jhNs7riLXgCYYFXoE7DhMy3NV7w//c0osYFqTm3URLRSfaiUq6aXnHEzPyj/+H4eyiM/9La+5j8cHtLQGRJ5+CccSJjtDQK2xEWVBR8VCwvOHpx4qGp/9BuLLh2f/qpleoFjS9/lZf/1yMgVxQ1fg6C1tBhyhRXxeTbTjckpZXeSCXouTg5tdfq5tflzBQC9TXPxWpbn4TX9X0uhxEV7Y+E6Wa4YMaAADIb6mvIkLT0wAAAABJRU5ErkJggg=='},
+	{'sensor_name':'Critical Application Hang', 	'sensor_id':'18088a1f-08b2-40ce-a011-ffb7295814fd', 'priority':'false','main_variable': null, 								'target': null, 'title':'Application <strong>@{Application}</strong> has gotten at least 5% of the total focus time on this system, and experienced a hang in the last day at <strong>@{startTime}</strong>', 'icon_color':'red', 'icon_image':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABtklEQVR4nO2VMUsjURDH/4gasdj1SisrC7nCIsWBIFqIebMRfCucjXB2V9r4AQIWCjopwhVHWhsbjQh2FnaCoPcJbGw8NG+W80654tCVl2RjLlESk4giDgw83uz8f7szwyzwZszRzK7mvXa4o5lrAT7vuz6H7XDH5/0XBsysLbozqxP/ueb1ctyeq+M2p2HA9Np4dbzPT3+JamzP1XGb0xKgnr0DXleJXJ+zzwZwNOfwNdvVFkCAyeEQY50RwPF5y4oLEh9DxLtaAgRIjAroj0BtFsTmUz1IpToE3oiALg1oN4SKNQW4QHJQoK4FFJb80CCxYKBYQH+jewPKNv0FArVcAXjIz22pygmu5nh5ryRXPtQDWBPQTulNf+SRGBfQogHdGqgbA+9T4SErVru46nv/VKo3gJqzgDxIV0CPDejksfltbB1rzhUbqpZK5chYrQDegAH9EtBVgAm3OYDmXahMrDgt9402UKdVjc8VRrjPTw83/Dv0+bud8zyScYH6XTEt/wTqSEBnlY02oI1yqZ5iBsoxoIOikPppgfY+xOdugfp2D/VmmwJEEIHaNvCGamO0GonfATqgEMzxCPBRAAAAAElFTkSuQmCC'}
+];
+
+// Insert sensors in the IT Health Sensors table
+sensors.forEach(function(current) {
+	gr.initialize();
+	
+	if (gr.get('sensor_id', current.sensor_id))
+		return;
+	
+	gr.sensor_name = current.sensor_name;
+	gr.sensor_id = current.sensor_id;
+	gr.priority = current.priority;
+	gr.main_variable = current.main_variable;
+	gr.target = current.target;
+	gr.title = current.title;
+	gr.icon_color = current.icon_color;
+	gr.icon_image = current.icon_image;
+
+	gr.insert();
+});
+]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-23 15:10:45</sys_created_on>
+        <sys_id>66886daa1b276910ad11eb93b24bcb53</sys_id>
+        <sys_mod_count>14</sys_mod_count>
+        <sys_name>Chameleon Widget - IT Health</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_script_fix_66886daa1b276910ad11eb93b24bcb53</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-19 19:44:55</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

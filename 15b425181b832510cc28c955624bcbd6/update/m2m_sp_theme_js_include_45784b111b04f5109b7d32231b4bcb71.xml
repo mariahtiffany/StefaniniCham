@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_theme_js_include">
+    <m2m_sp_theme_js_include action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sp_js_include display_value="Add Persona Background Loader">a4c4ce3c1b57ad509b7d32231b4bcb38</sp_js_include>
+        <sp_theme display_value="Chameleon Theme (DeVry)">60184b111b04f5109b7d32231b4bcb68</sp_theme>
+        <sys_class_name>m2m_sp_theme_js_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-14 20:04:44</sys_created_on>
+        <sys_id>45784b111b04f5109b7d32231b4bcb71</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Add Persona Background Loader.Chameleon Theme (DeVry)</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_theme_js_include_45784b111b04f5109b7d32231b4bcb71</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-02-12 14:48:29</sys_updated_on>
+    </m2m_sp_theme_js_include>
+</record_update>

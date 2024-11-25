@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = c.data.btnAsk;
+	
+	c.server.get({action: 'user'}).then(function (response) {
+		c.userLanguage = response.data.userLanguage;
+	});
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = c.data.btnLoading + '...';
+		
+		c.server.get({
+			question: c.question,
+			language: c.userLanguage,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = c.data.btnAsk;
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.specialist {&#13;
+	margin-bottom: 3rem;&#13;
+  &#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+  &#13;
+  box-shadow: $default-box-shadow;&#13;
+  &#13;
+  background-color: #FFF;&#13;
+  &#13;
+}&#13;
+&#13;
+.specialist-heading {&#13;
+	background-color: $header-bg-color;&#13;
+  display: flex;&#13;
+  &#13;
+  padding: 16px;&#13;
+  &#13;
+  gap: 1.5rem;&#13;
+  &#13;
+  h2 {&#13;
+  	font-size: 18px;&#13;
+    margin: 0;&#13;
+    &#13;
+    font-weight: bold;&#13;
+		color: $header-color;&#13;
+  }&#13;
+}&#13;
+&#13;
+.specialist-body {&#13;
+	padding: 16px;&#13;
+}&#13;
+&#13;
+.specialist-inputs {&#13;
+  display: flex;&#13;
+ 	align-items: center;&#13;
+    &#13;
+  @media(max-width: 768px) {&#13;
+  	flex-direction: column;&#13;
+  }&#13;
+  &#13;
+  span {&#13;
+  	font-size: 7rem;&#13;
+    padding: 0 10px;&#13;
+    height: 5rem;&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    font-weight: bold;&#13;
+  }&#13;
+  &#13;
+  textarea {&#13;
+    border-radius: 5px;&#13;
+    border: 1px solid #AEAEAE;&#13;
+    &#13;
+    padding: 8px;&#13;
+    &#13;
+    height: 300px;&#13;
+    resize: none;&#13;
+    &#13;
+    flex: 1;&#13;
+    &#13;
+    @media(max-width: 768px) {&#13;
+      height: 150px;&#13;
+    	flex: unset;&#13;
+      width: 100%;&#13;
+    }&#13;
+    &#13;
+    &amp;:focus, &amp;:active {&#13;
+    	border-width: 1px;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.specialist-button {&#13;
+  margin-top: 3rem;&#13;
+  &#13;
+  width: 100%;&#13;
+  padding: 1rem 2rem;&#13;
+  &#13;
+  color: #FFF;&#13;
+  font-size: 20px;&#13;
+  &#13;
+  border-radius: 5px;&#13;
+  border: 1px solid #36424F;&#13;
+  background: #36424F;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_energy_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Energy Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	var specialization = gs.getMessage("Energy");
+	data.title = gs.getMessage("I am a {0} specialist!", specialization);
+	data.subtitle = gs.getMessage("Ask me anything related to {0}, and I will respond!", specialization);
+	data.btnAsk = gs.getMessage("ASK YOUR QUESTION");
+	data.btnLoading = gs.getMessage("LOADING");
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+	
+	if (localInput.action == 'user') {
+		var languageCode = gs.getSession().getLanguage();
+    var languageGR = new GlideRecord('sys_language');
+    languageGR.addQuery('id', languageCode);
+    languageGR.query();
+
+    if (languageGR.next()) {
+        data.userLanguage = languageGR.getValue('name');
+    } else {
+        data.userLanguage = "English";
+    }
+	}
+	
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": "As an Energy Specialist, my role involves specializing in energy-related topics and providing expertise in various aspects of the energy sector. This includes an in-depth knowledge of energy history, energy sources, trends, technologies, sustainable practices, and the importance of energy efficiency. Be prepared to answer questions about energy sector trends, energy system design philosophy, renewable energy sources, energy conservation practices, and other topics related to energy. Offer detailed insights, historical context, and recommendations to enhance the understanding of individuals interested in the world of energy. If the question is unrelated to energy, you can respond by saying, \"I believe this question is not related to the energy sector. Do you have any inquiries about the energy sector that I can assist you with?\" and questions and answers need to use the language: " + localInput.language
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-11-05 11:35:25</sys_created_on>
+        <sys_id>4829d8c61bd671109b7d32231b4bcb27</sys_id>
+        <sys_mod_count>24</sys_mod_count>
+        <sys_name>GPT Energy Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_4829d8c61bd671109b7d32231b4bcb27</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-07 18:48:41</sys_updated_on>
+        <template><![CDATA[<div class="specialist">
+  <div class="specialist-heading">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD4klEQVR4nO2YyW9bVRTGTxoP8ZDEmYfSNHZCmjRzKjasEVsWSEj8A+z5C5CQWCB1U3ZIgGjiKY4dZ6gzOCFzmqQktJCpCbuypasiFbXFP3TfbWiFbEOEZL8n8pPO/pz7vvPd7z6RCy644P8Lt6WFmBMSrvNV3A1Re6bY/QtB+ZRxN8zUwmLDv6v5Opj2QdD2a7H7F4ZLT5nwwncNcNcPO235azsAy02Q9MCwvF3s/oWI7RnTXt3UvTY46IHjgex10As7AVioh7Gy4stHwagjQ6oKVpthrwMeDsLPN7LUEOz3wfpVSPkgVHokxYaYOBhzwVydbux+F5wMZR/gdAj2umClGSY8kJQrZljg94wFTtfDVgD2e+A02+nfgIcDcC+gFzjqNIl8gjJP0gtLjbq5477c8jnog42r2n1CkhYzwIjtCdOVWha7b8LJQG75/NCpFz3hhi/FLWaAqD3DnWpYbYH7nbrRfPKZq4Gw44WYBUbLYLYWNlu1RSqpZHWfHlhvOZPPF2IGGBY/cQ8sNukL6iiffLr0nij5fCKXxAwwIjeZKIelJvi+I7d9Kvlst8F8tco+T8UsECz9hSkfrL4BDzpzy+ewGzZaYKpSRYePxCwQtr9gplJb435vHvlc0/JJ1+WuuVqY9ELI/rxwA8SdMF8L261w3J9bPsfduUst93ZAy1CFuxF5q3ARQi3kYqP2/9Nc+ecfSn25tZeXW7j0sCDNGwN8Kx+QLIeVy/Dj9dzxIV8Zd0O7TqYxV2GjBcGSTeMGVsup4vN5m1e78eD6y2Dnha/k3cIOELY9ZbZGP2CUjlUGyld/t9jDflj3w2yVWtxHBW3eGCDmzJCu0Raar9ZaYE9J7LUBTgZht10/LROuDEhJ4QcYK9OuoT5/1iqH2WptsUbEeH1xu2H1MkyWw6h8KGaDpPiIuyBdCzut+sTPmj8e1O8GJb+Q/bGYEb6Wdxj3wIKy2Guv5GNcah3a8xPuDMtiEzPCbfnceOQsN2u5/LW4vfrZqSPFx2JWCJZsGU2uXdFef7a4yvNVZIg4fhMzQ9D2mJkq2PK/ks9P3bDUDEk33BKnmBki9udGdFYh7mxxN1ohZUjnMzE7jKo7olH/yFJfYLdDx4Wo43exAqj/RGqBVfMH/bCmPN9ImhViBUh44W4AjgZhux3u+FTz34gVYFxqmKrQCVVZ6EIDxJyFe6T8VxiW90mpBe7QOUj9QkxIvVgFhiVsnLqSkLLSsEyJlSBkf8RKk44LY84/xGoQdTwzLHOyAmLiF6tB3J0hVQHhS5tiRUh41PvWetI5g4gjQ1AGxKoQkZvF7uGCC+T8/AmYP2DYsLKWgQAAAABJRU5ErkJggg==">
+
+    <h2>
+      {{ c.data.title }}<br>
+      {{ c.data.subtitle }}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="specialist-body">
+    <div class="specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="${Example: How does energy efficiency impact our environment?}" ng-model="c.question"></textarea>
+      <span>=</span>
+      <textarea placeholder="${The answer will be presented here.}" readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="specialist-button">
+      {{c.textButton}}
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

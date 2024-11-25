@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <before>false</before>
+        <description>Create the Onboarding User Criteria</description>
+        <name>Chameleon Setup - Onboarding User</name>
+        <record_for_rollback>true</record_for_rollback>
+        <script><![CDATA[var record = new GlideRecord('user_criteria');
+var personaId = '52b799ca9f624927bb17ec8fa7f6bb51';
+
+if (!record.get(personaId)) {
+	record.name = 'Onboarding User';
+	record.advanced = true;
+	record.script = "gs.debug('UserId: ' + gs.getUserID()); var loggedInUser = new GlideRecord('sys_user'); if (!loggedInUser.get(gs.getUserID())) { gs.debug('User not found'); } else { var configuredDefaultOnboardingDays = new ChameleonUtil().getConfigKey('DefaultOnboardingDays'); var defaultOnboardingDays = configuredDefaultOnboardingDays && +configuredDefaultOnboardingDays.value || 360; gs.debug('Sys Created On: ' + loggedInUser.sys_created_on); var createdOn = new GlideDateTime(loggedInUser.sys_created_on); gs.debug('Created On: ' + createdOn); createdOn.addDaysUTC(defaultOnboardingDays); gs.debug('Created On (+defaultOnboardingDays days): ' + createdOn); var now = new GlideDateTime(); gs.debug('Now: ' + now); /*if now has a lower time than createdOn we should give the onboarding user criteria*/ answer = now.before(createdOn); }";
+
+	record.setNewGuidValue(personaId);
+	record.insert();
+}]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-26 13:40:19</sys_created_on>
+        <sys_id>54aef4af1b6bad109b7d32231b4bcb21</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>Chameleon Setup - Onboarding User</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_script_fix_54aef4af1b6bad109b7d32231b4bcb21</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-03 13:43:52</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

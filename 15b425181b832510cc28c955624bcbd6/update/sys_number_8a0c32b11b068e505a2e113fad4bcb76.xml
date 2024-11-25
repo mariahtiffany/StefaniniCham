@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_number">
+    <sys_number action="INSERT_OR_UPDATE">
+        <category display_value="" name="x_stefa_chameleon_suggestion">x_stefa_chameleon_suggestion</category>
+        <maximum_digits>7</maximum_digits>
+        <number>1000</number>
+        <prefix>CHA_SUGG</prefix>
+        <sys_class_name>sys_number</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-09 14:46:01</sys_created_on>
+        <sys_id>8a0c32b11b068e505a2e113fad4bcb76</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>CHA_SUGG</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_number_8a0c32b11b068e505a2e113fad4bcb76</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-09 14:46:01</sys_updated_on>
+    </sys_number>
+</record_update>

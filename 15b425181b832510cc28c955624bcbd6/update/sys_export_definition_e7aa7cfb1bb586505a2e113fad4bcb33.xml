@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_export_definition">
+    <sys_export_definition action="INSERT_OR_UPDATE">
+        <field_list>number,opened_at,short_description,caller_id,priority,state,category,assignment_group,assigned_to,sys_updated_on,sys_updated_by,u_external_agent</field_list>
+        <filter table="incident">caller_idDYNAMIC90d1921e5f510100a9ad2572f2b477fe^active=true^ORDERBYDESCsys_updated_on<item endquery="false" field="caller_id" goto="false" newquery="false" operator="DYNAMIC" or="false" value="90d1921e5f510100a9ad2572f2b477fe"/>
+            <item endquery="false" field="active" goto="false" newquery="false" operator="=" or="false" value="true"/>
+            <item endquery="false" field="" goto="false" newquery="false" operator="ORDERBYDESC" or="false" value="sys_updated_on"/>
+        </filter>
+        <name>ed_t_incident</name>
+        <sys_class_name>sys_export_definition</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-03 00:11:08</sys_created_on>
+        <sys_id>e7aa7cfb1bb586505a2e113fad4bcb33</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>ed_t_incident</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_export_definition_e7aa7cfb1bb586505a2e113fad4bcb33</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-03 00:11:09</sys_updated_on>
+        <table_name>incident</table_name>
+        <view display_value="Exp_de7aa7cfb1bb586505a2e113fad4bcb33" name="exp_de7aa7cfb1bb586505a2e113fad4bcb33">6baa7cfb1bb586505a2e113fad4bcb34</view>
+    </sys_export_definition>
+</record_update>

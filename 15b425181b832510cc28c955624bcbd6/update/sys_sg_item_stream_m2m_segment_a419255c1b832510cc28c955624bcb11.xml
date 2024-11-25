@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_item_stream_m2m_segment">
+    <sys_sg_item_stream_m2m_segment action="INSERT_OR_UPDATE">
+        <item_stream display_value="Chameleon Configuration Item Stream">ac19255c1b832510cc28c955624bcb10</item_stream>
+        <segment display_value="Chameleon Configuration Item Stream Segment">e019255c1b832510cc28c955624bcb10</segment>
+        <sys_class_name>sys_sg_item_stream_m2m_segment</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-22 17:31:17</sys_created_on>
+        <sys_id>a419255c1b832510cc28c955624bcb11</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_sg_item_stream_m2m_segment_a419255c1b832510cc28c955624bcb11</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-22 17:31:17</sys_updated_on>
+    </sys_sg_item_stream_m2m_segment>
+</record_update>

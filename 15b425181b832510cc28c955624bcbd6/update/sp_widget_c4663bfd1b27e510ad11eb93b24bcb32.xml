@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sp-tagline-color {
+	color: $sp-tagline-color;
+}
+
+#homepage-search {
+  .aisearch {
+    --classicsponlydonotuse--rem-multipy: 1.6;
+  }
+}
+
+#homepage-search .input-group {
+  box-shadow: none;
+}
+
+#homepage-search input {
+  border: 3px solid #f1f2f2 !important;
+  border-right: none !important;
+  background-color: white !important;
+  
+  border-top-left-radius: 2rem !important;
+  border-bottom-left-radius: 2rem !important;
+}
+
+#homepage-search .input-group-btn button {
+  height: 4.6rem;
+  background-color: white;
+  border: 3px solid #f1f2f2 !important;
+  border-left: none !important;
+  color: #959595;
+  border-top-right-radius: 2rem !important;
+  border-bottom-right-radius: 2rem !important;
+}
+
+.homepage-search-container {
+  width: 80%;
+  margin: 0 auto;
+  
+  @media (max-width: 1140px) {
+    width: 100%;
+  }
+}
+
+.homepage-search-container--container {
+	display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  padding-bottom: 16px;
+  
+  &gt; img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    margin-right: 16px;
+    object-fit: cover;
+  }
+  
+  h2 {
+    margin: 0;
+  }
+}</css>
+        <data_table>sp_instance_ais</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,short_description,search_application,search_results_configuration,disable_all_suggestions,placeholder,ai_search_source_filter</field_list>
+        <has_preview>true</has_preview>
+        <id>ino_homepage_search</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Homepage Search</name>
+        <option_schema>[{"name":"typeahead_search","default_value":"{title: 'How can we help?', size: 'lg', color: 'default'}","section":"Presentation","label":"Typeahead Search","type":"string"},{"hint":"Use this field to increase the internal padding","name":"padding","section":"Presentation","default_value":"2rem 0 3.5rem 0","label":"Internal Padding","type":"string"},{"hint":"Select the color of the text for title","name":"title_color","section":"Presentation","default_value":"white","label":"Title Color","type":"string"},{"hint":"You can change the size of the text","name":"title_text_size","section":"Presentation","default_value":"3rem","label":"Title Text Size","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[var aisEnabled = $sp.isAISearchEnabled();
+
+if (aisEnabled)
+	data.typeAheadSearch = $sp.getWidget('typeahead-search', options);
+else
+	data.typeAheadSearch = $sp.getWidget('typeahead-search', options.typeahead_search); 
+
+var user = new GlideRecord('sys_user');
+user.get(gs.getUserID());
+
+var userName = user.getValue('name');
+var firstName = (userName || '').split(' ')[0];
+
+data.avatar = user.getDisplayValue('avatar');
+data.userName = userName;
+
+if (options.title)
+  data.title = gs.getMessage(options.title).replace('{{name}}', firstName);
+else
+	data.title = gs.getMessage('Hello {0}, how can we help?', firstName);
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-21 16:10:56</sys_created_on>
+        <sys_id>c4663bfd1b27e510ad11eb93b24bcb32</sys_id>
+        <sys_mod_count>126</sys_mod_count>
+        <sys_name>Ino Homepage Search</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_c4663bfd1b27e510ad11eb93b24bcb32</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-05 19:00:26</sys_updated_on>
+        <template><![CDATA[<div id="homepage-search" class="container">
+  <div class="homepage-search-container" ng-style="{'padding': options.padding}">
+    <div id="homepage-search" class="homepage-search-container--container">
+      <img id="homepage-search-image" ng-if="data.avatar" src="{{data.avatar}}" alt="{{data.userName}}"> 
+
+      <h2 id="homepage-search-text" ng-if="data.title"
+          ng-style="{'color': options.title_color, 'font-size': options.title_text_size}"
+          class="text-center text-4x sp-tagline-color"
+          ng-bind="data.title"></h2>
+    </div>
+  	<div ng-if="options.short_description" class="text-center h4 m-b-lg sp-tagline-color" ng-bind="options.short_description"></div>
+  	<sp-widget widget="data.typeAheadSearch"></sp-widget>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

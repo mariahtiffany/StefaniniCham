@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>6</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="2">9b2ba6e51b0be510ad11eb93b24bcbe9</sp_column>
+        <sp_widget display_value="About Me V2">f4f88def1bc76d10ad11eb93b24bcb28</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-01 17:33:23</sys_created_on>
+        <sys_id>3079c5231b0b6d10ad11eb93b24bcb96</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_3079c5231b0b6d10ad11eb93b24bcb96</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-08-23 15:02:13</sys_updated_on>
+        <title/>
+        <url/>
+        <widget_parameters/>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=3079c5231b0b6d10ad11eb93b24bcb96"/>
+</record_update>

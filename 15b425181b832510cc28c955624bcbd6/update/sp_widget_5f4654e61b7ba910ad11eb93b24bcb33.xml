@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #666!default;
+
+.ino-dow-ask-it {
+	box-shadow: $default-box-shadow;
+  background-color: #FFF;
+  margin-bottom: 32px;
+  
+  .panel-heading &gt; h3 {
+  	text-transform: initial;
+  }
+}
+
+.ino-dow-ask-it-list {
+  list-style: none;
+  padding-left: 0;
+  
+  li {
+  	border-bottom: 1px solid #C3C3C3;
+    font-size: 18px;
+    color: $text-color;
+    padding-left: 32px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+    
+    &amp;:not(&amp;:first-child) {
+    	padding-top: 16px;
+    }
+  }
+}
+
+.ino-dow-ask-it-details {
+	display: flex;
+  padding: 1rem 3rem 2rem;
+  
+  a {
+    text-transform: uppercase;
+    color: #FFF !important;
+    display: flex;
+    align-items: center;
+    background-color: $secondary-color;
+    border-radius: $default-border-radius;
+    padding: 8px 16px;
+
+    svg {
+      width: 15px;
+      height: 15px;
+      margin-left: 10px;
+    }
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_ask_it</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Ask IT</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	var user = gs.getUserID();
+	
+	$sp.log(user);
+  data.directMessages = user[0].charCodeAt(0) % 10;
+  data.postsFromCompany = user[1].charCodeAt(0) % 10;
+	
+	var currentPortal = $sp.getPortalRecord();
+	var portal = currentPortal.getDisplayValue("url_suffix");
+	
+	if(portal == 'chameleon_rockwell') {
+		data.yammerTitle = 'Viva Engage';
+		data.yammerTitleHtml = 'viva<br><b>E</b>';
+		data.urlYammer = 'viva_engage';
+	}
+	else {
+		data.yammerTitle = 'askIT';
+		data.yammerTitleHtml = 'ask<b>IT</b>';
+		data.urlYammer = 'ino_ask_it';
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-05 18:03:04</sys_created_on>
+        <sys_id>5f4654e61b7ba910ad11eb93b24bcb33</sys_id>
+        <sys_mod_count>43</sys_mod_count>
+        <sys_name>Ino DOW Ask IT</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_5f4654e61b7ba910ad11eb93b24bcb33</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-03 16:38:07</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-ask-it">
+  <div class="panel-heading">
+    <h3>
+      <img src="/x_stefa_chameleon.yammer_brain.png">
+      <span ng-bind-html="c.data.yammerTitleHtml"></span>
+    </h3>
+  </div>
+
+  <ul class="ino-dow-ask-it-list">
+    <li>0 people have mentioned you in posts</li>
+    <li>You have {{c.data.directMessages}} direct messages</li>
+    <li>You have {{c.data.postsFromCompany}} posts from your company</li>
+  </ul>
+  
+  <div class="ino-dow-ask-it-details">
+  	<a href="?id=ino_ask_it">
+      See details
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+        <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+          <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+          <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+          <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+        </g>
+      </svg>
+    </a>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

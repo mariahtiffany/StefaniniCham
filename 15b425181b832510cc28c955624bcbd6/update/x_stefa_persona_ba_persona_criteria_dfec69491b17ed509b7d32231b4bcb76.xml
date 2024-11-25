@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="x_stefa_persona_ba_persona_criteria">
+    <x_stefa_persona_ba_persona_criteria action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>true</advanced>
+        <company/>
+        <department/>
+        <group/>
+        <location/>
+        <match_all>false</match_all>
+        <name>Persona for HR Depart.</name>
+        <persona>8c59ed851b17ed509b7d32231b4bcb64,cc5961c51b17ed509b7d32231b4bcb00</persona>
+        <role/>
+        <script><![CDATA[var strArr = "8c59ed851b17ed509b7d32231b4bcb64,cc5961c51b17ed509b7d32231b4bcb00"; 
+answer = new x_stefa_persona_ba.utilPersonas().arePersonas(user_id, strArr);]]></script>
+        <sys_class_name>x_stefa_persona_ba_persona_criteria</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-06 11:59:47</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>dfec69491b17ed509b7d32231b4bcb76</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Persona for HR Depart.</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>x_stefa_persona_ba_persona_criteria_dfec69491b17ed509b7d32231b4bcb76</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-09 12:45:37</sys_updated_on>
+        <user/>
+    </x_stefa_persona_ba_persona_criteria>
+</record_update>

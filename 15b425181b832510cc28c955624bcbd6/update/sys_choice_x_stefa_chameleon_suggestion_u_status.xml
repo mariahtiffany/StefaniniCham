@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="u_status" table="x_stefa_chameleon_suggestion" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>u_status</element>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 13:59:10</sys_created_on>
+            <sys_id>1fb1feb91bc28e505a2e113fad4bcb7d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>u_status</sys_name>
+            <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+            <sys_update_name>sys_choice_x_stefa_chameleon_suggestion_u_status</sys_update_name>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 13:59:10</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>New Suggestion</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 13:59:10</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>78b1feb91bc28e505a2e113fad4bcbb5</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 13:59:10</sys_updated_on>
+            <value>New Suggestion</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Initial Evaluation</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 13:59:25</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>2dc13eb91bc28e505a2e113fad4bcb32</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 13:59:25</sys_updated_on>
+            <value>Initial Evaluation</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Assignment Group Evaluation</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 13:59:45</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>55d1feb91bc28e505a2e113fad4bcbeb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 13:59:45</sys_updated_on>
+            <value>Assignment Group Evaluation</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Completed</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 13:59:59</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>86e13eb91bc28e505a2e113fad4bcb02</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 13:59:59</sys_updated_on>
+            <value>Completed</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>On hold</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>5</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 14:00:14</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>65f1feb91bc28e505a2e113fad4bcbb9</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 14:00:14</sys_updated_on>
+            <value>On hold</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Canceled</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>6</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 14:00:28</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>bc023eb91bc28e505a2e113fad4bcb35</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 14:00:28</sys_updated_on>
+            <value>Canceled</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Closed</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_suggestion</name>
+            <sequence>7</sequence>
+            <synonyms/>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2024-05-09 14:00:43</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1812b6f91bc28e505a2e113fad4bcb00</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2024-05-09 14:00:43</sys_updated_on>
+            <value>Closed</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>

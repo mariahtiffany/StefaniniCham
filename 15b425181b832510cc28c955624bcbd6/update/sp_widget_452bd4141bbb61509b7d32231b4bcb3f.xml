@@ -1,0 +1,1886 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function orgChartController ($scope, $sanitize, i18n) {
+	var c = this;	
+	
+	/* Work around for upgrading issue where users do not have access to HRJ theme.
+	 * If HRJ theme style is not being applied, manually append the following style block
+	 */
+	c.select2CSS = document.createElement('style');
+	c.select2CSS.id = "orgChartCSS";
+	c.select2CSS.type = "text/css";
+	c.select2CSS.textContent = '.orgchart-search-select2 .avatar {' +
+		'  background-size: cover;' +
+		'  background-color: white;' +
+		'  border-radius: 100px;' +
+		'  border: 1px solid #BDC0C4;' +
+		'  color: #343D47;' +
+		'  display: inline-block;' +
+		'  font-size: 1rem;' +
+		'  font-weight: bold;' +
+		'  margin-right: 5px;' +
+		'  padding-top: 3px;' +
+		'  text-align: center;' +
+		'  width: 20px;' +
+		'  height: 20px;' +
+		'  position: relative;' +
+		'  top: -1px;' +
+		'}' +
+		'.orgchart-search-select2 span {' +
+		'  width: 360px;' +
+		'  @media screen and (max-width: 420px) {' +
+		'    width: 100%;' +
+		'  }' +
+		'}' +
+		'.orgchart-search-select2 span,' +
+		'.orgchart-search-select2 .title {' +
+		'  white-space: nowrap;' +
+		'  overflow: hidden;' +
+		'  text-overflow: ellipsis;' +
+		'  display: inline-block;' +
+		'  margin-bottom: -6px;' +
+		'}' +
+		'.orgchart-search-select2 .title {' +
+		'  display: inline-block;' +
+		'  color: #343D47;' +
+		'  max-width: 33%;' +
+		'  margin-top: 3px;' +
+		'@media screen and (max-width: 420px) {' +
+		'  max-width: 45%;' +
+		'}' +
+		'}' +
+		'.orgchart-search-select2 .name {' +
+		'  max-width: 50%;' +
+		'}' +
+		'.orgchart-search-select2 .select2-highlighted .title {' +
+		'  color: white;' +
+		'}';
+		
+	c.localization = {
+				i18n : i18n,
+				s2InputTooShort : $scope.tooShortInput
+			};
+			
+	c.chart = {
+		data: $scope.data.orgChart.tiers,
+		config: $scope.data.orgChart.config,
+		di: {
+			$sanitize: $sanitize,
+			i18n: i18n
+		}
+	};
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>@mixin ellipsis ($width) {
+  max-width: $width;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@mixin animate ($name, $dur, $delay, $dir, $count, $mode) {
+  animation-name: $name;
+  animation-duration: $dur;
+  animation-delay: $delay;
+  animation-direction: $dir;
+  animation-iteration-count: $count;
+	animation-fill-mode: $mode;
+  animation-timing-function: ease-out;
+}
+
+@mixin trans ($prop, $dur) {
+  transition-property: $prop;
+  transition-duration: $dur;
+  transition-timing-function: ease-out;
+}
+
+a {
+  outline-offset : 3px !important;
+}
+.org-chart {
+  position: relative;
+  padding-bottom: 40px;
+  min-height: 500px;
+  
+  @media screen and (max-width: 1024px) {
+    overflow: hidden;
+  }
+
+  .orgchart-search {
+    background-color: white;
+    .select2-default{
+      color: #485563;
+      @if ($color-darker) {
+      	color: $color-darker !important;
+      }    
+    }
+  }
+  
+  .orgchart-search, 
+  .tier-indicator {
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+  }
+  
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(black, 0.3);
+    text-align: center;
+    z-index: 99;
+    @include animate(slide, 200ms, 0, normal, 1, forwards);
+    
+    &amp;.out {
+      @include animate(slide, 200ms, 0, reverse, 1, forwards);
+    }
+    
+    p {
+      position: absolute;
+      height: 60px;
+      width: 300px;
+      padding: 20px 30px;
+      border-radius: 3px;
+      background-color: white;
+      @if ($color-lightest) {
+        background-color: $color-lightest;
+      }
+      top: 0;
+      left: 50%;
+      bottom: 0;
+      margin: auto;
+      margin-left: -155px;
+    }
+  }
+  
+  .orgchart-search {
+	width: 360px;
+    
+    @media screen and (max-width: 767px) {
+      top: inherit;
+      bottom: 15px;
+      position: relative;
+      margin-top: 15px;
+    } 
+    
+    @media screen and (min-width: 421px) {
+		width: 360px;
+    } 
+    
+    @media screen and (max-width: 420px) {
+		width: 300px;
+    }
+    }    
+  }
+  
+  .sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+  
+  .tier-indicator {
+		right: 0;
+    padding-top: 5px;
+    list-style: none;
+    
+    @media screen and (max-width: 767px) {
+    	top: 0; 
+    }    
+    
+	  li {      
+      &amp;:after,
+      &amp;:not(:first-child):before {
+        content: "";
+        display: inline-block;
+        background-color: #BDC0C4;
+        @if ($color-light) {
+          background-color: $color-light;
+        }  
+        @if ($color-darker) {
+          background-color: $color-darker;
+        }  
+      }
+
+      &amp;.active {
+        span {
+          font-weight: bold;
+        }
+        &amp;:after {
+          background-color: #428BCA;
+          @if ($primary) {
+            background-color: $primary;
+          }   
+        }
+      }
+
+      &amp;:after {
+        height: 5px;
+        width: 5px;
+        margin-bottom: 2px;
+        border-radius: 5px;
+      }
+
+      &amp;:not(:first-child):before {
+        position: absolute;
+        right: 0;
+        height: 15px;
+        width: 1px;
+        margin-right: 2px;
+        margin-top: -7px;
+      }
+
+      span {
+        padding: 0 5px;
+        background-color: #F0F3F4;
+        color: #485563;
+        cursor: pointer;
+        @if ($color-darker) {
+          color: $color-darker !important;
+        }    
+        @if ($sp-body-bg) {
+          background-color: $sp-body-bg;
+        }
+      }
+    }    
+  }
+  
+  &amp;.fixie {
+      z-index: 11;
+    .orgchart-search,
+    .tier-indicator {
+      top: 0px;
+      position: fixed;
+      border-radius: 2px;
+      background-color: #f6f6f8;
+    }
+
+    @media screen and (min-width: 768px) {
+      .orgchart-search {
+    	top: 10px;
+      }
+    }
+    
+    @media screen and (max-width: 767px) {
+      .orgchart-search {
+        margin-left: 15px;
+      }
+
+      .tier-indicator {
+        margin-right: 0;
+        position: fixed;
+      }    
+    }
+  }
+  
+	.orgchart-search {    
+    .avatar {
+      float: left;
+      background-size: cover;
+      border-radius: 100px;            
+      background-color: white;
+      border: 1px solid #BDC0C4;
+      color: #343D47;
+      @if ($color-lightest) {
+        background-color: $color-lightest;
+      }
+      @if ($color-light) {
+        border-color: $color-light;
+      }
+      @if ($color-darkest) {
+        color: $color-darkest;
+      }     
+      display: inline-block;
+      margin-right: 5px;
+      text-align: center;
+      width: 24px;
+      height: 24px;
+      line-height: 21px;
+      font-size: 1rem;
+      font-weight: bold;
+      top: 4px;
+      text-transform: uppercase;
+    }
+      
+    .select2-chosen {
+      margin-bottom: -14px;
+      
+      span {
+        width: 200px;
+      }
+      
+      span,
+      .title {
+        @include ellipsis(100%);
+        padding: 0;
+        margin-top: -1px;
+      }
+
+      .name {
+        display: inline-block;
+        max-width: 50%;
+      } 
+      
+      .title {
+        display: inline-block;        
+        max-width: 33%;
+        color: #343D47;
+        @if ($color-darkest) {
+          color: $color-darkest;
+        }         
+      }            
+    }    
+      .select2-container .select2-choice ,.select2-arrow {
+        @if ($color-darker) {
+          border-color: $color-darker;
+        }
+      }
+  }
+  
+  @media screen and (min-width: 421px) and (max-width: 768px) {
+    .orgchart-search {
+      margin-left: 20px;
+    }
+    
+    .tier-indicator {
+	  margin-right: 20px;
+    }
+  }
+  
+  @media screen and (min-width: 421px) and (max-width: 550px) {
+    
+    .tiers.first {
+      margin-top: 5px;
+    }
+    
+  }
+  
+  @media screen and (max-width: 640px) {
+    
+    .tier-indicator {
+	  position: relative !important;
+    }
+  }
+  
+  @media screen and (max-width: 420px) {
+    .orgchart-search {
+      width: calc(100% - 30px);
+      margin-left: 15px;
+    }
+    
+    .tier-indicator {
+	  margin-right: 15px;
+	  margin-top: 15px;
+    }    
+  }  
+  
+  .tiers {
+   	position: relative;
+    
+    .reports:before {
+      content: "";
+      height: 20px;
+      width: 1px;
+      background-color: #BDC0C4;
+      color: #343D47;
+      @if ($color-light) {
+        background-color: $color-light;
+      }
+      @if ($color-darkest) {
+        color: $color-darkest;
+      }
+      @if ($color-darker) {
+        background-color: $color-darker;
+      }
+      left: 50%;
+      position: absolute;
+      z-index: -1;
+    }
+    
+    &amp;.first.last.no-report .reports:before,
+    &amp;.last.no-report .reports:before {
+      content: none;
+    }
+    
+    .card-back {
+      display: none;
+    }
+    
+    &amp;.first {
+      @media screen and (min-width: 768px) {
+      	padding-top: 40px;
+      }
+    }
+    
+    &amp;.last {
+      @media screen and (max-width: 767px) {
+      	padding-bottom: 20px;
+      }
+      
+      .highlight {
+        .card {
+          border-color: $primary;
+        }
+      }
+      
+      .col-lg-3 {
+        .name {
+          color: $color-darkest;
+          font-size: 1.8rem;
+        }
+        
+        .avatar {
+          @include animate(floop, 200ms, 0, normal, 1, forwards);
+        }
+        
+        .profile-link, 
+        .card-back {
+          opacity: 0;       
+          margin-top: -5px;
+          margin-bottom: 5px;
+          display: block;
+          @include animate(bloop, 200ms, 200ms, normal, 1, forwards);          
+        }
+        
+        .profile-link {          
+          display: inline-block;
+          margin-bottom: 10px !important;
+        }
+      }
+    }    
+  }
+  
+  .person {
+    padding: 40px 0 0;
+    text-align: center;
+    
+    &amp; &gt; div {
+      float: none;
+      display: inline-block;
+      @include trans(width, 200ms);
+    }
+    
+    @media screen and (max-width: 767px) {
+      padding-top: 50px;
+    }
+  }
+  
+  .reports {    
+    @include animate(slide, 600ms, 0, normal, 1, forwards);    
+    @media screen and (max-width: 768px) {
+      padding-left: 10px;
+      padding-right: 10px;      
+    }
+    
+    &amp;.center {
+      text-align: center;
+      
+      .report {
+        display: inline-block;
+        float: none;
+        vertical-align: top;
+      }
+    }
+  }
+  
+  .report {
+    cursor: pointer;    
+    padding: 20px 10px 0;
+    
+    &amp;:nth-child(-n+6) {
+      padding-top: 40px;
+    }
+    
+    .card {
+      .card-container {
+        min-height: 180px;
+      }
+    }        
+  }
+  
+  .center {
+	float: none;
+    margin: auto;
+  }
+  
+  .card {
+    padding: 25px 10px;
+    position: relative;
+    background-color: white;
+    border: 1px solid #BDC0C4;    
+    @if ($color-lightest) {
+    	background-color: $color-lightest;
+    }
+    @if ($color-light) {
+      border-color: $color-light;
+    }    
+      @if ($color-darker) {
+        border-color: $color-darker; 
+      }
+    text-align: center;
+    border-radius: 3px; 
+    @include trans(border-color, 200ms);
+    
+    &amp;:focus {
+      outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    .card-container {
+      p {
+        font-size: 1.2rem;
+        line-height: 1.42em;
+        
+        &amp;.name {
+          font-size: 1.4rem;
+        }
+      }
+      	@media screen and (max-width: 420px) {
+			font-size: 1rem;
+	           &amp;.name {
+	          font-size: 1.1rem;
+	        }
+    }
+    }
+    
+    .card-back-container {
+      padding-top: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .avatar {
+      margin-bottom: 20px;
+      
+      .report-badge {
+        position: absolute;
+        height: 22px;
+        min-width: 22px;
+        left: 48%;
+        bottom: 0;
+        margin-left: -30px;
+        background-color: #428BCA;
+        @if ($primary) {
+          background-color: $primary;
+        } 
+        color: white;
+        padding-top: 4px;
+        display: inline-block;
+        border-radius: 30px;
+        font-size: 1rem;
+      }
+
+      .view-profile {
+        display: inline-block;
+        height: 74px;
+        width: 74px;
+        background-size: 110%;
+        background-position: center;
+        background-repeat: no-repeat;
+        border: 1px solid #BDC0C4;
+        color: #343D47;
+        @if ($color-light) {
+          border-color: $color-light;
+        }
+        @if ($color-darkest) {
+          color: $color-darkest;
+        }      
+        @if ($color-darker) { 
+          border-color: $color-darker; 
+        }
+        border-radius: 50px;        
+        font-size: 3rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding-top: 14px;
+
+        &amp;.img {
+          color: transparent;
+        }
+      }
+    }
+    
+    .name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $primary;
+      @include trans(all, 200ms);
+    }
+    
+    .title {
+      small {
+        font-weight: 600;
+      }
+    }
+    
+    .profile-link {
+      display: none;
+      font-size: 1.2rem;
+      margin: 5px 0 0;
+    }
+  }
+  
+  .report {    
+    &amp;:nth-child(-n+6):before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: #BDC0C4;
+      @if ($color-light) {
+        background-color: $color-light;
+      } 
+      @if ($color-darker) {
+        background-color: $color-darker;
+      }
+      top: 0;
+      right: 50%;
+      margin-top: 20px;
+    }
+    
+    &amp;:first-child:before {
+      content: none;
+    }
+    
+    @media screen and (min-width: 768px) and (max-width: 1200px) {
+      &amp;:nth-child(n+5) {
+        &amp;:before {
+          content: none;
+        }
+      }
+      
+      &amp;:nth-child(n+5) {
+        padding-top: 20px;
+      }
+    }
+    
+    @media screen and (max-width: 767px) {
+      &amp;:nth-child(n+3) {
+        &amp;:before {
+          content: none;
+        }
+      }
+      
+      &amp;:nth-child(n+3) {
+        padding-top: 20px;
+      }
+    }  
+    
+    .card {
+      .fa-spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 15px 0 0 15px;
+      }
+    }
+  }
+  
+  p {
+    margin: 0;
+    
+    &amp;:not(.email),
+    &amp;:not(.phone),
+    &amp;:not(.mobile_phone) {
+      @include ellipsis(100%);
+    }
+    
+    a,    
+    label {
+      margin-bottom: 0;
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+    }
+    
+    a,
+    span {
+			@include ellipsis(100%);
+      display: inline-block;
+      
+      span {
+        display: inline;
+      }
+    }
+  }
+}
+
+
+@keyframes slide {
+	0% {
+  	opacity: 0;
+    margin-top: -10px;
+  }
+	100% {
+    opacity: 1;
+    margin-top: 0;
+  }  
+}
+
+@keyframes bloop {
+	100% {
+    opacity: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+  }  
+}
+
+@keyframes floop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+	100% {
+		transform: scale(1);
+  }  
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description>Displays an organization chart</description>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>ino-organization-chart-cd</id>
+        <internal>false</internal>
+        <link><![CDATA[function orgChartLink (scope, element, attr, ctrl) {
+	try {
+	var s = ctrl.chart;
+	var l = ctrl.localization;
+	var $sp = $('.sp-scroll');	
+	var $selectFn2 = $("#selectFn2");
+	var orgchart = element[0].firstChild;
+	var orgchartSearch = orgchart.querySelector('.orgchart-search');
+	var tierIndicator = orgchart.querySelector('.tier-indicator');
+	var $isFixedHeader;
+	
+	var CONST = {
+		scrollTime: 1000,
+		showReports: 400,
+		maxShowSearch: 10,
+		mobileScreen: 768,
+		smallScreen: 600,
+		searchAndTierIndicatorOffset: 10,
+		zeroOut: 0
+	};
+	
+	var usingHRJTheme = orgchart.querySelector('.using-hrj-theme');
+	usingHRJTheme = window.getComputedStyle(usingHRJTheme, null).getPropertyValue("display");
+	
+	// only apply the css if HRJ theme is not available
+	if (usingHRJTheme !== 'none' && !document.getElementById('orgChartCSS')) {
+		document.querySelector('head').appendChild(scope.c.select2CSS);
+		stickyHeader(0);
+	}	
+	
+	// initialize variable with window size
+	s.largeScreen = window.innerWidth > CONST.mobileScreen;
+	
+	// Ensure search input is behind the nav menu on smaller devices
+	if (window.innerHeight < CONST.smallScreen) {
+		$('.navbar-toggle').on({
+			click: function () {
+				orgchartSearch.style.zIndex = /collapsed/.test(this.className) ? -1 : 10;
+			}
+		});
+	}
+	
+	// initialize select2
+	var search = $selectFn2
+		.select2({	
+   formatInputTooShort: function(args) {
+		 var SELECT2_MINIMUM_CHAR_INPUT = 3;
+         var remainingChars = SELECT2_MINIMUM_CHAR_INPUT;
+         if (args.length)
+			 remainingChars -= args.length;
+		 var message= l.i18n.format(scope.data.orgChart.i18n.minimumCharacters, remainingChars);
+		 return message;
+
+            },
+    formatAjaxError: function() {
+        return "${The results could not be loaded.}";
+    },
+
+    formatLoadMore: function() {
+        return "${Loading more results…}";
+    },
+
+    formatNoMatches: function() {
+        return "${No matches found}";
+    },
+    formatSearching: function() {
+        return "${Searching…}";
+    },
+			formatSelection: formatResults,
+			formatResult: formatResults,
+			allowClear: false,
+			dropdownCssClass: "orgchart-search-select2",
+			minimumInputLength: 3,
+
+			// query method has to be defined as a function or will break :(
+			query: function (query) {
+				s.searchForPerson(query);
+			},
+			quietMillis: 250,
+			cache: true
+		})	
+		.on('change', function(e) {
+			s.data = [];
+
+			// select2 doesn't allow search on duplicates. Need to manually clear
+			if ($selectFn2.select2("val"))
+				$selectFn2.select2("val", "");
+
+			s.loading = e.added.text;
+			s.updateChart(e.val, -1);
+		});
+	
+	//open dropdown on keypress of down arrow
+	$("div.select2-container").on('keydown', function(event) {
+		if(event.keyCode == 40)
+			search.select2('open');
+	});
+	
+	// update tier indicators on scroll
+	$sp.on({
+		scroll: function() {
+			var currPos = this.scrollTop;
+			
+			// only check for fixed header once
+			if ($isFixedHeader == undefined)
+				$isFixedHeader = !!$('.fixed-header').length;
+
+			showIndicatorPos(currPos);
+			stickyHeader(currPos);				
+			
+			if (window.innerHeight < CONST.smallScreen && !$('.navbar-toggle').is('.collapsed'))
+				orgchartSearch.style.zIndex = currPos > 100 ? CONST.searchAndTierIndicatorOffset : -1;
+		}
+	});
+	
+	// get the height of the sp container to use as min-height for all tier containers
+	s.spHeight = $sp.outerHeight(true);
+	
+	
+	/* remove lower tiers from the selected manager
+	 * @param p (obj) - user's object or user's sys_id
+	 * @param i (int) - index of user's tier position
+	 */	
+	s.updateChart = function(p, i) {
+		var sd = scope.c.data.orgChart;
+		sd.action = "updateChart";
+		sd.searchNewUser = p;
+		sd.noManager = i;
+
+		serverUpdate(function (data) {
+			updateTier(data, i);
+		});
+	};
+	
+	
+	/* fetch users based on term
+	 * @param q (obj) - select2 query object
+	 */		
+	s.searchForPerson = function (q) {
+		var sd = scope.c.data.orgChart;
+
+		sd.action = "searchForPerson";
+		sd.searchTerm = q.term + "*";
+		sd.pg = q.page;
+		
+		serverUpdate(function(data) {
+			var more = false;
+			
+			if (data.orgChart && data.orgChart.searchRes) {
+				makeSearchRes(data.orgChart.searchRes);
+				more = (CONST.maxShowSearch * q.page) < data.orgChart.searchResCount;
+			}
+				
+			q.callback({
+				results: s.searchRes || [],
+				page: q.page + 1,
+				more: more
+			});
+		});
+	};
+	
+	
+	s.scrollToReports = function (person, last) {
+		if (person && !s.loading) {
+			if (!last) {
+				s.loading = person.name.display_value;
+				s.updateChart(person.sys_id.value, -1);
+			} else {
+				var tiers = document.querySelectorAll('.tiers');
+				scrollToTier(CONST.scrollTime, s.data.length-1);
+				var lastElement = (tiers[s.data.length-1]);
+				lastElement.querySelector(".card").focus();
+			}
+		}
+	};
+	
+	
+	// initialize orgchart with data	
+	if (s.data.length) {
+		s.data.map(makeTier);
+		
+		if (s.data.length > 1 || usingHRJTheme !== 'none')
+			scrollToTier(CONST.scrollTime, s.data.length-1);
+	}
+
+	
+	// highlight user in the indicator on user's scroll
+	function showIndicatorPos (cp) {
+		var leftPos = orgchart.offsetLeft;
+		var tiers = orgchart.querySelectorAll('.tiers');
+		var tierInd = orgchart.querySelectorAll('.tier-indicator > li');			
+		
+		if (tierInd)
+			Object.keys(tiers).map(function(i) {
+				if (tierInd[i] && cp < (tiers[i].clientHeight + tiers[i].offsetTop) && cp >= tiers[i].offsetTop)
+					tierInd[i].classList.add('active');
+				else if (tierInd[i] && /active/.test(tierInd[i].className))
+					tierInd[i].classList.remove('active');
+			});
+	}
+	
+	
+	/* 
+	 * affix search and position indicator in place when user scrolls down
+	 * @param cp (int) - scrollTop value of $sp
+	 */
+	function stickyHeader (cp) {						
+		var leftPos = orgchart.offsetLeft;
+		var headerHeightWithOffset = $('header').height() + CONST.searchAndTierIndicatorOffset * 2;
+		
+		if (cp > orgchart.offsetTop || ($isFixedHeader && cp > 0)) {			
+			orgchart.classList.add('fixie');
+			orgchartSearch.style.left = leftPos + "px";
+			
+			if (window.innerWidth <= CONST.mobileScreen && window.innerWidth > 767)
+				tierIndicator.style.right = leftPos + "px";
+			else 
+				tierIndicator.style.right = (leftPos + 15) + "px";
+			
+			if ($isFixedHeader) {
+				if (s.largeScreen) {				
+					orgchartSearch.style.top = headerHeightWithOffset + "px";
+					tierIndicator.style.top = headerHeightWithOffset + "px";
+					if (window.innerWidth > 1024)
+						tierIndicator.style.right = leftPos + CONST.searchAndTierIndicatorOffset * 0.5 + "px";
+					else 
+						tierIndicator.style.right = leftPos + "px";					
+				} else if (window.innerWidth >= CONST.smallScreen) {
+					orgchartSearch.style.top = headerHeightWithOffset + CONST.searchAndTierIndicatorOffset * 5 + "px";
+					tierIndicator.style.top = headerHeightWithOffset + CONST.searchAndTierIndicatorOffset * 5 + "px";					
+				} else 
+					tierIndicator.style.top = headerHeightWithOffset - CONST.searchAndTierIndicatorOffset + "px";
+			}			
+		} else {
+			orgchart.classList.remove('fixie');
+			orgchartSearch.style.left = CONST.zeroOut;
+			tierIndicator.style.right = CONST.zeroOut;
+			
+			if ($isFixedHeader) {				
+				if (s.largeScreen) {
+					orgchartSearch.style.top = CONST.searchAndTierIndicatorOffset + "px";
+					tierIndicator.style.top = CONST.searchAndTierIndicatorOffset + "px";
+					if (window.innerWidth > 1024)
+						tierIndicator.style.right = -CONST.searchAndTierIndicatorOffset + "px";
+					else 
+						tierIndicator.style.right = CONST.zeroOut;		
+				} else if (window.innerWidth >= CONST.smallScreen) {
+					orgchartSearch.style.top = CONST.searchAndTierIndicatorOffset + "px";
+					tierIndicator.style.top = CONST.searchAndTierIndicatorOffset + "px";						
+					tierIndicator.style.right = CONST.zeroOut;
+				} else {
+					tierIndicator.style.top = CONST.zeroOut;					
+					tierIndicator.style.right = CONST.zeroOut;						
+				}
+			}
+		}
+	}
+	
+	/* 
+	 * Handles server update process for data retrieval
+	 * @param cb (fn) - callback once promise is returned
+	 */	
+	function serverUpdate (cb) {
+		scope.c.server.update()
+			.then(
+				function success (data) {
+					$('.loading-screen').addClass('out');
+					delete s.loading;
+					cb(data);
+				},
+				function error (err) { // valid promise method, do not remove!
+					s.loading = "${There was an error, reload this page.}";
+					console.log(err);
+				});
+	}
+	
+	
+	/*
+	 * Makes search results data for select2
+	 * @param o (obj) - returned object from server update
+	 */
+	function makeSearchRes (o) {
+		s.searchRes = [];		
+		o.map(makeSearchObj);
+		
+		/* private function to use inside loop */
+		function makeSearchObj (obj) {
+			var person = obj;			
+			s.searchRes.push({
+				id: person.sys_id.value,
+				text: person.name.display_value,
+				p: person
+			});			
+		}
+	}
+	
+	
+	/* format user list in the select2
+	 * @param data (obj) - user's detail object
+	 * @return dom - <span><small class="avatar">initial</small> <span class="name">name <small class="title">title</small></span>
+	 */
+	function formatResults (data) {
+		var p = data.p;
+		var small = makeDom('small', 'avatar');
+		small.style.textTransform = "uppercase";
+		
+		// only apply inlinde-css if user has avatar prop
+		if (p.avatar || p.photo.value) {
+			small.style.backgroundImage = "url(" + (p.avatar || p.photo.value) + ")";
+			small.style.borderColor = "transparent";
+			small.style.color = "transparent";
+		}
+		
+		small.textContent = p.initial;
+		
+		var name = makeDom('span', 'name');
+		name.textContent = p.name.display_value;
+		
+		var span = makeDom('span');
+		span.appendChild(small);
+		span.appendChild(name);
+		
+		if (p.title) {
+			var title = makeDom('small', 'title');
+			title.textContent = p.title.display_value;
+			span.appendChild(title);
+		}
+
+		return span;
+	}	
+	
+	
+	/* create dom for user's card - profile
+	 * @param person (obj) - user's detail object
+	 * @return dom - <a href="profileLink" class="view-profile">initial</a>
+	 */
+	function makeProfile (person) {
+		var profile = makeDom('span', 'view-profile');
+		profile.textContent = person.initial;
+		profile.setAttribute("aria-label", s.di.i18n.format(scope.data.orgChart.i18n.avatar, person.name.display_value));
+
+		// only apply inline-css if user has avatar prop
+		if (person.avatar) {
+			profile.style.backgroundImage = 'url(' + person.avatar + ')';
+			profile.style.color = 'transparent';
+			profile.style.borderColor = 'transparent';
+		}
+		
+		return profile;
+	}
+	
+	
+	/* create dom for user's card - avatar container
+	 * @param person (obj) - user's detail object
+	 * @return dom - <div class="avatar"><span>report count</span><profile/></div>
+	 */	
+	function makeAvatar (person) {
+		var avatar = makeDom('div', 'avatar');
+
+		var profile = makeProfile(person);
+		avatar.appendChild(profile);
+
+		var managerText = makeDom('span', 'sr-only');
+		managerText.textContent = person.managerText;
+		avatar.appendChild(managerText);
+		if (+person.reportCount) {
+			var badgeHidden = makeDom('span', 'sr-only');
+			badgeHidden.textContent = person.reportCountText;
+			var reportBadge = makeDom('span', 'report-badge');
+			reportBadge.setAttribute("data-toggle","tooltip");
+			reportBadge.setAttribute("data-placement","top");
+			reportBadge.setAttribute("data-original-title",person.reportCount+" sub-ordinates");
+			reportBadge.setAttribute("aria-hidden","true");
+			reportBadge.textContent = person.reportCount;
+			avatar.appendChild(badgeHidden);
+			avatar.appendChild(reportBadge);
+		}
+				
+		return avatar;
+	}
+	
+	
+	/* create dom for user's card - front container
+	 * @param person (obj) - user's detail object
+	 * @return dom - <div class="card-container"><avatar/>
+	 * <p><strong>name</strong></p>
+	 * <p><small>title</small></p>
+	 * <p><small>city, state or country</small></p>	 
+	 */		
+	function makeCardFrontContainer (person) {
+		function makeTooltipAndAppend(el, key) {
+			if (!el.textContent)
+				return;
+			
+			var elem = makeDom('p', key);
+			elem.appendChild(el);
+			// makeTooltip.call(elem, key, person);
+			cfContainer.appendChild(elem);
+		}
+		
+		var avatar = makeAvatar(person);
+		var cfContainer = makeDom('div', 'card-container');
+		cfContainer.appendChild(avatar);
+		
+		var name = makeDom('span');
+		name.textContent = person.name.display_value;
+		makeTooltipAndAppend(name, 'name');
+
+		var viewProfile = makeDom('a', 'profile-link');
+		viewProfile.href = "?id=user_profile&sys_id=" + person.sys_id.value;
+		viewProfile.target = "_blank";
+		viewProfile.setAttribute("aria-label", "${View profile for }" + person.name.display_value);
+		viewProfile.textContent = '${View Profile}';
+		viewProfile.onclick = stopProp;
+		cfContainer.appendChild(viewProfile);
+		
+		var title = makeDom('strong');
+		title.textContent = person.title.display_value;
+		makeTooltipAndAppend(title, 'title');
+		
+		var dept = makeDom('span');
+		dept.textContent = person.department.display_value;
+		makeTooltipAndAppend(dept, 'department');
+		
+		var loc = makeDom('span');
+		var locData = {};
+		locData.city = person["location.city"].display_value;
+		locData.country = person["location.country"].display_value;
+		locData.state = person["location.state"].display_value;
+		
+		// display_value will be an empty string, forcing to bool to show correct value: "city, state" or "city, country"
+		loc.textContent = locData.city;
+		loc.textContent += (!locData.city || (!locData.state && !locData.country)) ? "" : ", ";
+		loc.textContent += !locData.state ? locData.country : locData.state;
+		makeTooltipAndAppend(loc, 'location');
+		
+		return cfContainer;
+	}	
+	
+	
+	/* create dom for user's card - front container
+	 * @param person (obj) - user's detail object
+	 * @return dom - <div class="card-back-container">
+	 * <p><label></label><a>email</a></p>
+	 * <p><label></label><small>phone</small></p>
+	 * <p><label></label><small>mobile phone</small></p> 
+	 * <p><label></label><small>location</small></p> 
+	 */		
+	function makeCardBackContainer (person) {
+		var cbContainer = makeDom('div', 'card-back-container');
+		s.config.map(container);
+		
+		/* private function to use inside loop */
+		function container (o) {
+			if (!person[o] || !person[o].display_value)
+				return;
+			
+			var label = makeDom('label');
+			label.textContent = person[o].label;
+			
+			var small = makeDom('span', o);
+			var span = makeDom('span');
+			
+			if (/email/.test(person[o].type)) {
+				small = makeDom('a', o);
+				small.href = "mailto:" + person[o].display_value;
+				small.setAttribute("data-toggle","tooltip");
+				small.setAttribute("data-placement","top");
+				small.setAttribute("data-original-title", "Send mail to " + person.name.display_value);
+				small.addEventListener("click", function(event) {
+					event.stopPropagation();
+				});			
+			} else if (/phone/.test(person[o].type) && window.innerWidth < 768) {
+				small = makeDom('a', o);				
+				small.href = "tel:" + person[o].display_value;
+			}
+			
+			var p = makeDom('p', o);
+			p.appendChild(label);
+			p.appendChild(small);	
+			
+			span.textContent = person[o].display_value;
+			small.appendChild(span);
+			// makeTooltip.call(small, o, person);
+			
+			cbContainer.appendChild(p);
+		}
+		
+		return cbContainer;
+	}
+	
+	
+	/* create dom for user's card - main card
+	 * @param person (obj) - user's detail object
+	 * @param reports (obj) - user's report detail object	 
+	 * @return dom - <div class="cardr">
+	 * <cardFrontContainer/>
+	 * <cardBackContainer/>
+	 * </div>
+	 */		
+	function makeCard (person, reports) {
+		var elem = {
+			card: makeDom('div', 'card'),
+			cardBack: makeDom('div', 'card-back'),
+			cardBackContainer: makeCardBackContainer(person),	
+			cardContainer: makeCardFrontContainer(person),
+			col: makeDom('div', reports || 'col-lg-2 col-md-3 col-sm-3 col-xs-6')
+		};
+		
+		// only add if card detail has values
+		if (elem.cardBackContainer.childNodes.length)
+			elem.cardBack.appendChild(elem.cardBackContainer);
+		
+		elem.card.appendChild(elem.cardContainer);
+		elem.card.tabIndex = 0;
+		elem.card.setAttribute("role", "group");
+		elem.card.setAttribute("aria-live", "assertive");
+		elem.card.setAttribute("aria-expanded", "false");
+		
+		// only add detail if manager
+		if (!reports)
+			elem.card.appendChild(elem.cardBack);
+		
+		elem.col
+			.appendChild(elem.card)
+			.parentNode
+			.onclick = function () {				
+				openDetail.call(this, person);
+			};
+		// openDetail for when user press enter
+		elem.col
+			.onkeypress = function (e) {
+				if (/enter/i.test(e.key))
+					openDetail.call(this, person);
+			};
+
+		elem.card.onmouseenter = function () {
+			initTooltip(this);
+		};
+		
+		return elem.col;
+	}
+	
+	
+	// get user detail or show current user's detail
+	function openDetail (person) {
+		var row = this.parentNode;
+		var tier = row.parentNode;
+		if (!/person/.test(row.className) || !/last/.test(tier.className))
+			s.scrollToReports(person);
+		else
+			switchClass.apply(this, ['lg-2', 'lg-3']);
+	}
+	
+	
+	// toggle class
+	function switchClass (c1, c2) {
+		var regx = new RegExp(c1);
+		var cn = this.className;
+		var person = this.parentNode;
+		var card = this.firstChild; 		//card container
+		this.className = regx.test(cn) ? cn.replace(c1, c2) : cn.replace(c2, c1);
+
+		// add blue border around the card
+		if (/lg-3/.test(this.className)) {
+			person.classList.add('highlight');
+			this.className = this.className.replace(/md-3/, "md-4");
+			this.className = this.className.replace(/sm-3/, "sm-5");		
+			this.className = this.className.replace(/xs-6/, "xs-10");
+			card.setAttribute('aria-expanded', 'true');
+		} else {
+			person.classList.remove('highlight');
+			this.className = this.className.replace(/md-4/, "md-3");
+			this.className = this.className.replace(/sm-5/, "sm-3");	
+			this.className = this.className.replace(/xs-10/, "xs-6");
+			card.setAttribute('aria-expanded', 'false');			
+		}
+	}
+
+	
+	/* 
+	 * add tooltip attributes to any dom
+	 * @param el (dom) - dom object to add attributes
+	 * @param key (string) - key for object
+	 * @param person (obj) - user's detail object
+	 * @param pos (string, optional) - tooltip position
+	 */
+	function makeTooltip (key, person, pos) {
+		 if(key === 'name' || key === 'title'){
+            this.setAttribute('data-toggle', 'tooltip');
+        }
+        else{
+		this.setAttribute('data-toggle', 'octooltip');
+        }
+		this.setAttribute('data-placement', pos || 'top');
+		if (typeof person === "string")
+			this.setAttribute('data-original-title', person);			
+		else if (person[key] && person[key].display_value)
+			this.setAttribute('data-original-title', person[key].display_value);
+	}
+	
+	
+	// only show tooltip if last child width is greater than the parent
+	function initTooltip (elem) {
+		$(elem).find('[data-toggle="octooltip"]').each(function() {
+			if (this.lastChild) {
+				var widthDiff = this.offsetWidth - this.lastChild.offsetWidth;
+				if (widthDiff <= -20)
+					$(this).tooltip({ "padding": 50 });
+			}
+		});
+	}
+	
+
+	/* 
+	 * create hierarchy dom and append to orgchart
+	 * @param person (obj) - user's detail object
+	 * @param i (int) - index of object
+	 * <div class="tiers">
+	 *   <div class="row person" />
+	 *   <div class="row report" />
+	 * </div>
+	 */	
+	function makeTier (o, i) {		
+		var row = makeDom('div', 'row person');
+		row.appendChild(makeCard(o));
+		
+		var tiers = makeDom('div', 'tiers');
+		tiers.setAttribute("data-tier", i);			
+		tiers.appendChild(row);
+
+		// first tier will always have a class of "first"
+		if (!i)
+			tiers.classList.add('first');
+
+		// last tier will always have a class of "last", it can also be both "first" & "last"
+		// last tier will be the active tier
+		if (i === s.data.length-1) {
+			tiers.classList.add('last');
+			tiers.style.minHeight = (s.spHeight - $sp.find('header').outerHeight(true)) - CONST.searchAndTierIndicatorOffset + "px";
+			s.active = s.data[i];
+			
+			setTimeout(function () {
+				switchClass.apply(row.querySelector('.col-lg-2'), ['col-lg-2', 'col-lg-3']);
+				row.setAttribute('data-height', $(row).find('.card-back').outerHeight());
+			}, 1);
+			
+			if (o.directReports.length) {
+				setTimeout(function () {
+					var rrow = makeReportCards(o.directReports);
+					tiers.appendChild(rrow);
+				}, 400);
+			}
+		}
+		
+		orgchart.appendChild(tiers);
+		
+		if (i === s.data.length-1) {
+			var card = tiers.querySelector('.card');
+			card.focus();
+			card.setAttribute('aria-expanded', 'true');
+		}
+	}
+
+	
+	function updateTier (data, i) {
+		$('.tiers').remove();		
+		s.data = data.orgChart.tiers;
+		s.data.map(makeTier);
+		scrollToTier(600);
+	}
+
+	
+	// factory fn to make report doms
+	function makeReportCards (reportData) {
+		var rrow = makeDom('div', 'row reports');
+		
+		if (reportData.length < 6)
+			rrow.classList.add('center');
+		
+		reportData.map(function(r) {
+			rrow.appendChild(makeCard(r, 'report col-lg-2 col-md-3 col-sm-3 col-xs-6'));	
+		});
+		
+		return rrow;
+	}	
+	
+	
+	/* factory fn to create dom + classname
+	 * @param tag (string) - dom tag
+	 * @param className (string) - class name
+	 * @return dom
+	 * i.e. makeDom('div', 'foo') -> <div class="foo" />
+	 */
+	function makeDom (tag, className) {
+		var el = document.createElement(tag);
+
+		if (className)
+			el.className = className;
+
+		return el;
+	}
+
+	
+	/* animate scrolling to specific user's position
+	 * @param time (int) - animation duration or defaults to 1s
+	 * @param i (int) - index of tier position to scroll to
+	 */		
+	function scrollToTier (time, i) {			
+		var tiers = document.querySelectorAll('.tiers');
+		var place = i > -1 ? i : tiers.length-1;
+		var tier = tiers[place];
+
+		$sp.clearQueue().animate({
+			scrollTop: tier.offsetTop + ($isFixedHeader ? 0 : 100)
+		}, time || CONST.scrollTime, initTooltip);
+	}
+	
+	
+	// utility fn to stop propagation
+	function stopProp (event) {
+		event.stopPropagation();
+	}
+	
+	//for tier-indicator list
+	$(".tier-indicator").keydown(function (event) {
+        if (event.which == 38 || event.which == 40) {
+			if ($(this).length) {
+					event.stopPropagation(); //prevent scrolling for up & down arrow
+					event.preventDefault(); //prevent scrolling for up & down arrow
+					
+					var parent = $(this); //pick parent ul elemt
+					if(!parent.length) return;
+					
+					var items = $(parent).find("li");  //pick all the li elements
+					if(!items.length) return;
+					
+					var index = items.index(items.filter(":focus"));  //pick the focused element
+					if(index == -1) return;
+					
+					if(event.which == 38){
+						if(index == 0) {index = items.length -1; }
+						else {index = index -1;}
+					}
+					else if(event.which == 40){
+						if(index == items.length -1) { index=0; }
+						else { index = index + 1;}
+					}
+					
+					items[index].focus();
+            }
+        }
+    });
+	} catch (e) {
+		console.error(e);
+		console.log('trying again...');
+		setTimeout(function () {
+			orgChartLink(scope, element, attr, ctrl);
+		}, 2000);
+	}
+}]]></link>
+        <name>Ino Organization Chart (CD)</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[data.orgChart = data.orgChart || {};
+data.orgChart.tiers = data.orgChart.tiers || [];
+data.orgChart.i18n = {
+	avatar: gs.getMessage("{0} avatar"),
+	minimumCharacters: gs.getMessage("Please enter {0} or more characters")
+};
+
+var loopDetected = false;
+var i = 0;
+var max = 1;
+var usersProcessed = {};
+var detailFields = [];
+var CONST = {
+	minList: ['sys_id', 'photo', 'name', 'title'],
+	table: {
+		attachment: "sys_attachment",
+		live: "live_profile",
+		ocConfig: "sn_cd_config_org_chart",
+		user: "sys_user"
+	},
+	userColumn: ""
+};
+CONST.defaultUserFields = ['sys_id', 'photo', 'name', 'title', 'department', 'manager', 'location.city', 'location.state', 'location.country'];
+
+var cdUtil = { canDisplayUser: function() {return true;} } //new sn_cd.cd_Utils();
+
+var ocUtil = ocUtil || {
+	getAvatar: getAvatar,
+	getGR: getGR,	
+	getReportGR: getReportGR,
+	getReports: getReports,
+	getUserInitial: getUserInitial,
+	getPersonData: getPersonData,
+	getProfileRecordFromConfig: getProfileRecordFromConfig,	
+	getReporteeDetails: getReporteeDetails,	
+	loadAll: loadAll,
+	loadUser: loadUser,	
+	searchUser: searchUser
+};
+
+var searchedPerson = $sp.getParameter('p');
+var orgchartConfig = null; // ocUtil.getGR({}, CONST.table.ocConfig);
+
+// Check sn_hr_core_config_orgchart for config record, else use static default
+if (orgchartConfig && orgchartConfig.next()) {
+	data.orgChart.config = ['', '', '', ''];
+	
+	CONST.table.profile = orgchartConfig.getValue('profile_table');
+	CONST.userColumn = orgchartConfig.getValue('user');
+
+	// Check the table if extended from sys_user
+	var checkTable = new GlideTableHierarchy(CONST.table.user).getAllExtensions();
+	CONST.isSysUserExtended = checkTable.indexOf(CONST.table.profile) > -1;
+	
+	var fieldPrefix = getFieldPrefix();
+	Object.keys(orgchartConfig).map(function(o) {
+		if (/show/.test(o) && +orgchartConfig.getValue(o)) {
+			var index = +o.match(/\d$/);
+			var val = orgchartConfig.getValue('detail_' + index);
+			data.orgChart.config.splice(index-1, 1, fieldPrefix + val);
+			detailFields.push(val);
+		}
+	});
+	// filter array to remove empty val
+	data.orgChart.config = data.orgChart.config.filter(String);
+} else {
+	// if no config is available, use default value
+	CONST.table.profile = CONST.table.user;
+	data.orgChart.config = ['email', 'phone', 'mobile_phone', 'location'];
+	detailFields = CONST.defaultUserFields.concat(data.orgChart.config);
+}
+
+/* handle hrprofile as search param
+ * get profile glide record, then use record.user to get another sys_user glide record
+ */
+if ($sp.getParameter('hrprofile')) {
+	searchedPerson = ocUtil.getGR($sp.getParameter('hrprofile'), "sn_hr_core_profile");
+	
+	// if user cannot be found, show message and use current user
+	if (!searchedPerson || !searchedPerson.user) {
+		searchedPerson = gs.getUserID();
+		gs.addInfoMessage(gs.getMessage("Could not find user {0}", $sp.getParameter('hrprofile')));
+	} else
+			searchedPerson = searchedPerson.user.toString();
+
+	searchedPerson = ocUtil.getGR(searchedPerson);
+	searchedPerson = searchedPerson.getUniqueValue();
+}
+ 
+if (input && input.orgChart.action === "updateChart")
+	ocUtil.loadAll(input.orgChart.searchNewUser);
+else if (input && input.orgChart.action === "searchForPerson")
+	ocUtil.searchUser(input.orgChart.searchTerm, input.orgChart.pg);
+else
+	ocUtil.loadAll(searchedPerson || gs.getUserID());
+
+function getGR (param, table) {
+	var gr = new GlideRecordSecure(table || CONST.table.user);
+	gr.addActiveQuery();
+	
+	if (typeof param !== 'string') {
+		Object.keys(param).map(function(o) {
+			gr.addQuery(o, param[o]);
+		});
+
+		gr.orderBy(gr.getDisplayName());
+		gr.query();
+	} else {
+		// avoid .get() since it includes inactive users for admins
+		gr.addQuery('sys_id', param);
+		gr.query();
+		gr.next();
+	}		
+
+	return gr;
+}
+
+function getAvatar (id) {
+	var liveProfGR = this.getGR({'document': id, 'type': 'user'},CONST.table.live);
+
+	if (!liveProfGR || !liveProfGR.hasNext())
+		return null;
+
+	liveProfGR.next();
+	var sysAttrGR = this.getGR({'table_sys_id': liveProfGR.sys_id}, CONST.table.attachment);
+
+	if (!sysAttrGR || !sysAttrGR.hasNext())
+		return null;
+
+	sysAttrGR.next();
+	return sysAttrGR.sys_id + ".iix";
+}
+
+function loadUser(userId, includeReportData) {
+		if (userId in usersProcessed)
+			return;
+		
+		// Mark this user as processed
+		usersProcessed[userId] = null;
+
+		var person = ocUtil.getGR(userId);
+		if (!person.canRead() || !person.isValid())
+			return;
+
+		var personObj = ocUtil.getPersonData(person);
+		if (personObj.shouldShow) {
+			if (includeReportData) {
+				personObj.directReports = ocUtil.getReports(person);
+				personObj.reportCount = personObj.directReports.length;
+			} else {
+				var count = new GlideAggregate(CONST.table.user);
+				count.addAggregate('COUNT');
+				count.addQuery('manager', '=', person);
+				count.query();
+				if (count.next())
+					personObj.reportCount = parseInt(count.getAggregate('COUNT'));
+			}
+			personObj.reportCountText = personObj.reportCount > 1 ? gs.getMessage("{0} direct subordinates", personObj.reportCount.toFixed(0)) : gs.getMessage("{0} direct subordinates", personObj.reportCount.toFixed(0));
+			if (personObj.manager && personObj.manager.display_value)
+				personObj.managerText = gs.getMessage("Manager: {0}", personObj.manager.display_value);
+			else
+				personObj.managerText = gs.getMessage("This user has no manager");
+			data.orgChart.tiers.push(personObj);
+		}
+
+		if (person.manager)
+			loadUser(person.manager.toString());
+}
+
+/* Get the details of the reportees if he/she matches the criteria. 
+  If they dont, the function goes on to check if his/her reportees matches the criteria 
+  and fetches their reports */
+function getReports(person) {
+	var resultObj = [];
+	var directReportObj = [];
+	var hiddenUserReportsObj = [];
+	var reports = this.getReportGR(person);
+	if (!reports)
+		return null;
+	while (reports.next()) {
+		if (cdUtil.canDisplayUser(reports.getUniqueValue())) {
+			directReportObj = ocUtil.getReporteeDetails(reports);
+			if(directReportObj)
+				resultObj = resultObj.concat(directReportObj);
+		} else { // if reports dont match the configuration, fetch their reports using recursion 
+			hiddenUserReportsObj = ocUtil.getReports(reports);
+			if (hiddenUserReportsObj)
+				resultObj = resultObj.concat(hiddenUserReportsObj);
+		}
+	}
+	return resultObj;
+}
+
+//Get the reportee details and their count, and return it if it matches the configuration.
+function getReporteeDetails(employeeGr) {
+    var isEmployeeDisplayed = cdUtil.canDisplayUser(employeeGr.getUniqueValue());
+    var reportsGr = this.getReportGR(employeeGr);
+    var employeePrepData = {};
+    var reportCount = 0;
+    while (reportsGr.next()) {
+        if (cdUtil.canDisplayUser(reportsGr.getUniqueValue()))
+            reportCount += 1;
+        else { // if configuration is not met get the report details and the count through recursion until they are met. 
+            var reporteeDetails = ocUtil.getReporteeDetails(reportsGr);
+			if(reporteeDetails.reportCount){
+				var reportCounter = parseInt(reporteeDetails.reportCount);
+				if (!gs.nil(reportCounter))
+					reportCount = reportCount + reportCounter;
+			}       
+        }
+    }
+
+	if (isEmployeeDisplayed || cdUtil.canDisplayUser(reportsGr.getUniqueValue())){
+		employeePrepData = this.getPersonData(employeeGr);
+		employeePrepData.reportCount = reportCount;
+		if (employeePrepData.manager && employeePrepData.manager.display_value)
+			employeePrepData.managerText = gs.getMessage("Manager: {0}", employeePrepData.manager.display_value);
+		else
+			employeePrepData.managerText = gs.getMessage("This user has no manager");
+	}
+
+	return employeePrepData;
+}
+
+function getReportGR (p) {
+	p = typeof p === "string" ? p : p.getUniqueValue();
+	return this.getGR({manager: p});
+}
+
+function getUserInitial (d) {
+	var initial = d.name.getDisplayValue().trim();
+	var cutOff = 3;
+
+	if (initial) {
+		if (/[^\u0000-\u007F]/.test(initial))
+			cutOff = 2;
+		else
+			// sanitize name: i.e. "john 'aka' smith" to "john smith" or "o'neil" to "oneil"
+			initial = initial.replace(/\W[\w\s]+\W(?!\w)|[^a-z\s]/gi, "");
+
+		initial = initial.match(/[^\u0000-\u007F]+|\b[a-z]/gi).join("");
+
+	} else 
+		initial = "--";
+
+	return (initial.length > cutOff) ? initial.substr(0, cutOff) : initial;
+}
+
+function getFieldValueAndMetadata (gr, fieldName) {
+    var ge = gr.getElement(fieldName);
+    var result = {
+        display_value: ge ? ge.getDisplayValue() : '',
+        label: ge ? ge.getLabel() : '',
+        value: ge ? ge.toString() : '',
+        type: ge ? ge.getED().getInternalType() : ''
+    };
+    return result;
+}
+
+function getPersonData (gr, customUserFields) {
+	var personData = {};
+	personData.shouldShow = cdUtil.canDisplayUser(gr.getUniqueValue());	
+	
+	if (!personData.shouldShow)
+		return personData;
+	
+	personData.avatar = this.getAvatar(gr.getUniqueValue());
+	personData.initial = this.getUserInitial(gr);
+	
+	(CONST[customUserFields] || CONST.defaultUserFields).forEach(function(fieldName) {
+		personData[fieldName] = getFieldValueAndMetadata(gr, fieldName);
+	});
+
+	// If we're using custom user fields (e.g. when retrieving search results)
+	// we don't need to query the default user fields or detail fields
+	if (customUserFields)
+		return personData;
+	
+	if (CONST.table.profile != CONST.table.user)
+		gr = ocUtil.getProfileRecordFromConfig(gr);
+
+	var fieldPrefix = getFieldPrefix();
+	detailFields.forEach(function(fieldName) {
+		personData[fieldPrefix + fieldName] = getFieldValueAndMetadata(gr, fieldName);
+	});
+	
+	return personData;
+}
+
+function loadAll(startingUserId) {
+    loadUser(startingUserId, true);
+
+    // Before reverse: data.orgChart.tiers = [focusedUser, boss1, boss2, ...]
+    // After reverse: data.orgChart.tiers = [bossN, ..., boss1, focusedUser]
+    // Org chart will be rendered from top to bottom, starting with bossN
+    data.orgChart.tiers.reverse();
+}
+
+function searchUser (term, pg) {
+	data.orgChart.searchRes = [];
+
+	var res = new GlideRecord(CONST.table.user);
+	res.addActiveQuery();
+	res.addQuery("123TEXTQUERY321", term);
+	res.chooseWindow(10 * pg - 10, 10 * pg);
+	res.query();
+
+	if (!res.hasNext())
+		return;
+
+	data.orgChart.searchResCount = res.getRowCount();		
+	while (res.next()){
+		if(cdUtil.canDisplayUser(res.getUniqueValue()))
+			data.orgChart.searchRes.push(this.getPersonData(res, 'minList'));
+		else
+			data.orgChart.searchResCount-- ;
+	}
+}
+
+// get the user GR of specified table (from config)
+function getProfileRecordFromConfig (gr) {
+	var queryObj = {};
+	queryObj[CONST.userColumn] = gr.getUniqueValue();
+	var parentGr = ocUtil.getGR(queryObj, CONST.table.profile);
+	if (parentGr.next())
+		gr = parentGr;
+	return gr;
+}
+
+function getFieldPrefix() {
+	return CONST.table.profile != CONST.table.user ? CONST.table.profile + '-' : '';
+}]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-28 18:37:53</sys_created_on>
+        <sys_id>452bd4141bbb61509b7d32231b4bcb3f</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>Ino Organization Chart (CD)</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_452bd4141bbb61509b7d32231b4bcb3f</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-28 19:07:35</sys_updated_on>
+        <template><![CDATA[<div class="org-chart">
+  <div class="org-chart-container">
+    <div class="loading-screen" ng-if="c.chart.loading">
+      <p aria-live="assertive"><span class="fa fa-spinner fa-spin"></span> ${Searching for} <strong>{{ ::c.chart.loading }}</strong></p>
+    </div>
+    <div class="orgchart-search">
+      <input id="selectFn2" placeholder="${Search for employee}">
+    </div>
+
+    <ul class="tier-indicator text-right">
+      <li ng-repeat="tier in c.chart.data"
+          ng-class="{'active': c.chart.active === tier}" 
+          ng-click="c.chart.scrollToReports(tier, $last)" role="navigation" tabindex="{{c.chart.data.length > 1 ? 0 : -1}}" aria-label="{{tier.name.display_value}}">
+        <span>{{ ::tier.name.display_value }}</span>
+        <span class="sr-only">{{ ::tier.managerText}}</span>
+      </li>
+    </ul>   
+  </div>
+  
+  <span class="using-hrj-theme"></span>
+</div>]]></template>
+    </sp_widget>
+</record_update>

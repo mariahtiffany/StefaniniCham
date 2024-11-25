@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-my-tickets-card {
+  margin: 0 0 3rem;
+  padding: 0;
+  box-shadow: $default-box-shadow;
+  border-radius: $default-border-radius;
+  position: relative;
+  background-color: #FFF;
+	
+  h3 {
+  	margin: 0;
+    font-size: 2rem;
+    padding: 3rem 2rem;
+    background-color: #F7F7F7;
+  }
+  
+  ul {
+  	list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li &gt; a {
+    	color: #0093FF;
+      font-size: 1.6rem;
+      display: flex;
+      padding: 2rem;
+      border-top: 0.1rem solid #EAEAEA;
+    }
+    
+    li:first-child {
+    	border: 0 none;
+    }
+  }
+}
+
+
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>my_resquests_card</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>My Requests Card</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	var tickets = [];
+	
+	var gr = new GlideRecord('sc_request');
+	gr.addEncodedQuery('active=true^requested_forDYNAMIC90d1921e5f510100a9ad2572f2b477fe^stateIN-5,1,2');
+	gr.setLimit(5);
+	gr.orderByDesc('sys_updated_on')
+	gr.query();
+	
+	while(gr.next()) {
+		var requestedItem = new GlideRecord('sc_req_item');
+		requestedItem.addQuery('request', '=', gr.getUniqueValue());
+		requestedItem.setLimit(2);
+		requestedItem.query();
+		
+		var requestedItems = [];
+		
+		while (requestedItem.next()) {
+			requestedItems.push(requestedItem.getValue('short_description'));
+		}
+
+		tickets.push({
+			sys_id: gr.getUniqueValue(),
+			number: gr.getValue('number'),
+			description: requestedItems.join(', '),
+			last_update: gr.getValue('sys_updated_on')
+		});
+	}
+
+	data.tickets = tickets;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-10-02 21:09:03</sys_created_on>
+        <sys_id>a3569f4f1b6d75109b7d32231b4bcb7c</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>My Requests Card</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_a3569f4f1b6d75109b7d32231b4bcb7c</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-06-04 19:04:34</sys_updated_on>
+        <template><![CDATA[<div class="ino-my-tickets-card">
+	<h3>
+    ${My Requests}
+  </h3>
+  
+  <ul>
+    <li ng-repeat="ticket in c.data.tickets">
+      <a href="?id=sc_request&is_new_order=true&table=sc_request&sys_id={{ticket.sys_id}}">
+        {{ ticket.number }} - {{ticket.description||'No Description'}}
+      </a>
+    </li>
+  </ul>
+  
+  <p ng-if="!c.data.tickets.length">
+    You don't have any open requests!
+  </p>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($rootScope, spModal) {
+  var c = this;
+	
+	c.seeDetails = function(){
+		spModal.open({
+			title: 'Edit Images to this page',
+			widget: 'banner_management_editing', 
+			shared: c.data.page,
+			size: 'lg',
+			buttons: []
+		}).then(function () {
+			spModal.close();
+		});
+	};
+};
+]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #f00!default;&#13;
+&#13;
+.carousel {&#13;
+	height: 400px;&#13;
+  width: 100%;&#13;
+  &#13;
+  &amp;.noImages {&#13;
+  	background: #000;&#13;
+background: linear-gradient(225deg, $secondary-color 0%, rgba(0,0,0,0.7) 40%);&#13;
+  }&#13;
+}&#13;
+&#13;
+.carousel-inner {&#13;
+  height: 100%;&#13;
+&#13;
+  .item {&#13;
+    height: 100%;&#13;
+    width: 100%;&#13;
+&#13;
+    img {&#13;
+      height: 100%;&#13;
+      width: 100%;&#13;
+      object-fit: cover;&#13;
+    }&#13;
+    &#13;
+    .shadow {&#13;
+    	height: 100%;&#13;
+      width: 100%;&#13;
+      display: inline-block;&#13;
+      background-color: rgba(0,0,0,0.5);&#13;
+      position: absolute;&#13;
+      top:0;&#13;
+      left:0;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.carousel-indicators {&#13;
+  list-style: none;&#13;
+  display: flex;&#13;
+  flex-flow: wrap;&#13;
+  justify-content: center;&#13;
+&#13;
+  li {&#13;
+    position: relative;&#13;
+    flex: 0 1 auto;&#13;
+    width: 30px;&#13;
+    height: 3px;&#13;
+    margin: 10px 3px;&#13;
+    text-indent: -999px;&#13;
+    cursor: pointer;&#13;
+    background-color: #fff;&#13;
+    opacity: 0.5;&#13;
+    transition: opacity 0.6s ease;&#13;
+  }&#13;
+&#13;
+  .active {&#13;
+    opacity: 1;&#13;
+  }&#13;
+}&#13;
+&#13;
+.carousel-control {&#13;
+  opacity: .5;&#13;
+  span {&#13;
+    background: rgba(0, 0, 0, 0);&#13;
+    font-size: 30px;&#13;
+  }&#13;
+  &#13;
+  .glyphicon {&#13;
+  	color: rgba(255,255,255,1);&#13;
+    @media (max-width: 1140px) {&#13;
+      top: 80%;&#13;
+    }&#13;
+  }&#13;
+  &#13;
+  &amp;:hover {&#13;
+    opacity: 1;&#13;
+  }&#13;
+}&#13;
+&#13;
+.edit-images {&#13;
+  padding: 5px 10px;&#13;
+  border: 2px solid rgba(255,255,255,0.7);&#13;
+  border-radius: 5px;&#13;
+  position: absolute;&#13;
+  top: 15px;&#13;
+  right: 15px;&#13;
+  &#13;
+  span {&#13;
+  	color: rgba(255,255,255,0.7);&#13;
+  }&#13;
+  &#13;
+  &amp;:hover {&#13;
+  	background-color: rgba(255,255,255,0.4);&#13;
+    border-color: rgba(255,255,255,1);&#13;
+    &#13;
+    span {&#13;
+    	color: rgba(255,255,255,1);&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+[role="button"]:focus{&#13;
+  outline: none!important;&#13;
+  box-shadow: 0 0 0 0!important;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>banner_management</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Banner Management</name>
+        <option_schema>[{"hint":"Image waiting time (in seconds)","name":"time","section":"Presentation","default_value":"8","label":"Waiting time between banners (in seconds)","type":"integer"},&#13;
+{"hint":"Add shading over the image.","name":"shadow","section":"Presentation","default_value":"true","label":" Darken banners","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles>admin,security_dashboard_user</roles>
+        <script><![CDATA[(function () {
+	var userId = gs.getUserID();
+	var permissionName = "image_admin";
+	var flag = true;
+
+	options.shadow = options.shadow == 'true';
+	data.hasPermissionToEdit = gs.hasRole(permissionName, userId);
+	data.list = [];
+	data.page = {};
+	data.page.portal = $sp.getPortalRecord().getDisplayValue("url_suffix");
+	data.page.id = $sp.getParameter('id');
+
+	var editingView = data.page.id == 'sp-preview';
+	var gr = new GlideRecord('x_stefa_chameleon_banner');
+
+	if(!editingView) {
+		gr.addQuery('u_portal', data.page.portal);
+		gr.addQuery('u_page_id', data.page.id);
+	}
+	gr.query();
+
+	var banners = [];
+
+	while (gr.next()) {
+		banners.push({
+			image: gr.getDisplayValue('u_image'),
+			order: gr.getDisplayValue('u_order')
+		});
+	}
+
+	banners.sort(function (a, b) {
+		return a.order - b.order;
+	});
+
+	data.list = banners;
+	
+	if(data.list.length > 0) 
+		data.list[0].active = "active";
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-06 15:48:46</sys_created_on>
+        <sys_id>9f0ea33cdb0a8a9018ca174b13961967</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Banner Management</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_9f0ea33cdb0a8a9018ca174b13961967</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-07 13:21:41</sys_updated_on>
+        <template><![CDATA[<div id="chml_banner" class="carousel slide" ng-class="{'noImages': data.list.length == 0}" data-ride="carousel" data-interval="{{c.options.time * 1000}}">
+  <ol ng-show="data.list.length > 0" class="carousel-indicators">
+    <li data-target="#chml_banner" data-slide-to="{{$index}}" class="{{banner.active}}" ng-repeat="banner in data.list"></li>
+  </ol>
+  <div ng-show="data.list.length > 0" class="carousel-inner">
+    <div class="item {{banner.active}}" ng-repeat="banner in data.list" role="tabpanel" id="tabpanel-0-{{$index}}">
+      <span class="shadow" ng-if="c.options.shadow"></span>
+      <img src="/{{banner.image}}" />
+    </div>
+  </div>
+  <a ng-show="data.list.length > 0" class="carousel-control left" href="#chml_banner" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a ng-show="data.list.length > 0" class="carousel-control right" href="#chml_banner" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  <a class="edit-images" role="button" ng-if="c.data.hasPermissionToEdit" href="javascript:void(0)" ng-click="c.seeDetails()">
+    <span class="glyphicon glyphicon-pencil"></span>
+    <span class="sr-only">Edit Images</span>
+  </a>
+</div>]]></template>
+    </sp_widget>
+</record_update>

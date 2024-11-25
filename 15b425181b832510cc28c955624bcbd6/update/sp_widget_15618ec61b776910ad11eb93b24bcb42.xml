@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	var intlDateFormat;
+	
+	c.formatDate = function (lastUpdate) {
+		try {
+			if (!intlDateFormat) {
+				intlDateFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
+			}
+			
+			return intlDateFormat.format(new Date(lastUpdate + 'Z')).split(',').join(''); 
+		} catch (e) {
+			return lastUpdate;
+		}		
+	};
+	
+	c.openSophie = function () {
+		SophieChatter.show();
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.ino-dow-manager-my-request {
+	box-shadow: $default-box-shadow;
+  width: 100%;
+  margin-bottom: 32px;
+	height: 452px;
+  background-color: #FFF;
+}
+
+.icon-default-color {
+  fill: $primary-color;
+  g {
+    fill: $primary-color;
+    path {
+      fill: $primary-color;
+    }
+  }
+}
+
+.ino-dow-manager-my-request-table {
+  width: 100%;
+  display: flex;
+  
+  table {
+    width: 100%;
+  	margin-bottom: 32px;
+    
+    td, th {
+      padding: 1rem;
+      border: 1px solid #EAEAEA;
+      vertical-align: middle;
+      
+      svg {
+        color: currentColor;
+        margin-right: 1rem;
+        height: 15px;
+        float: left;
+      }
+      
+      a {
+      	float: left;
+      }
+    }
+
+    th {
+    	padding: 2rem 1rem;
+      background-color: #F7F7F7;
+    }
+    
+    tr td:first-child {
+    	text-align: center;
+    }
+
+    tr td:last-child {
+      padding-right: 24px;
+    }
+
+    button {
+      appearance: none;
+      background-color: transparent !important;
+      padding: 8px 20px;
+      border: 0 none !important;
+      color: black !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      text-transform: uppercase;
+
+      svg {
+        color: currentColor;
+        margin-right: 8px;
+      }
+
+      &amp;:hover, &amp;:active, &amp;:focus {
+        background-color: white !important;
+        color: $secondary-color !important;
+      }
+    }
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_manager_my_request</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Manager My Request</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+	var tickets = [];
+	
+	var gr = new GlideRecord('sc_request');
+	gr.addEncodedQuery('active=true^requested_forDYNAMIC90d1921e5f510100a9ad2572f2b477fe^stateIN-5,1,2');
+	gr.setLimit(5);
+	gr.orderByDesc('sys_updated_on')
+	gr.query();
+	
+	while(gr.next()) {
+		var requestedItem = new GlideRecord('sc_req_item');
+		requestedItem.addQuery('request', '=', gr.getUniqueValue());
+		requestedItem.setLimit(2);
+		requestedItem.query();
+		
+		var requestedItems = [];
+		
+		while (requestedItem.next()) {
+			requestedItems.push(requestedItem.getValue('short_description'));
+		}
+
+		tickets.push({
+			sys_id: gr.getUniqueValue(),
+			number: gr.getValue('number'),
+			description: requestedItems.join(', '),
+			last_update: gr.getValue('sys_updated_on')
+		});
+	}
+
+	data.tickets = tickets;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 12:34:01</sys_created_on>
+        <sys_id>15618ec61b776910ad11eb93b24bcb42</sys_id>
+        <sys_mod_count>112</sys_mod_count>
+        <sys_name>Ino DOW Manager My Request</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_15618ec61b776910ad11eb93b24bcb42</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-08 18:02:59</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-manager-my-request">
+  <div class="panel-heading">
+    <h2>
+      <svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path id="Icon_ionic-md-checkmark-circle" data-name="Icon ionic-md-checkmark-circle" d="M15.375,3.375a12,12,0,1,0,12,12A12.035,12.035,0,0,0,15.375,3.375Zm-2.463,18.4-6.15-6.15L8.487,13.9l4.431,4.431,9.352-9.352L23.994,10.7Z" transform="translate(-3.375 -3.375)" />
+      </svg>
+      ${My Request}
+    </h2>
+  </div>
+  
+  <div class="ino-dow-manager-my-request-table">
+    <table>
+      <colgroup>
+         <col span="1" style="width: 20%;">
+         <col span="1" style="width: 38%;">
+         <col span="1" style="width: 20%;">
+         <col span="1" style="width: 22%;">
+      </colgroup>
+
+      <thead>
+      	<tr>
+        	<th>${Number}</th>
+        	<th>${Description}</th>
+        	<th>${Last Update}</th>
+        	<th></th>
+        </tr>
+      </thead>
+      <tbody>
+      	<tr ng-repeat="ticket in c.data.tickets">
+          <td>
+          	<svg width="5" height="26" viewBox="0 0 5 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+	            <path d="M2.49682 25.7143C1.80846 25.7143 1.22024 25.4692 0.732143 24.979C0.244048 24.4888 0 23.8995 0 23.2111C0 22.5228 0.245107 21.9345 0.735321 21.4464C1.22551 20.9583 1.8148 20.7143 2.50318 20.7143C3.19154 20.7143 3.77976 20.9594 4.26786 21.4496C4.75595 21.9398 5 22.5291 5 23.2175C5 23.9058 4.75489 24.494 4.26468 24.9821C3.77449 25.4702 3.1852 25.7143 2.49682 25.7143ZM0 17.1429V0H5V17.1429H0Z" fill="#F15D22"/>
+            </svg>
+            
+            <a href="?id=sc_request&is_new_order=true&table=sc_request&sys_id={{ticket.sys_id}}">
+              {{ticket.number}}
+            </a>
+          </td>
+        	<td>{{ticket.description}}</td>
+        	<td>{{c.formatDate(ticket.last_update)}} <sn-time-ago timestamp="::ticket.last_update"></sn-time-ago></td>
+          <td>
+          	<button ng-click="c.openSophie(ticket)">
+              <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+              	<path d="M11.25 22.5V20.625H21.875V11.125C21.875 9.91667 21.6146 8.75521 21.0938 7.64062C20.5729 6.52604 19.875 5.54167 19 4.6875C18.125 3.83333 17.125 3.15104 16 2.64062C14.875 2.13021 13.7083 1.875 12.5 1.875C11.2917 1.875 10.125 2.13021 9 2.64062C7.875 3.15104 6.875 3.83333 6 4.6875C5.125 5.54167 4.42708 6.52604 3.90625 7.64062C3.38542 8.75521 3.125 9.91667 3.125 11.125V18.75H2.5C1.8125 18.75 1.22396 18.5052 0.734375 18.0156C0.244792 17.526 0 16.9375 0 16.25V13.75C0 13.2708 0.114583 12.849 0.34375 12.4844C0.572917 12.1198 0.875 11.8229 1.25 11.5938L1.34375 9.9375C1.53125 8.41667 1.96354 7.04167 2.64062 5.8125C3.31771 4.58333 4.16146 3.54167 5.17188 2.6875C6.18229 1.83333 7.31771 1.17188 8.57812 0.703125C9.83854 0.234375 11.1458 0 12.5 0C13.875 0 15.1927 0.234375 16.4531 0.703125C17.7135 1.17188 18.8438 1.83854 19.8438 2.70312C20.8438 3.56771 21.6823 4.60938 22.3594 5.82812C23.0365 7.04688 23.4688 8.40625 23.6562 9.90625L23.75 11.5312C24.125 11.7188 24.4271 11.9948 24.6562 12.3594C24.8854 12.724 25 13.125 25 13.5625V16.4375C25 16.8958 24.8854 17.3021 24.6562 17.6562C24.4271 18.0104 24.125 18.2812 23.75 18.4688V20.625C23.75 21.1406 23.5664 21.582 23.1992 21.9492C22.832 22.3164 22.3906 22.5 21.875 22.5H11.25ZM8.75 13.4375C8.5 13.4375 8.28125 13.3438 8.09375 13.1562C7.90625 12.9688 7.8125 12.7448 7.8125 12.4844C7.8125 12.224 7.90625 12.0052 8.09375 11.8281C8.28125 11.651 8.50521 11.5625 8.76562 11.5625C9.02604 11.5625 9.24479 11.6523 9.42188 11.832C9.59896 12.0117 9.6875 12.2344 9.6875 12.5C9.6875 12.75 9.59766 12.9688 9.41797 13.1562C9.23828 13.3438 9.01562 13.4375 8.75 13.4375ZM16.25 13.4375C16 13.4375 15.7812 13.3438 15.5938 13.1562C15.4062 12.9688 15.3125 12.7448 15.3125 12.4844C15.3125 12.224 15.4062 12.0052 15.5938 11.8281C15.7812 11.651 16.0052 11.5625 16.2656 11.5625C16.526 11.5625 16.7448 11.6523 16.9219 11.832C17.099 12.0117 17.1875 12.2344 17.1875 12.5C17.1875 12.75 17.0977 12.9688 16.918 13.1562C16.7383 13.3438 16.5156 13.4375 16.25 13.4375ZM5.03125 11.8125C4.94792 10.5833 5.11979 9.46875 5.54688 8.46875C5.97396 7.46875 6.54688 6.61979 7.26562 5.92188C7.98438 5.22396 8.8125 4.6875 9.75 4.3125C10.6875 3.9375 11.625 3.75 12.5625 3.75C14.4583 3.75 16.0521 4.34896 17.3438 5.54688C18.6354 6.74479 19.4271 8.23958 19.7188 10.0312C17.7604 10.0104 16.0365 9.48438 14.5469 8.45312C13.0573 7.42188 11.9062 6.08333 11.0938 4.4375C10.7604 6.125 10.0573 7.61979 8.98438 8.92188C7.91146 10.224 6.59375 11.1875 5.03125 11.8125Z" fill="currentColor"/>
+              </svg>
+
+              ${Chat Now}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

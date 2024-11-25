@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="priority" label="Priority" language="en" table="x_stefa_chameleon_it_health_sensors">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>priority</element>
+            <help/>
+            <hint/>
+            <label>Priority</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_it_health_sensors</name>
+            <plural>Priorities</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2023-06-23 13:18:57</sys_created_on>
+            <sys_id>5c3229661b276910ad11eb93b24bcb79</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Priority</sys_name>
+            <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+            <sys_update_name>sys_documentation_x_stefa_chameleon_it_health_sensors_priority_en</sys_update_name>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2023-06-23 13:18:57</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

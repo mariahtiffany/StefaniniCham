@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $http, $timeout, spModal) {
+	var c = this;
+	c.data.page = angular.copy(c.options.shared);
+	
+	$scope.category = '';
+	$scope.categoryList = c.data.categoryList;
+	
+	getServerContent('imageList', {filter:null});
+	getServerContent('selectedList', null);
+	
+	$scope.uploadImage = function(){
+		var fileInput = document.getElementById('fileInput');
+		
+		if($scope.category == '') {
+			showNotification(c.data.messages.selectCategory, 3000, 'error');
+			return;
+		}
+		
+		if(fileInput.files.length == 0) {
+			showNotification(c.data.messages.selectFile, 3000, 'error');
+			return;
+		}
+		
+		c.uploadLoading = true;
+		
+		var reader = new FileReader();
+		reader.onload = function (e) {
+			c.server.get({ 
+				action: 'upload', 
+				upload: {
+					name: fileInput.files[0].name,
+					type: fileInput.files[0].type,
+					category: $scope.category,
+					fileBase64: e.target.result.split(',')[1]
+				} 
+			}).then(function (response) {
+
+				c.uploadLoading = false;
+				
+				if (response.$$uiNotification) {
+					var uploadStopped = false;
+					
+					response.$$uiNotification.forEach(function(notification) {
+						if (notification.type === 'error') {
+							var decodedText = document.createElement("textarea");
+							decodedText.innerHTML = notification.message;
+							showNotification(decodedText.value, 5000, 'error');
+							uploadStopped = true;
+						}
+					});
+					
+					if (uploadStopped)
+						return;
+				}
+				
+				c.selectedList.push({
+					sys_id: response.data.uploadFile.sysId,
+					page_id: response.data.uploadFile.pageId,
+					portal: response.data.uploadFile.portal,
+					name: response.data.uploadFile.name,
+					order: 0
+				});
+				
+				getServerContent('imageList', {filter:$scope.c.filter});
+				showNotification(c.data.messages.imageLoaded, 3000, 'alert');
+			});
+		};
+		
+		reader.readAsDataURL(fileInput.files[0]);
+	};
+	
+	$scope.filterImages = function() {
+		getServerContent('imageList', {filter:$scope.c.filter});
+	};
+	
+	$scope.toggleCheckbox = function(image) {
+		image.selected = !image.selected;
+	};
+	
+	$scope.addImages = function() {
+		var selectedImages = c.imageList.filter(function(image) { return image.selected; });
+    selectedImages.forEach(function(image, index) {
+        image.order = 100 + index;
+    });
+		if (selectedImages.length == 0)
+			showNotification(c.data.messages.selectImage, 3000, 'error');
+		else {
+    	c.selectedList = c.selectedList.concat(selectedImages);
+			showNotification(c.data.messages.imageAdded, 3000, 'alert');
+		}
+		$timeout(function () {
+			enableDragSort('drag-sort-enable');
+		}, 500);
+	};
+	
+	$scope.removeImage = function(image) {
+		var indexToRemove = c.selectedList.findIndex(function(item) {return item.sys_id === image.sys_id;});
+
+    if (indexToRemove !== -1) {
+			spModal.open({
+				title: c.data.messages.deleteConfirm,
+				message: c.data.messages.deleteDescription,
+				size: 'sm',
+				windowClass: 'delete-modal',
+				buttons: [
+					{ label: c.data.messages.cancelBtn, cancel: true },
+					{ label: c.data.messages.deleteBtn, primary: true }
+				]
+			}).then(function() {
+				c.selectedList.splice(indexToRemove, 1);
+			});
+			
+			var checkExist = setInterval(function() {
+				if (document.getElementsByClassName('modal-header')[0]) {
+					clearInterval(checkExist);
+					var x = document.getElementsByClassName('modal-header')[0];
+					x.style.display = "none";
+				}
+			}, 10);
+    }
+	};
+
+	$scope.saveOrder = function() {
+		getServerContent('save', {selectedImages: c.selectedList});
+		showNotification(c.data.messages.settingsSaved, 4000, 'success');
+	};
+
+	$scope.loadingHTML = function() {
+		return '<div class="loading"><div></div><div></div><div></div><div></div></div>';
+	};
+
+	function getServerContent(action, param) {
+		c[action + 'Loaded'] = false;
+		var params = {
+			action: action,
+			page: c.data.page
+		};
+
+		if (typeof param === 'object')
+			Object.assign(params, param);
+		else 
+			params[param] = param;
+		
+		c.server.get(params).then(function (response) {
+			c[action] = response.data[action];
+			
+			$timeout(function () {
+				c[action + 'Loaded'] = true;
+				if(action == 'selectedList')
+					enableDragSort('drag-sort-enable');
+			}, 500);
+		});
+	}
+	
+	// Drag and drop functionalities below -----------------------------
+	
+	function enableDragSort(listClass) {
+		var sortableLists = document.getElementsByClassName(listClass);
+		Array.prototype.map.call(sortableLists, function (list) {enableDragList(list)});
+	}
+
+	function enableDragList(list) {
+		Array.prototype.map.call(list.children, function (item) {enableDragItem(item)});
+	}
+
+	function enableDragItem(item) {
+		item.setAttribute('draggable', true)
+		item.ondrag = handleDrag;
+		item.ondragend = handleDrop;
+	}
+
+	function handleDrag(item) {
+		var selectedItem = item.target,
+				list = selectedItem.parentNode,
+				x = event.clientX,
+				y = event.clientY;
+
+		selectedItem.classList.add('drag-sort-active');
+		var swapItem = document.elementFromPoint(x, y) === null ? selectedItem : document.elementFromPoint(x, y);
+
+		if (list === swapItem.parentNode) {
+			swapItem = swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
+			list.insertBefore(selectedItem, swapItem);
+		}
+	}
+
+	function handleDrop(item) {
+		item.target.classList.remove('drag-sort-active');
+		
+		var updatedList = Array.from(item.target.parentNode.children);
+
+    updatedList.forEach(function (uItem, index) {
+			c.selectedList.find(function(e) { 
+				return e.sys_id == uItem.id;
+			}).order = (index + 1);
+		});
+	}
+	
+	function showNotification(message, duration, type) {
+		var notificationContainer = document.getElementById('notification-container');
+
+		var notification = document.createElement('div');
+		notification.className = 'notification ' + type;
+		notification.textContent = message;
+
+		notificationContainer.appendChild(notification);
+
+		setTimeout(function() {
+			notification.classList.add('show');
+		}, 10);
+
+		setTimeout(function() {
+			notification.classList.remove('show');
+			setTimeout(function() {
+				notificationContainer.removeChild(notification);
+			}, 300);
+		}, duration);
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #ccc!default;&#13;
+&#13;
+.chmlBannerEdit {&#13;
+  display: flex; &#13;
+  flex-direction: column;&#13;
+&#13;
+  select,&#13;
+  input {&#13;
+    border: 1px solid #AFAFAF;&#13;
+    border-radius: 5px;&#13;
+    padding: 5px;&#13;
+    font-size: 1.4rem;&#13;
+  }&#13;
+&#13;
+  button {&#13;
+    background-color: #0E8FD8;&#13;
+    color: white;&#13;
+    padding: 5px 10px;&#13;
+    border: 0;&#13;
+    border-radius: 5px;&#13;
+    font-size: 1.4rem;&#13;
+&#13;
+    &amp;:hover {&#13;
+      background-color: #0680CA;&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .alignButton {&#13;
+  	display: flex;&#13;
+  }&#13;
+  &#13;
+  .applyButton {&#13;
+    font-size: 1.6rem;&#13;
+    padding: 10px 15px;&#13;
+    display: flex;&#13;
+    align-self: flex-end;&#13;
+  }&#13;
+&#13;
+  .uploadArea {&#13;
+    display: flex; &#13;
+    flex-direction: column;&#13;
+    align-items: baseline;&#13;
+&#13;
+    label {&#13;
+      font-size: 12px;&#13;
+      display: flex;&#13;
+      flex-direction: column;&#13;
+      margin: 10px 0;&#13;
+&#13;
+      span {&#13;
+        color: #f00;&#13;
+        margin-top: 5px;&#13;
+      }&#13;
+    }&#13;
+&#13;
+    .custom-file-input {&#13;
+      position: relative;&#13;
+      display: inline-block;&#13;
+      overflow: hidden;&#13;
+      cursor: pointer;&#13;
+      margin-right: 10px;&#13;
+&#13;
+      input {&#13;
+        position: absolute;&#13;
+        top: 0;&#13;
+        right: 0;&#13;
+        margin: 0;&#13;
+        padding: 0;&#13;
+        font-size: 20px;&#13;
+        cursor: pointer;&#13;
+        opacity: 0;&#13;
+        filter: alpha(opacity=0);&#13;
+      }&#13;
+&#13;
+      span {&#13;
+        display: inline-block;&#13;
+        padding: 5px 10px;&#13;
+        background-color: #0E8FD8;&#13;
+        color: white;&#13;
+        border-radius: 5px;&#13;
+        cursor: pointer;&#13;
+      }&#13;
+&#13;
+      &amp;:hover span {&#13;
+        background-color: #0680CA;&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .boxArea {&#13;
+    border: 1px solid #d9d9d9;&#13;
+    padding: 15px;&#13;
+    margin-top: 15px;&#13;
+    display: flex;&#13;
+    flex-direction: column;&#13;
+&#13;
+    h4, h5 {&#13;
+      display: flex; &#13;
+      justify-content: space-between; &#13;
+      align-items: center;&#13;
+      color: #000;&#13;
+      padding: 0 0 10px;&#13;
+      margin: 0;&#13;
+      font-size: 18px;&#13;
+    }&#13;
+    &#13;
+    h5 { &#13;
+      padding: 0; &#13;
+    &#13;
+      .glyphicon {&#13;
+      	font-size: 12px;&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .imageList {&#13;
+    background-color: #d9d9d9;&#13;
+    max-height: 32rem;&#13;
+    overflow-y: auto;&#13;
+    padding: 10px;&#13;
+    margin-top: 10px;&#13;
+    display: flex;&#13;
+    flex-direction: column;&#13;
+    align-items: center;&#13;
+&#13;
+    ul {&#13;
+      width: 100%;&#13;
+      list-style: none;&#13;
+      margin: 0;&#13;
+      padding: 0;&#13;
+      display: flex;&#13;
+      flex-flow: wrap;&#13;
+      justify-content: center;&#13;
+&#13;
+      li {&#13;
+        position: relative;&#13;
+        overflow: hidden;&#13;
+        object-fit: cover;&#13;
+        max-width: 150px;&#13;
+        min-width: 40px;&#13;
+        max-height: 70px;&#13;
+        border: 1px solid #666;&#13;
+        margin: 3px;&#13;
+        flex: auto;&#13;
+        box-shadow: #666 2px 2px 3px;&#13;
+        background-color:#fff;&#13;
+        display: flex;&#13;
+        justify-content: center;&#13;
+&#13;
+        .shadow {&#13;
+          height: 100%;&#13;
+          width: 100%;&#13;
+          display: inline-block;&#13;
+          background: linear-gradient(200deg, rgba(0,0,0,0.4) 5%, rgba(0,0,0,0) 40%);&#13;
+          position: absolute;&#13;
+          top:0;&#13;
+          left:0;&#13;
+        }&#13;
+&#13;
+        img {&#13;
+          width: 100%;&#13;
+          height: 100%;&#13;
+          object-fit: cover;&#13;
+        }&#13;
+&#13;
+        input[type="checkbox"],&#13;
+        svg	{&#13;
+          position: absolute;&#13;
+          top: 3px;&#13;
+          right: 5px;&#13;
+          cursor: pointer;&#13;
+        }&#13;
+&#13;
+        svg	{&#13;
+          top: 5px;&#13;
+          fill: #FFF;&#13;
+        }&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+&#13;
+.drag-sort-enable &gt; li {&#13;
+  cursor: move;&#13;
+}&#13;
+&#13;
+.details {&#13;
+  transition: all 0.2s ease-in-out;&#13;
+  opacity: 1;&#13;
+  &#13;
+  &amp;.ng-hide {&#13;
+    opacity: 0;&#13;
+  }&#13;
+}&#13;
+&#13;
+.loading {&#13;
+  display: inline-block;&#13;
+  position: relative;&#13;
+  width: 8rem;&#13;
+  height: 13rem;&#13;
+&#13;
+  div {&#13;
+    position: absolute;&#13;
+    top: 50%;&#13;
+    margin-top: -7px;&#13;
+    width: 13px;&#13;
+    height: 13px;&#13;
+    border-radius: 50%;&#13;
+    background: $secondary-color;&#13;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);&#13;
+  }&#13;
+&#13;
+  div:nth-child(1) {&#13;
+    left: 8px;&#13;
+    animation: loading1 0.6s infinite;&#13;
+  }&#13;
+  div:nth-child(2) {&#13;
+    left: 8px;&#13;
+    animation: loading2 0.6s infinite;&#13;
+  }&#13;
+  div:nth-child(3) {&#13;
+    left: 32px;&#13;
+    animation: loading2 0.6s infinite;&#13;
+  }&#13;
+  div:nth-child(4) {&#13;
+    left: 56px;&#13;
+    animation: loading3 0.6s infinite;&#13;
+  }&#13;
+}&#13;
+&#13;
+.uploadArea &gt; div &gt; button &gt; span &gt; .loading {&#13;
+	height: 1rem;&#13;
+  &#13;
+  div {&#13;
+    width: 8px;&#13;
+    height: 8px;&#13;
+    margin-top: -4px;&#13;
+    background-color:#fff;&#13;
+  }&#13;
+}&#13;
+&#13;
+@keyframes loading1 {&#13;
+  0% {transform: scale(0);}&#13;
+  100% {transform: scale(1);}&#13;
+}&#13;
+@keyframes loading3 {&#13;
+  0% {transform: scale(1);}&#13;
+  100% {transform: scale(0);}&#13;
+}&#13;
+@keyframes loading2 {&#13;
+  0% {transform: translate(0, 0);}&#13;
+  100% {transform: translate(24px, 0);}&#13;
+}&#13;
+@keyframes loadingSm2 {&#13;
+  0% {transform: translate(0, 0);}&#13;
+  100% {transform: translate(12px, 0);}&#13;
+}&#13;
+&#13;
+.notification-container {&#13;
+  position: fixed;&#13;
+  top: 10px;&#13;
+  right: 10px;&#13;
+  width: 300px;&#13;
+  z-index: 9000;&#13;
+  &#13;
+  .notification {&#13;
+    color: white;&#13;
+    padding: 15px;&#13;
+    margin: 10px 0;&#13;
+    border-radius: 5px;&#13;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);&#13;
+    opacity: 0;&#13;
+    transition: opacity 0.3s ease-in-out;&#13;
+    &#13;
+    &amp;.show {&#13;
+      opacity: 1;&#13;
+    }&#13;
+    &amp;.success {&#13;
+      background-color: #4CAF50;&#13;
+    }&#13;
+    &amp;.alert {&#13;
+      background-color: #FF8500;&#13;
+    }&#13;
+    &amp;.error {&#13;
+      background-color: #AF0000;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.modal-content {&#13;
+	background-color: #AF0000!important;&#13;
+  color: #FFF;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>banner_management_editing</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>Banner Management - Editing</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.messages = {
+		selectCategory: gs.getMessage("Select a category before loading."),
+		selectFile: gs.getMessage("Select a file before loading."),
+		selectImage: gs.getMessage("Select a image before adding."),
+		imageLoaded: gs.getMessage("Image loaded into the selection list."),
+		imageAdded: gs.getMessage("Images added to the selection list."),
+		settingsSaved: gs.getMessage("Settings saved successfully!"),
+		deleteConfirm: gs.getMessage("Delete Confirmation"),
+		deleteDescription: gs.getMessage("Are you <b>sure</b> you want to delete this image?"),
+		deleteBtn: gs.getMessage("Delete"),
+		cancelBtn: gs.getMessage("Cancel")
+	};
+	
+	data.categoryList = [
+		{value: 'cms', title: gs.getMessage('Content Management')},
+		{value: 'general', title: gs.getMessage('General')},
+		{value: 'kb', title: gs.getMessage('Knowledge Management')},
+		{value: 'sc', title: gs.getMessage('Service Catalog')},
+		{value: 'Service Portal', title: gs.getMessage('Service Portal')},
+		{value: 'system', title: gs.getMessage('System')}
+	];
+	
+	if (!input)
+    return;
+	
+	var editingView = $sp.getParameter('id') == 'sp-preview';
+	if (editingView) {
+		input.page = {
+			id: "chameleon_home",
+			portal: "chameleon_doordash"
+		}
+	}
+	
+	if (input.action === 'imageList') {
+		var imageList = [];
+		var grImgList = new GlideRecord('db_image');
+		
+		if(input.filter)
+			grImgList.addQuery('name', 'LIKE', '%' + input.filter + '%');
+		
+		grImgList.query();
+		
+		while (grImgList.next()) {
+			var image = {
+				sys_id: grImgList.sys_id.toString(),
+				name: grImgList.name.toString(),
+				format: grImgList.format.toString(),
+				thumbnail: grImgList.thumbnail.toString(),
+				selected: false,
+				order: 0,
+				active: grImgList.active.toString() == 'true',
+				size: grImgList.size_bytes ? ' (' + Math.round(grImgList.size_bytes.toString() / 1024) + ' KB)' : ''
+			};
+			imageList.push(image);
+		}
+		data.imageList = imageList;
+		
+		$sp.log(imageList);
+		return;
+	}
+
+	if (input.action === 'upload') {
+		//Create a record in db_image, but still no image
+		var grUpload = new GlideRecord('db_image');
+		grUpload.initialize();
+		grUpload.setValue('name', input.upload.name);
+		grUpload.setValue('category', input.upload.category);
+		grUpload.setValue('image', null);
+		var uniqueSysId = grUpload.insert();
+		
+		//Upload file in sys_attachment
+		var attachment = new GlideSysAttachment();
+		var rec = new GlideRecord('db_image');
+		rec.get(uniqueSysId);
+		var bytes = GlideStringUtil.base64DecodeAsBytes(input.upload.fileBase64);
+		var agr = attachment.write(rec, 'image', input.upload.type, bytes);
+
+		//Associating the uploaded file with the db_image record
+		var di = new GlideRecord('db_image');
+		di.addQuery('sys_id', uniqueSysId);
+		di.query();
+		while (di.next()) { 
+			di.image = agr;
+			di.update();
+		}
+		data.uploadFile = {
+			sysId: uniqueSysId,
+			pageId: input.page.id,
+			portal: input.page.portal,
+			name: input.upload.name
+		};
+		return;
+	}
+	
+	if (input.action === 'selectedList') {
+		listSelectedImages();
+		return;
+	}
+	
+	if (input.action === 'save') {
+		insertSelectedImages(input.selectedImages);
+		listSelectedImages();
+		return;
+	}
+
+	function listSelectedImages(){
+		var selectedList = [];
+		var grSelectedList = new GlideRecord('x_stefa_chameleon_banner');
+		
+		if(input.page) {
+			grSelectedList.addQuery('u_page_id', input.page.id);
+			grSelectedList.addQuery('u_portal', input.page.portal);
+		}
+		grSelectedList.query();
+		
+		while (grSelectedList.next()) {
+
+			var selectedImage = {
+				sys_id: grSelectedList.sys_id.toString(),
+				page_id: grSelectedList.u_page_id.toString(),
+				portal: grSelectedList.u_portal.toString(),
+				order: parseInt(grSelectedList.u_order.toString(), 10),
+				name: grSelectedList.u_image.toString(),
+			};
+			selectedList.push(selectedImage);
+		}
+		data.selectedList = selectedList;
+	}
+	
+	function insertSelectedImages(images) {
+		var grSelectedList = new GlideRecord('x_stefa_chameleon_banner');
+
+		if (input.page) {
+			grSelectedList.addQuery('u_page_id', input.page.id);
+			grSelectedList.addQuery('u_portal', input.page.portal);
+		}
+
+		grSelectedList.deleteMultiple();
+
+		for (var i = 0; i < images.length; i++) {
+			var image = images[i];
+
+			grSelectedList.initialize();
+			grSelectedList.u_page_id = input.page.id;
+			grSelectedList.u_portal = input.page.portal;
+			grSelectedList.u_order = image.order;
+			grSelectedList.u_image = image.name;
+
+			grSelectedList.insert();
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-06 15:49:25</sys_created_on>
+        <sys_id>fc3ea33cdb0a8a9018ca174b139619c0</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Banner Management - Editing</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_fc3ea33cdb0a8a9018ca174b139619c0</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-07 13:23:03</sys_updated_on>
+        <template><![CDATA[<div class="chmlBannerEdit">
+  <button class="applyButton" ng-click="saveOrder()">${Apply Configuration}</button>
+
+  <div class="boxArea">
+    <h4>
+      ${Selected Images}
+    </h4>
+
+    <div class="imageList" ng-model="c.selectedList">
+      <span ng-show="c.selectedList.length == 0 && c.selectedListLoaded">${No images selected}</span>
+      <ul ng-show="c.selectedListLoaded" class="drag-sort-enable">
+        <li ng-repeat="image in c.selectedList | orderBy: 'order'" id="{{image.sys_id}}">
+          <span class="shadow"></span>
+          <img ng-src="/{{image.name}}" alt="{{image.name}}">
+          <svg ng-click="removeImage(image)" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z"/>
+          </svg>
+        </li>
+      </ul>
+      <span ng-hide="c.selectedListLoaded" ng-bind-html="loadingHTML()"></span>
+    </div>
+  </div>
+
+  <div class="boxArea">
+    <h5 ng-click="c.updateArea = !c.updateArea">
+      ${Upload}
+      <span ng-hide="c.updateArea" class="glyphicon glyphicon-chevron-down"></span>
+      <span ng-show="c.updateArea" class="glyphicon glyphicon-chevron-up"></span>
+    </h5>
+    <div class="uploadArea details" ng-show="c.updateArea">
+      <label>${Select an category}</label>
+      <select ng-model="category" ng-options="category.value as category.title for category in categoryList">
+        <option value="">${Category}</option>
+      </select>
+      <br/>
+      <label>
+        ${Select file}
+        <span>* ${For the best visual quality, we recommend uploading images with a resolution of 1920x1187 pixels.}</span>
+      </label>
+      <div class="alignButton">
+        <div for="fileInput" class="custom-file-input">
+          <span>${Choose File}</span>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
+        <button ng-click="uploadImage()">
+        	<span ng-hide="c.uploadLoading">${Upload}</span>
+          <span ng-show="c.uploadLoading" ng-bind-html="loadingHTML()"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="boxArea">
+    <h4>
+      ${Database Images}
+      <button ng-click="addImages()">${Add Selected Images}</button>
+    </h4>
+
+    <label>${Please type below the image you wish to filter}</label>
+    <input type="text" ng-model="c.filter" placeholder="${e.g. kitchen}" ng-change="filterImages()">
+
+    <div class="imageList">
+      <ul ng-show="c.imageListLoaded">
+        <li ng-repeat="image in c.imageList" ng-click="toggleCheckbox(image)">
+          <img ng-src="/{{image.name}}" alt="{{image.name}}" title="{{image.name + image.size}}">
+          <input type="checkbox" ng-click="toggleCheckbox(image)" ng-model="image.selected">
+        </li>
+      </ul>
+      <span ng-hide="c.selectedListLoaded" ng-bind-html="loadingHTML()"></span>
+    </div>
+  </div>
+  
+  <div id="notification-container" class="notification-container"></div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

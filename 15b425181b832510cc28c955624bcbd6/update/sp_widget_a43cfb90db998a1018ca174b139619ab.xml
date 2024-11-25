@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $timeout, spModal) {
+  var c = this;
+	
+	getServerContent('imageList', {filter:null});
+
+  $scope.filterImages = function() {
+		getServerContent('imageList', {filter:$scope.c.filter});
+	};
+	
+	$scope.selectImage = function(event, image) {
+		image.selected = image;
+		c.widget.options.shared.selectedImage = image.selected.name;
+		
+		var targetElement = event.currentTarget;
+    var selectedElements = document.querySelector('.imageList ul').querySelectorAll('.selected');
+
+		selectedElements.forEach(function(element) {
+			element.classList.remove('selected');
+		});
+
+		targetElement.classList.add('selected');
+	};
+	
+	$scope.addImages = function() {
+		var selectedImages = c.imageList.filter(function(image) { return image.selected; });
+		selectedImages.forEach(function(image, index) {
+			image.order = 100 + index;
+		});
+		if (selectedImages.length == 0)
+			showNotification(c.data.messages.selectImage, 3000, 'error');
+		else {
+			c.selectedList = c.selectedList.concat(selectedImages);
+			showNotification(c.data.messages.imageAdded, 3000, 'alert');
+		}
+		$timeout(function () {
+			enableDragSort('drag-sort-enable');
+		}, 500);
+	};
+
+	$scope.loadingHTML = function() {
+		return '<div class="loading"><div></div><div></div><div></div><div></div></div>';
+	};
+
+	function getServerContent(action, param) {
+		c[action + 'Loaded'] = false;
+		var params = {
+			action: action,
+			page: c.data.page
+		};
+
+		if (typeof param === 'object')
+			Object.assign(params, param);
+		else 
+			params[param] = param;
+		
+		c.server.get(params).then(function (response) {
+			c[action] = response.data[action];
+			
+			$timeout(function () {
+				c[action + 'Loaded'] = true;
+				if(action == 'selectedList')
+					enableDragSort('drag-sort-enable');
+			}, 500);
+		});
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #ccc!default;
+
+.selectImage {
+  display: flex; 
+  flex-direction: column;
+  
+  select,
+  input {
+    border: 1px solid #AFAFAF;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1.4rem;
+  }
+
+  button {
+    background-color: #0E8FD8;
+    color: white;
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 5px;
+    font-size: 1.4rem;
+
+    &amp;:hover {
+      background-color: #0680CA;
+    }
+  }
+  
+  .imageList {
+    background-color: #d9d9d9;
+    max-height: 32rem;
+    overflow-y: auto;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    ul {
+      width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-flow: wrap;
+      justify-content: center;
+
+      li {
+        position: relative;
+        overflow: hidden;
+        object-fit: cover;
+        max-width: 150px;
+        min-width: 40px;
+        max-height: 70px;
+        border: 1px solid #666;
+        margin: 3px;
+        flex: auto;
+        box-shadow: #666 2px 2px 3px;
+        background-color:#fff;
+        display: flex;
+        justify-content: center;
+        
+        &amp;.selected {
+        	border: 3px solid #F00;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+}
+
+.loading {
+  display: inline-block;
+  position: relative;
+  width: 8rem;
+  height: 13rem;
+
+  div {
+    position: absolute;
+    top: 50%;
+    margin-top: -7px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: $secondary-color;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+
+  div:nth-child(1) {
+    left: 8px;
+    animation: loading1 0.6s infinite;
+  }
+  div:nth-child(2) {
+    left: 8px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(3) {
+    left: 32px;
+    animation: loading2 0.6s infinite;
+  }
+  div:nth-child(4) {
+    left: 56px;
+    animation: loading3 0.6s infinite;
+  }
+}
+
+@keyframes loading1 {
+  0% {transform: scale(0);}
+  100% {transform: scale(1);}
+}
+@keyframes loading3 {
+  0% {transform: scale(1);}
+  100% {transform: scale(0);}
+}
+@keyframes loading2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(24px, 0);}
+}
+@keyframes loadingSm2 {
+  0% {transform: translate(0, 0);}
+  100% {transform: translate(12px, 0);}
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>kb_slider_cards_editing_images</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) { 
+
+ }]]></link>
+        <name>KB Slider Cards - Images</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  
+  if (input.action === 'imageList') {
+		var imageList = [];
+		var grImgList = new GlideRecord('db_image');
+		
+		if(input.filter)
+			grImgList.addQuery('name', 'LIKE', '%' + input.filter + '%');
+		
+		grImgList.query();
+		
+		while (grImgList.next()) {
+			var image = {
+				sys_id: grImgList.sys_id.toString(),
+				name: grImgList.name.toString(),
+				format: grImgList.format.toString(),
+				thumbnail: grImgList.thumbnail.toString(),
+				selected: false,
+				order: 0,
+				active: grImgList.active.toString() == 'true',
+				size: grImgList.size_bytes ? ' (' + Math.round(grImgList.size_bytes.toString() / 1024) + ' KB)' : ''
+			};
+			imageList.push(image);
+		}
+		data.imageList = imageList;
+		
+		return;
+	}
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-03-28 20:52:55</sys_created_on>
+        <sys_id>a43cfb90db998a1018ca174b139619ab</sys_id>
+        <sys_mod_count>32</sys_mod_count>
+        <sys_name>KB Slider Cards - Images</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_a43cfb90db998a1018ca174b139619ab</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-04-08 20:48:32</sys_updated_on>
+        <template><![CDATA[<div class="selectImage">
+  <label>${Please type below the image you wish to filter}</label>
+  <input type="text" ng-model="c.filter" placeholder="${e.g. kitchen}" ng-change="filterImages()">
+
+  <div class="imageList">
+    <ul ng-show="c.imageListLoaded">
+      <li ng-repeat="image in c.imageList" ng-click="selectImage($event, image)">
+        <img ng-src="/{{image.name}}" alt="{{image.name}}" title="{{image.name + image.size}}">
+      </li>
+    </ul>
+    <span ng-hide="c.imageListLoaded" ng-bind-html="loadingHTML()"></span>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = 'ASK YOUR QUESTION';
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = 'LOADING...';
+		
+		c.server.get({
+			question: c.question,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = 'ASK YOUR QUESTION';
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.fashion-specialist {&#13;
+	margin-bottom: 3rem;&#13;
+  &#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+  &#13;
+  box-shadow: $default-box-shadow;&#13;
+  &#13;
+  background-color: #FFF;&#13;
+  &#13;
+}&#13;
+&#13;
+.fashion-specialist-heading {&#13;
+	background-color: $header-bg-color;&#13;
+  display: flex;&#13;
+  &#13;
+  padding: 16px;&#13;
+  &#13;
+  gap: 1.5rem;&#13;
+  &#13;
+  h2 {&#13;
+  	font-size: 18px;&#13;
+    margin: 0;&#13;
+    &#13;
+    font-weight: bold;&#13;
+		color: $header-color;&#13;
+  }&#13;
+}&#13;
+&#13;
+.fashion-specialist-body {&#13;
+	padding: 16px;&#13;
+}&#13;
+&#13;
+.fashion-specialist-inputs {&#13;
+  display: flex;&#13;
+ 	align-items: center;&#13;
+    &#13;
+  @media(max-width: 768px) {&#13;
+  	flex-direction: column;&#13;
+  }&#13;
+  &#13;
+  span {&#13;
+  	font-size: 7rem;&#13;
+    padding: 0 10px;&#13;
+    height: 5rem;&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    font-weight: bold;&#13;
+  }&#13;
+  &#13;
+  textarea {&#13;
+    border-radius: 5px;&#13;
+    border: 1px solid #AEAEAE;&#13;
+    &#13;
+    padding: 8px;&#13;
+    &#13;
+    height: 300px;&#13;
+    resize: none;&#13;
+    &#13;
+    flex: 1;&#13;
+    &#13;
+    @media(max-width: 768px) {&#13;
+      height: 150px;&#13;
+    	flex: unset;&#13;
+      width: 100%;&#13;
+    }&#13;
+    &#13;
+    &amp;:focus, &amp;:active {&#13;
+    	border-width: 1px;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.fashion-button {&#13;
+  margin-top: 3rem;&#13;
+  &#13;
+  width: 100%;&#13;
+  padding: 1rem 2rem;&#13;
+  &#13;
+  color: #FFF;&#13;
+  font-size: 20px;&#13;
+  &#13;
+	border-radius: 5px;&#13;
+  border: 1px solid #36424F;&#13;
+  background: #36424F;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_fashion_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Fashion Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": "As a Chanel Fashion Specialist, my role involves specializing in Chanel's iconic fashion and providing expertise in various aspects of this luxury brand. This includes an in-depth knowledge of Chanel's history, collections, fashion designers, iconic pieces, and the artistry behind Chanel's creations. Please be prepared to answer questions about Chanel's fashion trends, design philosophy, iconic pieces, and any other topics related to Chanel fashion. Offer detailed insights, historical context, and fashion recommendations to enhance the understanding of individuals interested in Chanel's world of style. If the question is unrelated to Chanel fashion, you can respond by saying, \"I believe this question is not related to Chanel fashion. Do you have any inquiries about Chanel's fashion that I can assist you with?\""
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-09-07 17:41:46</sys_created_on>
+        <sys_id>4f27f5831b01b5109b7d32231b4bcbf0</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>GPT Fashion Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_4f27f5831b01b5109b7d32231b4bcbf0</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-09-07 17:56:29</sys_updated_on>
+        <template><![CDATA[<div class="fashion-specialist">
+  <div class="fashion-specialist-heading">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADw0lEQVR4nO2abYiOWRjH7yZZQ95SK8xEeZ3aZUsUYVKjECnhC9LsivJBlvWya0Pig8VQfPOasBFmxAfyuu1saFeI3bW0fPCybewmrWkT+9NV/zun6Zln7+d+znluU/511/2cc13/63/dc859rnPuiaL3SAbgO+DHqLUDIWrtoLUkAgwDvgHuAz8A3YAJwGrgZJyI7lerz2wuAHflOyzrJM7hD2dLKbw3MAPYDDQ6IuqA33TfpL5NwDSgAugJTFXb97Ix3Aa2ODyN4rYYvUMk0Ba4kedp9gB26X58Ar7xst0BVObhvW6xfSbSTuP5D6ABWA5UA38qYBUwT/dbE/Btle1nwMe6N65qcTcolsX8wFsieQTFf6WRQBfgBfAP0CuPTy/ZPAc6AaPFcSO44DyizkrERP22uWK4bCJz2JvwK7JZr7bJ+n0mixxiYQclYrZ+twd+Vds1oI9j29f5C16NhwxQq7b9WSYSj/WvnTabvHfU/gQYobH/dzyEgA8d+zVqr8sykc8lYmez9m7OsHuuOWE4AXRsZrtHfYtKnoAjYlJLixnQxoaL8yrdDZTlsDuv/kklE55DxCCJ+L2FfltfYnRvweae+gdGWUEL5Std5Sn87eXwWv7+Fr40cEqToSkLTsPdMOoKAHBIYuak8P1UvoejrAF8KTEbU/hagWhYGUZdAdD+wnAqhe/pzN9YOd5MTSr21qp8H6nVvIOuvmqbJpsGp5yvjLIG8AnFY8i7kMgyiakHpgPr9LQva/v7QpfdX1LfOtmaj2Fp1nlETikyK4Xv7MwrX2dB+xf4z+ZKVCBstZevcXSIsoLtQ/RErxXBYdvZRFvkYHAODjYUwWHHQZmX8b9IRE0RHOPEccuvuuQCKpz1o7zIg43s1hPe1kmnPHDFK3ytH3WFBT+g4Is9cH0hrn1+1BUW/KGvVdmpDh74UZc88AAF/ivX9jUFXxnwVJz9/KhMFni+gh71yBmXK3N9cSYJ+q2CLvTIuajk51vAIwUd7JEzniePfXH+X8Aqn/OjhXnS3xdvkvlxLAB3fcnmCbBXwZYE4F6a6+QydH01KgD3aHHf9M3dPFBnHai9tL1IAP5ycb/O9VnCZ6AaPbFg/wAA/KQYY6OAQb5SkG0BY2xXjBVRwCDH0+7PU+zj60uxENqEP2Kni8ACYAowBvhIH3q66mrfbH8ft1fKdox8F4jriPMyeRQykfhbRilwLlgiSsae6HBgJrDK5osOsi8CP9u3EivH9antmSPsmdoeyOaWfA6Jw7hmirtr0CTeIwqPN2d7ZG3++FbtAAAAAElFTkSuQmCC">
+
+    <h2>
+      ${I am a Chanel fashion specialist!}<br>
+      ${Ask me anything related to Chanel fashion, and I will respond!}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="fashion-specialist-body">
+    <div class="fashion-specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="Example: Tell me about Chanel's iconic little black dress" ng-model="c.question"></textarea>
+      <span>=</span>
+      <textarea placeholder="The answer will be presented here." readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="fashion-button">
+      {{c.textButton}}
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="fashion-specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

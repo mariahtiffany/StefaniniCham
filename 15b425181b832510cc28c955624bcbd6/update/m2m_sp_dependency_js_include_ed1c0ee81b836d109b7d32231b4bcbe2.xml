@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_dependency_js_include">
+    <m2m_sp_dependency_js_include action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sp_dependency display_value="Add Echart">64cbcee81b836d109b7d32231b4bcbff</sp_dependency>
+        <sp_js_include display_value="Echart 5.4.2">9cfb062c1b836d109b7d32231b4bcb0b</sp_js_include>
+        <sys_class_name>m2m_sp_dependency_js_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-23 14:42:51</sys_created_on>
+        <sys_id>ed1c0ee81b836d109b7d32231b4bcbe2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Add Echart.Echart</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_dependency_js_include_ed1c0ee81b836d109b7d32231b4bcbe2</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-23 14:42:51</sys_updated_on>
+    </m2m_sp_dependency_js_include>
+</record_update>

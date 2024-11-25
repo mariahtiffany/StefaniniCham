@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = 'ASK YOUR QUESTION';
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = 'LOADING...';
+		
+		c.server.get({
+			question: c.question,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = 'ASK YOUR QUESTION';
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-chemical-specialist {
+	margin-bottom: 3rem;
+  
+  display: flex;
+  flex-direction: column;
+  
+  box-shadow: $default-box-shadow;
+  
+  background-color: #FFF;
+  
+  svg path {
+    fill: $header-color;
+  }
+}
+
+.ino-chemical-specialist-heading {
+	background-color: $header-bg-color;
+  display: flex;
+  
+  padding: 16px;
+  
+  gap: 1.5rem;
+  
+  h2 {
+  	font-size: 18px;
+    margin: 0;
+    
+    font-weight: bold;
+		color: $header-color;
+  }
+}
+
+.ino-chemical-specialist-body {
+	padding: 16px;
+}
+
+.ino-chemical-specialist-inputs {
+  display: flex;
+ 	align-items: center;
+    
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+  
+  span {
+  	font-size: 7rem;
+    padding: 0 10px;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #AEAEAE;
+    
+    padding: 8px;
+    
+    height: 300px;
+    resize: none;
+    
+    flex: 1;
+    
+    @media(max-width: 768px) {
+      height: 150px;
+    	flex: unset;
+      width: 100%;
+    }
+    
+    &amp;:focus, &amp;:active {
+    	border-width: 1px;
+    }
+  }
+}
+
+.ino-chemical-button {
+  margin-top: 3rem;
+  
+  width: 100%;
+  padding: 1rem 2rem;
+  
+  color: #FFF;
+  font-size: 20px;
+  
+	border-radius: 5px;
+  border: 1px solid #36424F;
+  background: #36424F;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_gpt_chemical_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino GPT Chemical Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	
+	$sp.log(config.value);
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": "I want you to act as a chemistry expert and be prepared to help answer questions about chemical reactions, properties of elements, laboratory techniques, or any other topic related to chemistry, from explaining the principles behind chemical reactions to providing guidance on laboratory experiments, you should offer detailed explanations, examples, and formulas to help you understand and explore the world of chemistry. If the question is not related with Chemistry, you can just answer 'I don\'t think the question is related to chemistry. Do you have a chemistry-related question that I can help you with?'."
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-28 19:25:56</sys_created_on>
+        <sys_id>8126ac101bfb61509b7d32231b4bcbe7</sys_id>
+        <sys_mod_count>57</sys_mod_count>
+        <sys_name>Ino GPT Chemical Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_8126ac101bfb61509b7d32231b4bcbe7</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-07 17:33:23</sys_updated_on>
+        <template><![CDATA[<div class="ino-chemical-specialist">
+  <div class="ino-chemical-specialist-heading">
+    <svg width="40" height="38" viewBox="0 0 40 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+	    <path d="M3.52721 38C2.03972 38 0.982454 37.3139 0.355408 35.9417C-0.271675 34.5694 -0.0689376 33.3204 0.963619 32.1944L14.2088 17.4167V3.16667H11.4316C10.9776 3.16667 10.5971 3.01405 10.29 2.70882C9.98291 2.40355 9.82937 2.02531 9.82937 1.5741C9.82937 1.12285 9.98291 0.747685 10.29 0.448611C10.5971 0.149537 10.9776 0 11.4316 0H28.5222C28.9762 0 29.3567 0.152615 29.6638 0.457847C29.9709 0.763113 30.1244 1.14135 30.1244 1.59257C30.1244 2.04382 29.9709 2.41898 29.6638 2.71806C29.3567 3.01713 28.9762 3.16667 28.5222 3.16667H25.745V17.4167L38.9902 32.1944C40.0227 33.3204 40.2255 34.5694 39.5984 35.9417C38.9714 37.3139 37.9141 38 36.4266 38H3.52721ZM2.88631 34.8333H37.0675L22.5405 18.5778V3.16667H17.4133V18.5778L2.88631 34.8333Z" fill="white"/>
+    </svg>
+
+    <h2>
+      ${I am a chemistry specialist!}<br>
+      ${Ask me anything related to chemistry, and I will respond!}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="ino-chemical-specialist-body">
+    <div class="ino-chemical-specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="Example: How does caffeine work?" ng-model="c.question"></textarea>
+			<span>=</span>
+      <textarea placeholder="The answer will be presented here." readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="ino-chemical-button">
+      {{c.textButton}}
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="ino-chemical-specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

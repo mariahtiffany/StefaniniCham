@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_stefa_chameleon.Load Sophie Chatter Va</name>
+        <script><![CDATA[var isOnLogin = document.title.toLowerCase().includes('login')
+
+
+if (!isOnLogin) {
+    //var endpoint = "https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter402";
+    //"https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter_EMEA_Portal";//
+   //  var endpoint = "https://sophie-emea-test.stefanini.com/Tenant/SophieDemoDev/Chatter_EMEA_Portal"
+    var endpoint = "https://valvoline.sophieagent.com";
+    var authOptions = null;
+    var botName_ = 'Val';
+    var chatterWebURL_ = endpoint;
+    var isMultiTenant_ = false;
+    var tenant_ = "valvoline";
+    var translationURL_ = chatterWebURL_ + "/Content/chatterJs/misc/translations.json";
+    var voiceRecognitionEnabled_ = true;
+    var usePathWithoutTenant_ = false;
+    var showGoogleLogin_ = false;
+    var showSAML2Login_ = false;
+    var showLiveAgentButton_ = true;
+    var autoCompleteEnabled_ = false;
+    var contentDir_ = chatterWebURL_ + '/Content';
+
+    SophieChatterValvoline.initialize({
+
+        visuals: {
+            greetingMessage: "Hello"
+        },
+        config: {
+            general: {
+                botName: botName_,
+                chatterWebURL: chatterWebURL_,
+                isMultiTenant: isMultiTenant_,
+                usePathWithoutTenant: usePathWithoutTenant_,
+                tenant: tenant_,
+                translationURL: translationURL_,
+                voiceRecognitionEnabled: voiceRecognitionEnabled_,
+                showLiveAgentButton: showLiveAgentButton_,
+                autoCompleteEnabled: autoCompleteEnabled_,
+                contentDir: contentDir_
+            }
+            // general: {
+            //     chatterWebURL: endpoint,
+            //     tenant: '',
+            //     voiceRecognitionEnabled: false,
+            //     translationURL: endpoint + '/Scripts/misc/translations.json',
+            //     autoCompleteEnabled: true,
+            //     showLiveAgentButton: false
+
+            // }
+        },
+        auth: {
+            login: "User"
+        }
+    });
+}]]></script>
+        <script_name>Load Sophie Chatter Valvoline</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>mariah.caparas</sys_created_by>
+        <sys_created_on>2024-02-01 14:54:39</sys_created_on>
+        <sys_id>d4a29e9a1b840a509b7d32231b4bcb15</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>x_stefa_chameleon.Load Sophie Chatter Va</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_ui_script_d4a29e9a1b840a509b7d32231b4bcb15</sys_update_name>
+        <sys_updated_by>mariah.caparas</sys_updated_by>
+        <sys_updated_on>2024-02-01 15:00:30</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

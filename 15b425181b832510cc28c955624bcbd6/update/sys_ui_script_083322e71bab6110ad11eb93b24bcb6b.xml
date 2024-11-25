@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_stefa_chameleon.Load Microsoft Open Gr</name>
+        <script><![CDATA[mgt.Providers.globalProvider = new mgt.Msal2Provider({
+	clientId: '8dd077a9-4df4-401e-9048-31528e1ecd8d', 
+	// https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Overview/appId/8dd077a9-4df4-401e-9048-31528e1ecd8d/isMSAApp~/false
+	// clientId: '7ee460f6-8ceb-4aad-af4f-676063731008',
+	// https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Overview/appId/7ee460f6-8ceb-4aad-af4f-676063731008/isMSAApp~/false
+	loginType: 0,
+	redirectUri: location.origin,
+	scopes: ['user.read', 'people.read', 'calendars.read'],
+});]]></script>
+        <script_name>Load Microsoft Open Graph Toolkit</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-26 20:41:27</sys_created_on>
+        <sys_id>083322e71bab6110ad11eb93b24bcb6b</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>x_stefa_chameleon.Load Microsoft Open Gr</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_ui_script_083322e71bab6110ad11eb93b24bcb6b</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-01-18 18:00:17</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

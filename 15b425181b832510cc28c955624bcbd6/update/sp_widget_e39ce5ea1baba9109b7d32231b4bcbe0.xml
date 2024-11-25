@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $sce) {
+  /* widget controller */
+  var c = this;
+	
+	c.html = $sce.trustAsHtml(c.options.html);
+	$scope.$watch('c.options.html',function(){
+		c.html = $sce.trustAsHtml(c.options.html);
+	});
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel {
+	min-height: 40px;
+}
+
+.ino-simple-card {
+  .panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    background-color: transparent;
+    
+    a {
+    	color: $primary;
+    }
+  }
+  
+}
+
+.ino-simple-card-body {
+	display: flex;
+}
+
+.ino-simple-card-image {
+	width: 30%;
+  
+  img {
+  	width: 100%;
+    max-width: 100%;
+  }
+}
+
+.ino-simple-card-content {
+  width: 70%;
+	padding: 0 2rem;
+}
+
+.ino-simple-card-content.no-image {
+  width: 100%:
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>ino_simple_card</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Simple Card</name>
+        <option_schema>[{"hint":"","name":"title","section":"Data","default_value":"Lorem Impsum","label":"Title","type":"string"},{"name":"see_more_link","section":"Data","label":"(optional) See more Link","type":"string"},{"name":"html","default_value":" &lt;b&gt;hello&lt;/b&gt;","section":"Data","label":"HTML","type":"translated_html"},{"name":"custom_heading_class","section":"Behavior","label":"(optional) Custom Heading Class","type":"string"},{"displayValue":"Images","name":"image","section":"Data","label":"(optional) Image","type":"reference","value":"db_image","ed":{"reference":"db_image"}},{"hint":"Decide how the image will behave inside the card","name":"image_object_fit","section":"Data","default_value":"contain","label":"(optional) Image Object Fit","type":"choice","choices":[{"label":"cover","value":"cover"},{"label":"contain","value":"contain"},{"label":"100%","value":"100%"}]},{"name":"image_max_height","section":"Data","default_value":"20rem","label":"(optional) Image Max Height","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	data.title = gs.getMessage(options.title);
+	
+	var image = new GlideRecord('db_image');
+	
+	if (image.get(options.image))
+		data.image_url = image.getDisplayValue('image');
+})();
+]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-23 14:04:30</sys_created_on>
+        <sys_id>e39ce5ea1baba9109b7d32231b4bcbe0</sys_id>
+        <sys_mod_count>42</sys_mod_count>
+        <sys_name>Ino Simple Card</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_e39ce5ea1baba9109b7d32231b4bcbe0</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:52:02</sys_updated_on>
+        <template><![CDATA[<div class="panel ino-simple-card">
+  <div class="panel-heading" ng-class="c.options.custom_heading_class">
+    <h2 class="panel-title">
+      {{c.data.title}}
+    </h2>
+  </div>
+  
+  <div class="panel-body ino-simple-card-body">
+  	<div ng-if="c.data.image_url" class="ino-simple-card-image">
+      <img ng-style="{'object-fit': c.options.image_object_fit || 'contain', 'max-height': c.options.image_max_height || '20rem'}"
+           src="{{c.data.image_url}}" 
+           alt="The image of the card.">
+    </div>
+
+    <div class="ino-simple-card-content"
+         ng-class="{'no-image': !c.data.image_url}"
+         ng-if="c.options.html" 
+         ng-bind-html="c.html"></div>
+  </div>
+  
+  <div ng-if="!c.options.html" class="panel-body">
+  	<p>
+      ${Ctrl + Click > Options to set HTML content}
+    </p>
+  </div>
+  
+  <div ng-if="options.see_more_link" class="panel-footer">
+    <a href="{{options.see_more_link}}">See more >></a>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

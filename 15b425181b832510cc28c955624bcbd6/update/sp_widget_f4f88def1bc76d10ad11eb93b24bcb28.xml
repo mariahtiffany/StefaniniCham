@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel dl {
+	margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+  </css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>about_me_v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>About Me V2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  
+	/* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */
+	function loadCriteriaNames(listCriteriaIds) {
+		var query = new GlideRecord('user_criteria');
+		var list = [];
+		
+		query.addQuery('sys_id', 'IN', listCriteriaIds);
+		query.query();
+
+		while (query.next()) {
+			list.push(query.getDisplayValue('name'));
+		}
+		
+		return list;
+	}
+
+	data.personas = loadCriteriaNames(
+		new sn_uc.UserCriteriaLoader.getAllUserCriteria(gs.getUserID())
+	).join(', ');
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-01 17:31:11</sys_created_on>
+        <sys_id>f4f88def1bc76d10ad11eb93b24bcb28</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>About Me V2</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_f4f88def1bc76d10ad11eb93b24bcb28</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:52:09</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+    		About me
+    </h2>
+  </div>
+  <div class="panel-body">
+    <dl>
+      <dt>Name: </dt>
+      <dd>{{ user.name }}</dd>
+      <dt>Email: </dt>
+      <dd>{{ user.email }}</dd>
+      <dt>Company: </dt>
+      <dd>{{ user.company_dv || 'Unknown' }}</dd>
+      <dt>Domain: </dt>
+      <dd>{{ user.sys_domain_dv }}</dd>
+      <dt>Personas: </dt>
+      <dd>{{data.personas}}</dd>
+    </dl>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

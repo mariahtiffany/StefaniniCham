@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.containerId = Math.random().toString(16).slice(2);
+	
+	setTimeout(function () {
+		var chartDom = document.getElementById(c.containerId);
+		var myChart = echarts.init(chartDom);
+		var option = {
+			series: [
+				{
+					type: 'gauge',
+					axisLine: {
+						lineStyle: {
+							width: 70,
+							color: [
+								[0.5, '#d91221'],
+								[0.7, '#f08302'],
+								[0.9, '#feba02'],
+								[1, '#0f7c10']
+							]
+						}
+					},
+					axisTick: {
+						distance: 0,
+						length: 8,
+						lineStyle: {
+							color: '#fff',
+							width: 0
+						}
+					},
+					splitLine: {
+						distance: -80,
+						length: 0,
+						lineStyle: {
+							color: '#fff',
+							width: 0
+						}
+					},
+					axisLabel: {
+						color: 'inherit',
+						distance: 40,
+						fontSize: 20
+					},
+					detail: {
+						valueAnimation: true,
+						formatter: '{value}',
+						color: 'black',
+						fontSize: '2rem',
+					},
+					data: [
+						{
+							value: 78.95
+						}
+					]
+				}
+			]
+		};
+	
+		myChart.setOption(option);
+	}, 10);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.dl-body  {
+ 
+  h2 {
+  	text-align: center;
+    margin-top: 0;
+    
+    font-size: 2.5rem;
+  }
+  
+  &amp; &gt; div {
+    min-height: 300px;
+    min-width: 200px;
+
+    height: 100%;
+    width: 100%;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>data_lake_gauge_indicator</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Data Lake Gauge Indicator</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-23 14:40:50</sys_created_on>
+        <sys_id>a1ab4a281b836d109b7d32231b4bcb12</sys_id>
+        <sys_mod_count>63</sys_mod_count>
+        <sys_name>Data Lake Gauge Indicator</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_a1ab4a281b836d109b7d32231b4bcb12</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:51:44</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    GLOBAL WORKFORCE EXPERIENCE IT SCORE
+  </div>
+  <div class="panel-body dl-body">
+    <h2>
+      ITQX
+    </h2>
+    
+    <div ng-attr-id="{{c.containerId}}">
+      <!-- your widget template -->
+    </div>	
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

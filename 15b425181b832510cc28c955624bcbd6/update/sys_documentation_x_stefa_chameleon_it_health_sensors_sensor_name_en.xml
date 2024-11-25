@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="sensor_name" label="Sensor name" language="en" table="x_stefa_chameleon_it_health_sensors">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>sensor_name</element>
+            <help/>
+            <hint/>
+            <label>Sensor name</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_it_health_sensors</name>
+            <plural>Sensor names</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2023-06-23 13:51:41</sys_created_on>
+            <sys_id>a3a9adea1b276910ad11eb93b24bcb45</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Sensor name</sys_name>
+            <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+            <sys_update_name>sys_documentation_x_stefa_chameleon_it_health_sensors_sensor_name_en</sys_update_name>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2023-06-23 13:51:41</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

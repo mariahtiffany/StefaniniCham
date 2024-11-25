@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css_include">
+    <sp_css_include action="INSERT_OR_UPDATE">
+        <lazy_load>false</lazy_load>
+        <name>Montserrat</name>
+        <source>url</source>
+        <sp_css/>
+        <sys_class_name>sp_css_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-06 16:55:36</sys_created_on>
+        <sys_id>0ea036051b5bed509b7d32231b4bcb20</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Montserrat</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_css_include_0ea036051b5bed509b7d32231b4bcb20</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-06 16:55:36</sys_updated_on>
+        <url>https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap</url>
+    </sp_css_include>
+</record_update>

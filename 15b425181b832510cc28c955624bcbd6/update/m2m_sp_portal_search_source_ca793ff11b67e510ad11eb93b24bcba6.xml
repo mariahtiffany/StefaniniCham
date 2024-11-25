@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_portal_search_source">
+    <m2m_sp_portal_search_source action="INSERT_OR_UPDATE">
+        <order>400</order>
+        <sp_portal display_value="Innovation Chameleon">1e78ae251b0be510ad11eb93b24bcb14</sp_portal>
+        <sp_search_source display_value="Questions and Answers">3b392ad41b23e1109b7d32231b4bcb16</sp_search_source>
+        <sys_class_name>m2m_sp_portal_search_source</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-21 16:24:27</sys_created_on>
+        <sys_id>ca793ff11b67e510ad11eb93b24bcba6</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Innovation Chameleon.Questions and Answers</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_portal_search_source_ca793ff11b67e510ad11eb93b24bcba6</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-08-01 17:21:59</sys_updated_on>
+    </m2m_sp_portal_search_source>
+</record_update>

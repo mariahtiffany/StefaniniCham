@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_theme">
+    <sp_theme action="INSERT_OR_UPDATE">
+        <css_variables>/* ServiceNOW Defaults */&#13;
+$primary: #e80033;&#13;
+$panel-inner-border: $primary;&#13;
+$secondary-color: #415364;&#13;
+$secondary-contrast-color: white;&#13;
+&#13;
+$sp-navbar-divider-color:#f1f1f1;&#13;
+$navbar-inverse-bg:#ffffff;&#13;
+$navbar-inverse-link-color: #4a4a4a;&#13;
+$navbar-inverse-link-hover-color:#526778;&#13;
+$text-color:#181A1F;&#13;
+$link-color:#3c59e7;&#13;
+&#13;
+/* Chameleon Custom */&#13;
+$primary-color: $primary !default;&#13;
+$primary-hover-color: #bb0725 !default;&#13;
+&#13;
+$header-bg-color: $primary-color !default;&#13;
+$header-color: #FFFFFF !default;&#13;
+$header-border-color: $primary-hover-color !default;&#13;
+&#13;
+$button-bg-color: $primary-color !default;&#13;
+$button-bg-hover-color: $primary-hover-color !default;&#13;
+&#13;
+$button-secondary-color: $secondary-contrast-color !default;&#13;
+$button-secondary-hover-color: $secondary-contrast-color;&#13;
+$button-secondary-bg-color: transparent !default;&#13;
+$button-secondary-bg-hover-color: transparent !default;&#13;
+$button-secondary-border-radius: 4px;&#13;
+$button-secondary-border-color: $secondary-contrast-color;&#13;
+$button-secondary-border-hover-color: $secondary-contrast-color;&#13;
+$button-secondary-border-style: solid;&#13;
+$button-secondary-border-width: 3px;&#13;
+$button-secondary-font-weight: bold;&#13;
+&#13;
+$background-bg-pos-x: 60% !default;&#13;
+$background-bg-image: var(--main-bg-image, unset) !default;&#13;
+$background-bg-attachment: fixed !default;&#13;
+$background-bg-box-shadow: inset white 0 6rem 20rem 11rem !default;&#13;
+&#13;
+.panel-heading {&#13;
+  background-color: $header-bg-color;&#13;
+  color: $header-color;&#13;
+  border-color: $header-border-color;&#13;
+  font-weight: bold;&#13;
+}&#13;
+&#13;
+.btn-primary {&#13;
+  background-color: $button-bg-color;&#13;
+  border: 1px solid $button-bg-hover-color;&#13;
+  &#13;
+  &amp;:hover {&#13;
+    background-color: $button-bg-hover-color;&#13;
+  }&#13;
+}&#13;
+&#13;
+.btn-secondary {&#13;
+  color: $button-secondary-color;&#13;
+  background-color: $button-secondary-bg-color;&#13;
+  border: $button-secondary-border-width $button-secondary-border-style $button-secondary-border-color;&#13;
+  border-radius: $button-secondary-border-radius;&#13;
+  font-weight: $button-secondary-font-weight;&#13;
+}&#13;
+&#13;
+.btn-secondary:hover,&#13;
+.btn-secondary:focus {&#13;
+  background-color: $button-secondary-bg-hover-color;&#13;
+  color: $button-secondary-hover-color;&#13;
+  border-color: $button-secondary-border-hover-color;&#13;
+}&#13;
+&#13;
+/* hide top search input since we are using an input in the page */&#13;
+.header-search, .header-search-mobile {&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+/**&#13;
+ * Cards&#13;
+ */&#13;
+.ino-card {&#13;
+  box-shadow: 2px 3px 10px 0px rgba(0, 0, 0, 0.09);&#13;
+  margin-bottom: 2.5rem;&#13;
+  padding: 0;&#13;
+  background-color: #FFF;&#13;
+}&#13;
+&#13;
+ /**&#13;
+  * Paddings&#13;
+  */&#13;
+.px-fix-for-charts {    &#13;
+  padding-left: 2.2rem;&#13;
+  padding-right: 3rem;&#13;
+}&#13;
+&#13;
+.fix-home-search-padding {&#13;
+  margin-top: -1rem; &#13;
+  display: flex;&#13;
+  height: 400px;&#13;
+  flex-wrap: wrap;&#13;
+}&#13;
+</css_variables>
+        <footer display_value="Employee Center Footer">ce046d5773603010c94f54eb7df6a7ec</footer>
+        <footer_fixed>true</footer_fixed>
+        <header display_value="Employee Center Header">d0009941eb103010ed7966d6475228c1</header>
+        <name>Chameleon Theme</name>
+        <navbar_fixed>true</navbar_fixed>
+        <sys_class_name>sp_theme</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-26 19:26:29</sys_created_on>
+        <sys_id>2ba9e6651b0be510ad11eb93b24bcbf4</sys_id>
+        <sys_mod_count>35</sys_mod_count>
+        <sys_name>Chameleon Theme</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_theme_2ba9e6651b0be510ad11eb93b24bcbf4</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-12-20 12:53:35</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_theme>
+</record_update>

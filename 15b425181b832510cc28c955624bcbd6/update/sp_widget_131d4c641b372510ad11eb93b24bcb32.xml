@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $sce) {
+  /* widget controller */
+  var c = this;
+	
+	c.sanitize = function (url) {
+		return $sce.trustAsUrl(url);
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ino-dow-hr-contacts-cards {
+  display: grid;
+ 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  
+  gap: 3rem;
+  
+  margin-top: 3rem;
+}
+
+.ino-dow-hr-contacts-card {
+	box-shadow: $default-box-shadow;
+  
+  padding: 16px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  gap: 8px;
+  
+  width: 100%;
+  
+  img {
+  	width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    
+    object-fit: cover;
+  }
+}
+
+.ino-dow-hr-contacts-card-details {
+	flex: 1;
+  width: 100%;
+
+  p {
+    margin-bottom: 0;
+    text-align: center;
+    
+  	font-size: 14px;
+    max-width: 100%;
+    word-break: break-word;
+    
+    &amp;:first-child {
+    	font-size: 16px;
+    }
+  }
+
+  .ino-dow-hr-contacts-card-details-title {
+    margin: 8px 0;
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_our_hr_contacts</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Our HR Contacts</name>
+        <option_schema>[{"displayValue":"Department","hint":"Select the HR Department","name":"hr_department","section":"Data","label":"HR Department","type":"reference","value":"cmn_department","ed":{"reference":"cmn_department"}}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	var gr = new GlideRecord('sys_user');
+	gr.addQuery('department', '=', options.hr_department || '93b25282c0a8000b0b55c8ab34e2f1e6');
+	gr.query();
+	
+	var results = [];
+	
+	while (gr.next()) {
+		results.push({
+			name: gr.getValue('name'),
+			title: gr.getValue('title'),
+			email: gr.getValue('email'),
+			time_zone: gr.getValue('time_zone'),
+			photo: gr.getDisplayValue('photo'),
+			phone: gr.getValue('phone'),
+			mobile_phone: gr.getValue('mobile_phone'),
+		});
+	}
+	
+	data.users = results;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-29 12:15:06</sys_created_on>
+        <sys_id>131d4c641b372510ad11eb93b24bcb32</sys_id>
+        <sys_mod_count>64</sys_mod_count>
+        <sys_name>Ino DOW Our HR Contacts</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_131d4c641b372510ad11eb93b24bcb32</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-13 18:38:19</sys_updated_on>
+        <template><![CDATA[<div class="panel ino-dow-hr-contacts">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      ${Our HR Contacts}
+    </h2>
+  </div>
+  
+  <div class="panel-body">
+    <p>
+      Our HR team is dedicated to supporting and assisting employees in various aspects of their professional journey. With their expertise and resources, they are here to help you thrive and succeed in the workplace. We encourage you to reach out to our HR department whenever you need assistance or have questions. They are dedicated to serving you and ensuring that you have a positive and fulfilling experience throughout your time with our company.
+		</p>
+    
+    <p>
+      <b>HR Team Contact</b>
+    </p>
+
+    <div class="ino-dow-hr-contacts-cards">
+      <div ng-repeat="user in c.data.users" class="ino-dow-hr-contacts-card">
+       	<img src="{{user.photo || '/x_stefa_chameleon.no-image.png'}}" alt="{{user.name}}">
+        
+        <div class="ino-dow-hr-contacts-card-details">
+          <p>
+            {{user.name}}
+          </p>
+          
+          <p class="ino-dow-hr-contacts-card-details-title">
+            {{user.title}}
+          </p>
+          <p>
+            <a href="{{c.sanitize('mailto:' + user.email)}}">{{user.email}}</a>
+          </p>
+          <p>
+            {{user.time_zone}}
+          </p>
+          <p ng-if="user.phone">
+            Phone: <a href="{{c.sanitize('tel:' + user.phone)}}">{{user.phone}}</a>
+          </p>
+          <p ng-if="user.mobile_phone">
+            Mobile Phone: <a href="{{c.sanitize('tel:' + user.mobile_phone)}}">{{user.mobile_phone}}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

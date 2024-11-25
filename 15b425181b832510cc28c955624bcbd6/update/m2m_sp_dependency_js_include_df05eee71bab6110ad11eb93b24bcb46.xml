@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_dependency_js_include">
+    <m2m_sp_dependency_js_include action="INSERT_OR_UPDATE">
+        <order>300</order>
+        <sp_dependency display_value="Load Microsoft Open Graph Toolkit">47e42a2b1bab6110ad11eb93b24bcb94</sp_dependency>
+        <sp_js_include display_value="Load Microsoft Open Graph Toolkit">1344222b1bab6110ad11eb93b24bcb77</sp_js_include>
+        <sys_class_name>m2m_sp_dependency_js_include</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-26 20:44:59</sys_created_on>
+        <sys_id>df05eee71bab6110ad11eb93b24bcb46</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Load Microsoft Open Graph Toolkit.Load Microsoft Open Graph Toolkit</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_dependency_js_include_df05eee71bab6110ad11eb93b24bcb46</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-30 19:49:42</sys_updated_on>
+    </m2m_sp_dependency_js_include>
+</record_update>

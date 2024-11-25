@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = 'ASK YOUR QUESTION';
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = 'LOADING...';
+		
+		c.server.get({
+			question: c.question,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = 'ASK YOUR QUESTION';
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.formula-one-specialist {
+	margin-bottom: 3rem;
+  
+  display: flex;
+  flex-direction: column;
+  
+  box-shadow: $default-box-shadow;
+  
+  background-color: #FFF;
+  
+}
+
+.formula-one-specialist-heading {
+	background-color: $header-bg-color;
+  display: flex;
+  
+  padding: 16px;
+  
+  gap: 1.5rem;
+  
+  h2 {
+  	font-size: 18px;
+    margin: 0;
+    
+    font-weight: bold;
+		color: $header-color;
+  }
+}
+
+.formula-one-specialist-body {
+	padding: 16px;
+}
+
+.formula-one-specialist-inputs {
+  display: flex;
+ 	align-items: center;
+    
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+  
+  span {
+  	font-size: 7rem;
+    padding: 0 10px;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #AEAEAE;
+    
+    padding: 8px;
+    
+    height: 300px;
+    resize: none;
+    
+    flex: 1;
+    
+    @media(max-width: 768px) {
+      height: 150px;
+    	flex: unset;
+      width: 100%;
+    }
+    
+    &amp;:focus, &amp;:active {
+    	border-width: 1px;
+    }
+  }
+}
+
+.formula-one-button {
+  margin-top: 3rem;
+  
+  width: 100%;
+  padding: 1rem 2rem;
+  
+  color: #FFF;
+  font-size: 20px;
+  
+	border-radius: 5px;
+  border: 1px solid #36424F;
+  background: #36424F;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_formula_one_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Formula One Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": "As a Formula One specialist, my expectation is that you will specialize in Formula One racing and provide expertise in various aspects related to this sport. This includes in-depth knowledge of Formula One teams, drivers, race tracks, and the technicalities of Formula One cars. Please be prepared to answer questions about race strategies, driver performances, team dynamics, and any other topic related to Formula One racing. Offer detailed insights, statistics, and recommendations to enhance the understanding of individuals interested in this sport. If the question is unrelated to Formula One racing, you can respond by saying, \"I believe this question is not related to Formula One racing. Do you have any inquiries about Formula One that I can assist you with?\""
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-09-06 19:23:58</sys_created_on>
+        <sys_id>56f4c9721bcd7510ad11eb93b24bcb98</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>GPT Formula One Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_56f4c9721bcd7510ad11eb93b24bcb98</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-09-06 20:01:22</sys_updated_on>
+        <template><![CDATA[<div class="formula-one-specialist">
+  <div class="formula-one-specialist-heading">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE/UlEQVR4nO2WbUxTVxjHL/sw1KlA6qgyqSJiebWx1V5qKZlWFxipLE5GDIiydUyWiIBMSptGAwXFqNWAdAU6Rilz2GUMXETEotJBcR8oNOom6IYYYEtEXhoMU+C/3Lss8dOII3ox9Jc8X+7Lued3n3Oe5xCEizlEcnIyT6fTfZ2VlZVKvI7k5OQ4Hj58iOLiYojF4nDidSM2NrY9Ozsbe/funRYKhbznbrnJ5fKQgIAAHp/Pl0gkktiIiIhtJEmSiYmJPIVC4UXMBRISEt6Lj48flkgklw4fVpSV6HT3rlosTx486Ju2Wn9CaGgoIiMjER0djZiYGGzfvh15eXmYnJzE4ODgVFdX17jFYumrqblgS0pKyl28eLGYxWIteWUCSqWSr9FokJKS8qy+/iJa22z4vfcBhodH8F8C09PTdExNTeHp02dwOp04eDAdnp5eYLGWTXl7swfYbHarQCAw6fV6c1lZmaqqqupdAO4zzam8vHzJ6dNnP9Lp9BeMVVWDhYWF7a9aAGz2cvj4+CAiIgJ373ajv38Ajx4NYWzMiYGBwSm1Wt1HkmSbSCSykiTZzOPx2jZu3Hiru/ve5OAff9JzuHX7DizN13Dq1Knbc0bA6XRiYuIvFBQUYPPmzfTYYrEYAoEAJBmO4eFRzG+B6m/O47T2DLKyvsCBA2loaWmBw+FAd3c3enp60NHRAZPJhJMnT8JoNKKxsRGdnV3o7+9nVmDLli1jy5a9DcLtjX+CcINUug0TExN0xaH+9r80NTVBJBKBz+cjJCQEAQHrwOGsgkaTj5qaCzhy5Cjk8k8RFRVFx/8V6LB3QnvmLOLi4iwzCgQHBz+mJj0bAa1Wizt3fkFbmw02WztsNhtqa2vB5QbSY+3blwy1Wo3S0jJaQKVSISMjA2lpacjMzERGRiaKis4h7WA6oqLfh7c3G+4LFoIgiEpGBfz81tDPBAUFIyxsPTZs4NPXn99H1DeGhh5j7dp18OWsgjd7OZZ6eM5TgeUrfCCRRCI19XPo9XrodDqUlpaioqIC1dXVKCoqgkKhwO7du2mROSEglUqd6ekZqL/44wuXUWpz3rz5M125qDEKC0/g/PlvYbVaZy2wZKkH/P39v2OkD/j6+tJVyGisQnHxOeTm5tHPJCYmwmw2Y3R0lH6fipGREdy//xtiYmT4+BM5cpQqGL6qwKWGy/OskbW6BLyYzcCNFisaLjeistJIr1mqClEbjjoyNDQ00GuXulZXV4f29nb09vZifPwJ80tIJpONb9okxMJFb71wHwgMDKQ/np2toI8Te/Yk0e9yudxZC/xQV0d1ahtjjYzqG9Tm378/Ffn5BXRFun79BnJzc7Fr1y7s2LGDrlQymQw7d36IK1eacK5ERx8nyHARFixcNA87MeESsDGagT7Cze17gnArCA8PTzcYDGq9Xi83GAwpVFRWVqqOHTt2VCAQqMPCwgxBQUFX/P3X/srhrBpndAkJhcKrBEEEE7Pg0KFDwcePn1Botdr68nJDj9lsHjOZTM9mITD5prt7J0EQ+2YUkEqlXxIvCQ6H47Vy5Uqhn59fApfLVYWGri8tKSnpstvtQw6HY4QKu90+0tx8rX/16jWGFSveyWaxvD/w8PDwnHHwVyHwUlG6BBhG6coAwyhdGWAYpSsDDKN0ZYBhlK4MMIzSlQGGUSgUazQaTe3WrVs/Y3ouLojXhL8B9D/vHheHuZoAAAAASUVORK5CYII=">
+
+    <h2>
+      ${I am a Formula One specialist!}<br>
+      ${Ask me anything related to Formula One, and I will respond!}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="formula-one-specialist-body">
+    <div class="formula-one-specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="Example: Who was the champion driver of the last season?" ng-model="c.question"></textarea>
+      <span>=</span>
+      <textarea placeholder="The answer will be presented here." readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="formula-one-button">
+      {{c.textButton}}
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="formula-one-specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

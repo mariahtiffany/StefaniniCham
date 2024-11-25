@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	
+	var cachedContentKey = 'CACHED_TRAINING';
+	var userId = c.data.userId;
+
+	function randomTraining(name, progressBg, progressFill, index) {
+		var charCodeAt = userId[index % userId.length].charCodeAt(0);
+		var progress = Math.max(charCodeAt % 100, 10);
+
+		return { name: name, progressBg: progressBg, progressFill: progressFill, progress: progress };
+	}
+	
+	function getTrainings() {
+		/*var cachedContent = window.localStorage.getItem(cachedContentKey);
+
+		if (cachedContent) {
+			return JSON.parse(cachedContent);
+		}*/
+
+		var trainings = [
+			randomTraining(
+				'${Skills Development: Introduction Training}', 
+				'#c1f1ed',
+				'#81d8d0',
+				1
+			),
+			randomTraining(
+				'${Skills Development: Effective Communication Strategies}', 
+				'#a0d6f4',
+				'#4bb4ef',
+				2
+			),
+			randomTraining(
+				'${Skills Development: Mastering Time Management}', 
+				'#da94b7',
+				'#910048',
+				3
+			),
+		];
+
+		//window.localStorage.setItem(cachedContentKey, JSON.stringify(trainings));
+
+		return trainings;
+	}
+	
+	c.trainings = getTrainings();
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+$secondary-color: #ccc!default;
+
+.ino-dow-wp {
+	width: 100%;
+  background-color: #FFF;
+  margin-bottom: 3rem;
+  box-shadow: $default-box-shadow;
+  border-radius: $default-border-radius;
+  display: flex;
+  flex-direction: column;
+
+  h2, h4, p {
+    color: rgba(91, 89, 89, 1);
+    margin: 0;
+  }
+  
+  h2 {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    text-transform: uppercase;
+    font-size: 2rem;
+    display: flex;
+    
+    svg {
+    	margin-right: 10px;
+      fill: $primary-color;
+      g {
+        fill: $primary-color;
+        path {
+          fill: $primary-color;
+        }
+      }
+    }
+  }
+
+  h4 {
+  	font-weight: bold;
+    
+    p {
+      font-size: 18px;
+    }
+  }
+    
+  a {
+    margin-top: 1rem;
+    
+    float: left;
+  	font-size: 16px;
+    font-weight: bold;
+    color: $secondary-color!important;
+  }
+}
+
+.ino-dow-wp-card {
+	display: flex;
+  width: 100%;
+  
+  padding: 30px;
+  
+  &amp;:not(:last-child) {
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+  }
+}
+
+.ino-dow-wp-card--training {
+	display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  &amp;:after, &amp;:before {
+  	content: unset;
+  }
+}
+
+.ino-dow-wp-card-image {
+  width: 30%;
+  
+  img {
+  	width: 100%;
+	  max-height: 187px;
+    border-radius: 4px;
+    object-fit: contain;
+  }
+}
+
+.ino-dow-wp-card-content {
+  width: 70%;
+	padding: 0 24px;
+}
+
+.training-item {}
+
+.training-item-text {
+	display: inline-block;
+  margin-bottom: 1rem;
+  
+  span, p {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  
+  span {
+		display: inline-block;
+    margin-right: 1.5rem;
+  }
+
+  p {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.training-item-progress {
+	width: 100%;
+  height: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.training-item-progress-fill {
+  height: 100%;	
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_welcome_package</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Dow Welcome Package</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	data.userId = gs.getUserID()
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-27 19:11:49</sys_created_on>
+        <sys_id>9859d3731b6721509b7d32231b4bcba1</sys_id>
+        <sys_mod_count>70</sys_mod_count>
+        <sys_name>Ino Dow Welcome Package</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_9859d3731b6721509b7d32231b4bcba1</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-06 14:59:27</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-wp">
+  <h2>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+      <path id="Icon_ionic-md-list-box" data-name="Icon ionic-md-list-box" d="M26,4.5H7A2.5,2.5,0,0,0,4.5,7V26A2.5,2.5,0,0,0,7,28.5H26A2.5,2.5,0,0,0,28.5,26V7A2.5,2.5,0,0,0,26,4.5Zm-6.5,19H9.5v-3h10Zm4-5.5H9.5V15h14Zm0-5.5H9.5v-3h14Z" transform="translate(-4.5 -4.5)"/>
+    </svg>
+    
+    ${Welcome Package}
+  </h2>
+  
+  <div class="ino-dow-wp-card">
+    <div class="ino-dow-wp-card-image">
+      <img src="/x_stefa_chameleon.dow-welcome-package-1.png">
+    </div>
+    
+    <div class="ino-dow-wp-card-content">
+      <h4>
+        ${Welcome to Our Team: Getting to Know Us}
+      </h4>
+      <p>
+        ${In this onboarding session, we will introduce you to our company, its history, mission, and values. You'll gain insights into our organizational structure, team dynamics, and the role you'll be playing within our company. Get ready to dive into an exciting journey of discovery!}
+      </p>
+
+      <a href="?id=ino_welcome_to_our_team">${See more}</a>
+    </div>
+  </div>
+  
+  <div class="ino-dow-wp-card">
+    <div class="ino-dow-wp-card-image">
+      <img src="/x_stefa_chameleon.dow-welcome-package-2.png">
+    </div>
+    
+    <div class="ino-dow-wp-card-content">
+      <h4>
+        ${Onboarding Process: Your Guide}
+      </h4>
+      <p>
+        ${This guide will walk you through the essential steps, from completing paperwork and setting up your workspace to understanding our policies and procedures. Check your guides}
+      </p>
+
+      <a href="?id=ino_onboarding_process">${See more}</a>
+    </div>
+  </div>
+  
+  <div class="ino-dow-wp-card ino-dow-wp-card--training">
+    <h4>
+      ${Skill Development: Trainings}
+    </h4>
+    
+    <div class="training-item" 
+         ng-repeat="item in c.trainings">
+      <div class="training-item-text">
+        <span>{{ item.progress }}%</span>
+        <p>
+          {{ item.name }}
+        </p>
+      </div>
+      
+      <div class="training-item-progress"
+           ng-style="{'background-color': item.progressBg }">
+        <div class="training-item-progress-fill"
+             ng-style="{width: item.progress + '%', 'background-color': item.progressFill }"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="ino-dow-wp-card">
+    <div class="ino-dow-wp-card-image">
+      <img src="/x_stefa_chameleon.dow-welcome-package-3.png">
+    </div>
+    
+    <div class="ino-dow-wp-card-content">
+      <h4>
+        ${Our HR Contacts}
+      </h4>
+      <p>
+        ${Building strong connections is essential to thriving in our company culture. In this session, you'll be introduced to our HR team and learn about the various resources they provide. They will be your go-to contacts for any HR-related questions, benefits information, or employee support.}
+      </p>
+
+      <a href="?id=ino_our_hr_contacts">${See more}</a>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

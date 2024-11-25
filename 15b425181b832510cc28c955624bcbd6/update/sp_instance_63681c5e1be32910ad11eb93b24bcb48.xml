@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>3</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">4b2ba6e51b0be510ad11eb93b24bcba9</sp_column>
+        <sp_widget display_value="Ino Banner">6d5554da1be32910ad11eb93b24bcb62</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-22 13:18:12</sys_created_on>
+        <sys_id>63681c5e1be32910ad11eb93b24bcb48</sys_id>
+        <sys_mod_count>17</sys_mod_count>
+        <sys_name>Our ambition &amp; values</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_instance_63681c5e1be32910ad11eb93b24bcb48</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-28 19:15:51</sys_updated_on>
+        <title>Our ambition &amp; values</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"title": {
+		"value": "Our ambition & values",
+		"displayValue": "Our ambition & values"
+	},
+	"description": {
+		"value": "We are seeking to become the most innovative, customer-centric, inclusive and sustainable materials science company in the world. See how our values, our integrity, respect for people, nand protection of our planet help us get there.",
+		"displayValue": "We are seeking to become the most innovative, customer-centric, inclusive and sustainable materials science company in the world. See how our values, our integrity, respect for people, nand protection of our planet help us get there."
+	},
+	"image": {
+		"value": "112f5cd21b272910ad11eb93b24bcba1",
+		"displayValue": "x_stefa_chameleon.dow-banner-image-1.jpg"
+	},
+	"learn_more_redirect_link": {
+		"value": "https://corporate.dow.com/en-us/progress-report.html",
+		"displayValue": "https://corporate.dow.com/en-us/progress-report.html"
+	},
+	"image_alt": {
+		"value": "",
+		"displayValue": ""
+	},
+	"image_object_fit": {
+		"value": "cover",
+		"displayValue": "cover"
+	},
+	"image_background_color": {
+		"value": "",
+		"displayValue": ""
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=63681c5e1be32910ad11eb93b24bcb48"/>
+</record_update>

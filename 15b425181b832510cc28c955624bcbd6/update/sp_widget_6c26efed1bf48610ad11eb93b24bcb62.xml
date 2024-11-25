@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  var c = this;
+	
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = c.data.btnAsk;
+	
+	c.server.get({action: 'user'}).then(function (response) {
+		c.userLanguage = response.data.userLanguage;
+	});
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = c.data.btnLoading + '...';
+		
+		c.server.get({
+			question: c.question,
+			language: c.userLanguage,
+			gpt_content: c.options.gpt_content,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = c.data.btnAsk;
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.specialist {
+	margin-bottom: 3rem;
+  
+  display: flex;
+  flex-direction: column;
+  
+  box-shadow: $default-box-shadow;
+  
+  background-color: #FFF;
+  
+}
+
+.specialist-heading {
+	background-color: $header-bg-color;
+  display: flex;
+  
+  padding: 16px;
+  
+  gap: 1.5rem;
+  
+  h2 {
+  	font-size: 18px;
+    margin: 0;
+    
+    font-weight: bold;
+		color: $header-color;
+  }
+}
+
+.specialist-body {
+	padding: 16px;
+}
+
+.specialist-inputs {
+  display: flex;
+ 	align-items: center;
+    
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+  
+  span {
+  	font-size: 7rem;
+    padding: 0 10px;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #AEAEAE;
+    
+    padding: 8px;
+    
+    height: 300px;
+    resize: none;
+    
+    flex: 1;
+    
+    @media(max-width: 768px) {
+      height: 150px;
+    	flex: unset;
+      width: 100%;
+    }
+    
+    &amp;:focus, &amp;:active {
+    	border-width: 1px;
+    }
+  }
+}
+
+.specialist-button {
+  margin-top: 3rem;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  color: #FFF;
+  border: 0 none;
+  background-color: $secondary-color;
+  border-radius: $default-border-radius;
+  padding: 1rem 2rem;
+  
+  svg {
+  	width: 15px;
+    height: 15px;
+    margin-left: 10px;
+  }
+  
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_customizable_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Customizable Specialist</name>
+        <option_schema>[{"hint":"data:image/png;base64,&lt;BASE64 HERE&gt;","name":"icon","section":"Presentation","default_value":"","label":"Icon (URL or Base64)","type":"string"},{"hint":"Example: Chemistry","name":"specialization_theme","section":"Data","default_value":"Chemistry","label":"Specialization theme","type":"string"},{"name":"gpt_content","section":"Data","default_value":"","label":"GPT Content","type":"string"},{"hint":"Example: How does caffeine work?","name":"suggestion","section":"Presentation","default_value":"How does caffeine work?","label":"Question Suggestion","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	var specialization = gs.getMessage(options.specialization_theme);
+	data.title = gs.getMessage("I am a {0} specialist!", specialization);
+	data.subtitle = gs.getMessage("Ask me anything related to {0}, and I will respond!", specialization);
+	data.btnAsk = gs.getMessage("ASK YOUR QUESTION");
+	data.btnLoading = gs.getMessage("LOADING");
+	data.suggestion = gs.getMessage(options.suggestion);
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+	
+	if (localInput.action == 'user') {
+		var languageCode = gs.getSession().getLanguage();
+    var languageGR = new GlideRecord('sys_language');
+    languageGR.addQuery('id', languageCode);
+    languageGR.query();
+
+    if (languageGR.next()) {
+        data.userLanguage = languageGR.getValue('name');
+    } else {
+        data.userLanguage = "English";
+    }
+	}
+	
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+		
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					"content": localInput.gpt_content + " and questions and answers need to use the language: " + localInput.language
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-03-07 19:51:07</sys_created_on>
+        <sys_id>6c26efed1bf48610ad11eb93b24bcb62</sys_id>
+        <sys_mod_count>27</sys_mod_count>
+        <sys_name>GPT Customizable Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_6c26efed1bf48610ad11eb93b24bcb62</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-03-08 14:52:18</sys_updated_on>
+        <template><![CDATA[<div class="specialist">
+  <div class="specialist-heading">
+    <img src="{{c.options.icon}}">
+
+    <h2>
+      {{ c.data.title }}<br>
+      {{ c.data.subtitle }}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="specialist-body">
+    <div class="specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="${Example}: {{c.data.suggestion}}" ng-model="c.question"></textarea>
+      <span>=</span>
+      <textarea placeholder="${The answer will be presented here.}" readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="specialist-button">
+      {{c.textButton}}
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+        <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+          <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+          <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+          <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+        </g>
+      </svg>
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="specialist-body">
+    <p>${You need to setup the ChatGPTApiKey first!}</p>
+  </div>
+  <div ng-if="data.needConfigurations" class="specialist-body">
+    <p>${You need to setup the ChatGPTApiKey first!}</p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

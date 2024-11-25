@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$ino-banner-border-radius: $default-border-radius !default;
+$ino-banner-text-color: $secondary-contrast-color !default;
+$ino-banner-bg-color: $secondary-color !default;
+$ino-banner-description-text-align: left !default;
+$ino-banner-box-shadow: $default-box-shadow !default;
+
+.ino-banner {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  
+  box-shadow: $ino-banner-box-shadow;
+  
+  margin-bottom: 2.5rem;
+
+  @media(max-width: 768px) {
+    flex-direction: column-reverse;
+  }
+}
+
+.ino-banner-main {
+  display: block;
+	width: 50%;
+  max-height: 100%;
+
+  padding: 4rem;
+
+  background-color: $ino-banner-bg-color;
+ 	border-top-left-radius: $ino-banner-border-radius;
+ 	border-bottom-left-radius: $ino-banner-border-radius;
+
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: $ino-banner-text-color;
+  }
+  
+  p {
+    font-size: 1.8rem;
+    
+    text-align: $ino-banner-description-text-align;
+    color: $ino-banner-text-color;
+  }
+}
+
+.ino-banner-image {
+	width: 50%;
+  min-height: 6rem;
+  max-height: 100%;
+
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+    
+    border-top-right-radius: $ino-banner-border-radius;
+    border-bottom-right-radius: $ino-banner-border-radius;
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_banner</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Banner</name>
+        <option_schema>[{"hint":"The title of the card","name":"title","section":"Presentation","default_value":"Describe your banner","label":"Title","type":"string"},{"hint":"The description of this card.","name":"description","section":"Presentation","default_value":"Talk about what you want to present in this card","label":"Description","type":"string"},{"displayValue":"Images","hint":"Select the image that will be presented in the right of the card","name":"image","section":"Presentation","label":"Image","type":"reference","value":"db_image","ed":{"reference":"db_image"}},{"hint":"If you want to show a redirect button, paste the link here","name":"learn_more_redirect_link","section":"Presentation","label":"(optional) Learn More Redirect link","type":"string"},{"hint":"The alternative text for the image","name":"image_alt","section":"Presentation","label":"(optional) Image Alt","type":"string"},{"hint":"Select how the image will behave when it does not fit correctly on the card.","name":"image_object_fit","section":"Presentation","default_value":"cover","label":"(optional) Image Object Fit","type":"choice","choices":[{"label":"cover","value":"cover"},{"label":"contain","value":"contain"},{"label":"100%","value":"100%"}]},{"hint":"Useful when you use Image Object Fit in Contain mode","name":"image_background_color","section":"Presentation","default_value":"transparent","label":"(optional) Image Background Color","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+	if (options.image) {
+		var imageRecord = new GlideRecord('db_image');
+		
+		if (!imageRecord.get(options.image))
+			return;
+		
+	  data.image_url = imageRecord.getDisplayValue('image');
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-22 13:04:41</sys_created_on>
+        <sys_id>6d5554da1be32910ad11eb93b24bcb62</sys_id>
+        <sys_mod_count>34</sys_mod_count>
+        <sys_name>Ino Banner</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_6d5554da1be32910ad11eb93b24bcb62</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:51:37</sys_updated_on>
+        <template><![CDATA[<article class="ino-banner">
+  <div class="ino-banner-main">
+    <h1>
+      {{options.title}}
+    </h1>
+    
+    <p>
+      {{options.description}}
+    </p>
+
+    <a ng-if="options.learn_more_redirect_link" class="btn btn-secondary" href="{{options.learn_more_redirect_link}}">Learn more</a>
+  </div>
+  
+  <div class="ino-banner-image"
+       ng-style="{'background-color': options.image_background_color || 'transparent'}">
+    <img ng-if="data.image_url" 
+         src="{{ data.image_url }}"
+         ng-style="::{'object-fit': options.image_object_fit || 'cover'}"
+         alt="{{ options.image_alt }}">
+  </div>
+</article>]]></template>
+    </sp_widget>
+</record_update>

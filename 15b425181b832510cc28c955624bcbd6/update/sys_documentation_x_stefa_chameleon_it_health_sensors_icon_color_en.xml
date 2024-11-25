@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="icon_color" label="Icon color" language="en" table="x_stefa_chameleon_it_health_sensors">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>icon_color</element>
+            <help/>
+            <hint/>
+            <label>Icon color</label>
+            <language>en</language>
+            <name>x_stefa_chameleon_it_health_sensors</name>
+            <plural>Icon colors</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+            <sys_created_on>2023-06-23 13:18:57</sys_created_on>
+            <sys_id>1c3229661b276910ad11eb93b24bcb77</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Icon color</sys_name>
+            <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+            <sys_update_name>sys_documentation_x_stefa_chameleon_it_health_sensors_icon_color_en</sys_update_name>
+            <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+            <sys_updated_on>2023-06-23 13:18:57</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

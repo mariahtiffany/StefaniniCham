@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page">
+    <sp_page action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <css>body {&#13;
+  background-image: $background-bg-image;&#13;
+  background-size: cover;&#13;
+  background-repeat: no-repeat;&#13;
+  background-position-x: $background-bg-pos-x;&#13;
+  background-position-y: $background-bg-pos-y;&#13;
+  background-attachment: $background-bg-attachment;&#13;
+  box-shadow: $background-bg-box-shadow;&#13;
+}&#13;
+&#13;
+main.body {&#13;
+	/*background: linear-gradient(0deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,1) 90%);*/&#13;
+}&#13;
+&#13;
+#homepage-search {&#13;
+  .wrapper-xl {&#13;
+    padding: 0 !important;&#13;
+  }&#13;
+  &#13;
+  .input-group {&#13;
+    border-radius: 20px;&#13;
+    box-shadow: 0rem 0.5rem 1.5rem -0.3rem rgba(0, 0, 0, 0.3); &#13;
+    &#13;
+    input {&#13;
+      box-shadow: none;&#13;
+      border: none;&#13;
+      border-top-left-radius: 20px;&#13;
+      border-bottom-left-radius: 20px;&#13;
+    }&#13;
+    &#13;
+    .input-group-btn button {&#13;
+      border: none;&#13;
+    	border-top-right-radius: 20px;&#13;
+    	border-bottom-right-radius: 20px;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.iconlink &gt; a.color_box {&#13;
+    min-height: 140px;&#13;
+}&#13;
+&#13;
+.mx-auto {&#13;
+  margin: 0 auto;&#13;
+}&#13;
+&#13;
+#homepage-search {&#13;
+  margin-top: 10px;&#13;
+&#13;
+  h2 {&#13;
+    color: black!important;&#13;
+  }&#13;
+}&#13;
+&#13;
+header {&#13;
+  z-index: 1000;&#13;
+  box-shadow: 2px 3px 10px 0px rgba(0, 0, 0, 0.2);&#13;
+}&#13;
+&#13;
+.menu-navlinks {&#13;
+  flex: 1;&#13;
+}&#13;
+&#13;
+.panel-heading &gt; .panel-title {&#13;
+  display: inline-flex!important;&#13;
+}</css>
+        <draft>false</draft>
+        <dynamic_title_structure/>
+        <human_readable_url_structure/>
+        <id>chameleon_retail</id>
+        <internal>false</internal>
+        <omit_watcher>false</omit_watcher>
+        <public>false</public>
+        <roles/>
+        <seo_script/>
+        <short_description/>
+        <sys_class_name>sp_page</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-14 16:34:12</sys_created_on>
+        <sys_id>c54816951b40f5109b7d32231b4bcb55</sys_id>
+        <sys_mod_count>22</sys_mod_count>
+        <sys_name>chameleon_retail</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_page_c54816951b40f5109b7d32231b4bcb55</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-24 18:09:57</sys_updated_on>
+        <title>Chameleon Retail</title>
+        <use_seo_script>false</use_seo_script>
+    </sp_page>
+    <sys_translated_text action="delete_multiple" query="documentkey=c54816951b40f5109b7d32231b4bcb55"/>
+</record_update>

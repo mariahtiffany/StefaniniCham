@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+	function buildCircleProgressBar(id, progress, text, color) {
+		var option = {
+			color: [color, '#d4d4d4'],
+			title: {
+				 text: text,
+				 left: 'center',
+				 top: 'center',
+				 textStyle: {
+					 color: color
+				 },
+			},
+			tooltip: {
+				trigger: 'item'
+			},
+			legend: {
+				top: '5%',
+				left: 'center',
+				show: false,
+			},
+			series: [
+				{
+					name: 'Progress Bar',
+					type: 'pie',
+					radius: ['50%', '70%'],
+					avoidLabelOverlap: false,
+					label: {
+						show: false,
+						position: 'center'
+					},
+					tooltip: {
+						show: false,
+					},
+					emphasis: {
+						label: {
+							show: false,
+							fontSize: 40,
+							fontWeight: 'bold'
+						}
+					},
+					labelLine: {
+						show: false
+					},
+					data: [
+						{ value: progress, name: '0_Fill' },
+						{ value: 100 - progress, name: '1_Empty' },
+					]
+				}
+			]
+		}
+		
+		var theChart = echarts.init(
+			document.getElementById(id)
+		);
+		
+		theChart.setOption(option);
+		
+		window.addEventListener('resize', function() {
+			theChart.resize();
+		});
+	}
+
+	/* widget controller */
+  var c = this;
+	
+	c.mainProgressCircleId = Math.random().toString(16).slice(2);
+	
+	c.asideProgressCircleId1 = Math.random().toString(16).slice(2);	
+	c.asideProgressCircleId2 = Math.random().toString(16).slice(2);
+	c.asideProgressCircleId3 = Math.random().toString(16).slice(2);
+
+	setTimeout(function () {
+		buildCircleProgressBar(c.mainProgressCircleId, 70, '70.2%', '#027d5b');
+		
+		buildCircleProgressBar(c.asideProgressCircleId1, 40, '2', '#d3470e');
+		buildCircleProgressBar(c.asideProgressCircleId2, 45, '3', '#d3470e');
+		buildCircleProgressBar(c.asideProgressCircleId3, 35, '11', '#d3470e');
+	}, 10);
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.ith-body {
+	display: flex;
+  align-items: center;
+  
+  @media(max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.ith-body-main {
+	width: 30%;
+  
+  &amp; &gt; div {
+  	min-height: 160px;
+  	min-width: 160px;
+
+    width: 100%;
+    max-width: 100%;
+    
+    @media (max-width: 576px) {
+      min-height: 240px;
+      min-width: 240px;
+    }
+  }
+
+  @media (max-width: 576px) {
+  	width: 100%;
+  }
+}
+
+.ith-body-aside {
+	width: 70%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (max-width: 576px) {
+  	width: 100%;
+  }
+}
+
+.ith-aside-item {
+	display: flex;
+  align-items: center;
+  
+  &amp; &gt; div {
+    min-width: 80px;
+    min-height: 80px;
+  	width: 80px;
+  	height: 80px;
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>it_health</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>IT Health</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 20:15:25</sys_created_on>
+        <sys_id>a4f4641f1b8fe5509b7d32231b4bcbad</sys_id>
+        <sys_mod_count>56</sys_mod_count>
+        <sys_name>IT Health</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_a4f4641f1b8fe5509b7d32231b4bcbad</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-06 13:52:42</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>YOUR IT HEALTH</b>
+  </div>
+  
+  <div class="panel-body ith-body">
+    <div class="ith-body-main">
+      <div ng-attr-id="{{c.mainProgressCircleId}}"></div>
+    </div>
+    
+    <div class="ith-body-aside">
+      <div class="ith-aside-item">
+        <div ng-attr-id="{{c.asideProgressCircleId1}}"></div>
+        
+        <p>
+          Days until your password reset and restart the pc.<br>
+          Request an <a href="#">IT TUNE UP</a>.
+        </p>
+      </div>
+      
+      <div class="ith-aside-item">
+        <div ng-attr-id="{{c.asideProgressCircleId2}}"></div>
+        
+        <p>
+          Days until your password expires.<br>
+          Please change your <a href="#">password</a>.
+        </p>
+      </div>
+      
+      <div class="ith-aside-item">
+        <div ng-attr-id="{{c.asideProgressCircleId3}}"></div>
+        
+        <p>
+          Days since you last restarted your PC.<br>
+          Please <a href="#">restart</a> to apply the latest updates.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

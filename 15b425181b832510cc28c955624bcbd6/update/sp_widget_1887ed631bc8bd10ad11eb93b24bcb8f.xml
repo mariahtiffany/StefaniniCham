@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.question = '';
+	c.disableButton = false;
+	c.textButton = 'ASK YOUR QUESTION';
+	
+	c.askQuestion = function() {
+		c.disableButton = true;
+		c.textButton = 'LOADING...';
+		
+		c.server.get({
+			question: c.question,
+			action: 'ask_question',
+		}).then(function (response) {
+			c.disableButton = false;
+			c.textButton = 'ASK YOUR QUESTION';
+
+			c.answer = response.data.answer;
+		});
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$secondary-color: #666!default;
+
+.nutritional-specialist {
+	margin-bottom: 3rem;
+  
+  display: flex;
+  flex-direction: column;
+  
+  box-shadow: $default-box-shadow;
+  
+  background-color: #FFF;
+  
+}
+
+.nutritional-specialist-heading {
+	background-color: $header-bg-color;
+  display: flex;
+  
+  padding: 16px;
+  
+  gap: 1.5rem;
+  
+  h2 {
+  	font-size: 18px;
+    margin: 0;
+    
+    font-weight: bold;
+		color: $header-color;
+  }
+}
+
+.nutritional-specialist-body {
+	padding: 16px;
+}
+
+.nutritional-specialist-inputs {
+  display: flex;
+ 	align-items: center;
+    
+  @media(max-width: 768px) {
+  	flex-direction: column;
+  }
+  
+  span {
+  	font-size: 7rem;
+    padding: 0 10px;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #AEAEAE;
+    
+    padding: 8px;
+    
+    height: 300px;
+    resize: none;
+    
+    flex: 1;
+    
+    @media(max-width: 768px) {
+      height: 150px;
+    	flex: unset;
+      width: 100%;
+    }
+    
+    &amp;:focus, &amp;:active {
+    	border-width: 1px;
+    }
+  }
+}
+
+.nutritional-button {
+  margin-top: 3rem;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  color: #FFF;
+  border: 0 none;
+  background-color: $secondary-color;
+  border-radius: $default-border-radius;
+  padding: 1rem 2rem;
+  
+  svg {
+  	width: 15px;
+    height: 15px;
+    margin-left: 10px;
+  }
+  
+  @media(max-width: 768px) {
+    width: 100%;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>gpt_nutritional_specialist</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>GPT Nutritional Specialist</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	var config = new ChameleonUtil().getConfigKey('ChatGPTApiKey');
+	
+	if (!config || !config.value) {
+		data.no_api_key = true;
+		return;
+	}
+	
+	var localInput = input;
+	if (!localInput)
+		return;
+
+  var CHATAPI_KEY = config.value;
+
+	if (localInput.action == 'ask_question') {
+		var question = localInput.question;
+
+		if (!question)
+			return;
+
+		// Set up the REST message
+		var restMessage = new sn_ws.RESTMessageV2();
+		restMessage.setEndpoint("https://api.openai.com/v1/chat/completions");
+		restMessage.setRequestHeader("Authorization", 'Bearer ' + CHATAPI_KEY);
+		restMessage.setHttpMethod("post");
+		restMessage.setRequestHeader("Content-Type", "application/json");
+
+		// Set up the request body
+		var requestBody = {
+			"model": "gpt-3.5-turbo",
+			"messages": [
+				{
+					"role": "system",
+					//Doordash
+					"content": "As a Nutritionist, I want you to specialize in providing expertise in nutrition, recipes, and food-related topics, with a focus on incorporating Doordash products whenever applicable. Please be prepared to address inquiries about dietary guidelines, nutritional values of foods, meal planning, and any other subjects related to nutrition and its impact on health. Offer comprehensive explanations, examples, and recommendations to support individuals in making informed choices and reaching their nutritional objectives. If the question is unrelated to nutrition or food, you can respond with something like, \"I don't believe this question pertains to nutrition. Do you have any nutrition-related inquiries I can assist you with?\""
+					
+					//Kraft Heinz
+					//"content": "As a Nutritionalist, I want you to focus on providing expertise in nutrition, recipe and food-related topics using Kraft Heinz products whenever possible. Please be ready to help answer questions about dietary guidelines, nutritional values of foods, meal planning, and any other topic related to nutrition and its impact on health. Offer detailed explanations, examples, and recommendations to assist individuals in making informed choices and achieving their nutritional goals. If the question is not related to nutrition or food, you can respond with something like, \"I don't believe the question is related to nutrition. Do you have any nutrition-related inquiries that I can assist you with?\""
+				},
+				{
+					"role": "user",
+					"content": 'Now, answer the following question: "' + question.replace(/"/g, '') + '"'
+				}
+			],
+			"presence_penalty": 0,
+			"frequency_penalty": 0,
+			"max_tokens": 1000,
+			"stream": false,
+			"top_p": 1,
+			"temperature": 0.5
+		};
+		restMessage.setRequestBody(JSON.stringify(requestBody));
+
+		try {
+			// Execute the request
+			var response = restMessage.execute();
+			gs.info("Response");
+			gs.info(response);
+
+			// Parse the response
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+			
+			gs.info('Body:' + responseBody);
+			gs.info('StatusCode:' + httpStatus);
+			
+			if (httpStatus != 200) {
+				data.answer = 'Error: The ChatGPT did not answer with a good status, probably you hit the rate limit, wait a couple seconds and try again!';
+				$sp.log(responseBody);
+				$sp.log(httpStatus);
+				return;
+			}
+			
+			var responseBodyParsed = JSON.parse(responseBody);
+			gs.info(responseBodyParsed);
+
+			var answer = responseBodyParsed.choices[0].message.content;
+
+			data.answer = answer;
+		} catch (e) {
+			gs.error('Error calling GPT Templates: ' + e);
+
+			data.answer = 'Error calling GPT Templates: ' + e.message;
+		}
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-21 12:47:29</sys_created_on>
+        <sys_id>1887ed631bc8bd10ad11eb93b24bcb8f</sys_id>
+        <sys_mod_count>18</sys_mod_count>
+        <sys_name>GPT Nutritional Specialist</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_1887ed631bc8bd10ad11eb93b24bcb8f</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-03 12:51:51</sys_updated_on>
+        <template><![CDATA[<div class="nutritional-specialist">
+  <div class="nutritional-specialist-heading">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD7ElEQVR4nO2VS2gTURSGz0YFl+pGEEVEQbC+8dWJYBSaO51BFKoLEToWBcGN1geKUEUROomJoggVV24UFRSViXXXDNigVVz4QrBNa32A2tqH72aO3HnEdDKJk5nbJoUe+Ak5M+ee/7v3ngRgPMZjPHzFWSU0SVaJLKv8eznBqzDWQlaJHFZ5pBoJgMYEEcIq+RBW+bdhNSSyXh/ozlPzkRZ+Dct1wyo5KaukV06Q7/82iHSz7GE2MhZnumYLCVrr2vSWZZ8RAWh4VjNRTpCXdvPGSRDia3HkYB4GQMUAfEMOHiMH0vnmDUiFlbADOXhiPkvgWpibd50mmIAxOIRReIUx+IVR6MAoyBiBaY0JcsR590mPL/MmQDMGAF2Jg3t5zUfhHsYA7UpHYeDOrcU/nQDkBDlRnNn1MBUDcB0D0JeqgHTXIhhIV8KQWwD6Lq2htXQNDMA1XAVTMAaHncxjlh5cnZu9868jLdVVxe92AC5bZt4sMOR69wOAmlnXnl23Dm5gFL5lmx3YD9hfD6hFbBBX5vwJq+QY/Z8p2rwOwMFnq3F7hWFG49wDpDmjpqNiGMBP+2731wP27gHs35cLgVHY5sm8CZC5LqmFhpmhSvcAQyZAKhtgbe510SKGeR2iPuf5VzrY3gDor4nZuNME+L3GPcDvSqOma+GwE3C88xqFqDeuk8PzRq8AnVbj7kWGmR+r3QPQd2nNu8VZ+arCw4tOikK7V4Ck1fjjEsPM4Cr3AIMrjRpam8lvHG5uIM8A2/TDK8BNq/GnpYaZvhXuAei7tObTsqz81iIGOJY5gRfeADiIWY17lhtmvix3D/DZrKG1mbxUYID3AqadIQ4UZ/xRA4+PGrqx7Riy0v2Le7CaVGEwGPQsnlRppw5uP/N/gLaGLpbmqfyaD5qq5kNaSQAsA5fadnpW0Fzj/wAPjxPWEF4Blu2eqasogAxIXERWKhGA8KvUAJe8XKEMgCK8Yw3AQuAeQHw8tgHiwoUcMxenIJ6Ff6LfnUzb3pMkiZnAPYC4JcdYk0uApnIAuC1MxrjYw+IKZRtIJpOYSqX0T6lArrOmBnHzZv3TE4AOoQjnWANQo5akAjlq3pIPgNAMVMTBkTiB1tbWgjnrBFJ+TkCHiAtHWQKM2gxYgW27JmBcaClo0v7rZBvwkgLQwPim6QX/2JrcA7gd4qRDzjOADtEszkZFaB+tIU455HwB6BB3+VmoiE9HY4iTDjnfADqEEpqEinga40J6TAxxvsC7/HxUxMtuQMoSoJgoiyH2E2UzxF6jrIbYS0iSpDGaAQ1KEbW1tc8ZATwrCYAkSStpc7/m6+rqVpQEYDwgf/wF+/ZYZvM1HuQAAAAASUVORK5CYII=">
+
+    <h2>
+      ${I am a nutritionist specialist!}<br>
+      ${Ask me anything related to nutrition, and I will respond!}
+    </h2>
+  </div>
+  
+  <form ng-submit="c.askQuestion()" ng-if="!data.no_api_key" class="nutritional-specialist-body">
+    <div class="nutritional-specialist-inputs">
+      <textarea ng-disabled="c.disableButton" name="question" placeholder="Example: How do you make a pancake?" ng-model="c.question"></textarea>
+      <span>=</span>
+      <textarea placeholder="The answer will be presented here." readonly ng-model="c.answer"></textarea>
+    </div>
+
+    <button type="submit" ng-disabled="c.disableButton" class="nutritional-button">
+      {{c.textButton}}
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="29.698" height="29.698" viewBox="0 0 29.698 29.698">
+        <g id="Icon_feather-arrow-right-circle" data-name="Icon feather-arrow-right-circle" transform="translate(-2 -2)">
+          <path id="Path_2" data-name="Path 2" d="M16.849,2A14.849,14.849,0,1,1,2,16.849,14.866,14.866,0,0,1,16.849,2Zm0,25.877A11.028,11.028,0,1,0,5.821,16.849,11.04,11.04,0,0,0,16.849,27.877Z"/>
+          <path id="Path_3" data-name="Path 3" d="M18.856,24.768A1.856,1.856,0,0,1,17.544,21.6l3.716-3.716-3.716-3.716a1.856,1.856,0,0,1,2.625-2.625L25.2,16.572a1.856,1.856,0,0,1,0,2.625l-5.028,5.028A1.85,1.85,0,0,1,18.856,24.768Z" transform="translate(-1.901 -1.035)"/>
+          <path id="Path_4" data-name="Path 4" d="M22.912,20.712H12.856a1.856,1.856,0,0,1,0-3.712H22.912a1.856,1.856,0,1,1,0,3.712Z" transform="translate(-1.035 -2.007)"/>
+        </g>
+      </svg>
+    </button>
+  </form>
+
+  <div ng-if="data.no_api_key" class="nutritional-specialist-body">
+    <p>
+      ${You need to setup the ChatGPTApiKey first!}
+    </p>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

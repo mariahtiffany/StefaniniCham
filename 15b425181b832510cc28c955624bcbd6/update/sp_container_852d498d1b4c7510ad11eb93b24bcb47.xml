@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_container">
+    <sp_container action="INSERT_OR_UPDATE">
+        <background_color/>
+        <background_image/>
+        <background_style>default</background_style>
+        <bootstrap_alt>false</bootstrap_alt>
+        <class_name/>
+        <container_class_name/>
+        <name>Ino TechHub Mind - Container 1</name>
+        <order>1</order>
+        <sp_page display_value="ino_techhub_mind">492d498d1b4c7510ad11eb93b24bcb43</sp_page>
+        <subheader>false</subheader>
+        <sys_class_name>sp_container</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-13 16:27:30</sys_created_on>
+        <sys_id>852d498d1b4c7510ad11eb93b24bcb47</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Ino TechHub Mind - Container 1</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_container_852d498d1b4c7510ad11eb93b24bcb47</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-13 16:27:30</sys_updated_on>
+        <title/>
+        <width>container</width>
+    </sp_container>
+</record_update>

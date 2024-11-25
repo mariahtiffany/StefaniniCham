@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sysevent_email_action">
+    <sysevent_email_action action="INSERT_OR_UPDATE">
+        <action_insert>false</action_insert>
+        <action_update>true</action_update>
+        <active>true</active>
+        <advanced_condition/>
+        <affected_field_on_event/>
+        <category display_value="Suggestions" name="Suggestions">1d47cb141bccf1109b7d32231b4bcb38</category>
+        <collection>x_stefa_chameleon_suggestion</collection>
+        <condition table="x_stefa_chameleon_suggestion">u_status=Canceled^EQ<item display_value="Canceled" endquery="false" field="u_status" goto="false" newquery="false" operator="=" or="false" value="Canceled"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </condition>
+        <content_type>text/html</content_type>
+        <default_interval/>
+        <description/>
+        <digest_from/>
+        <digest_html/>
+        <digest_reply_to/>
+        <digest_separator_html><![CDATA[<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>]]></digest_separator_html>
+        <digest_separator_text><![CDATA[\n--------------------------------------------------------------------------------\n]]></digest_separator_text>
+        <digest_subject/>
+        <digest_template/>
+        <digest_text/>
+        <digestable>false</digestable>
+        <enable_dynamic_translation>false</enable_dynamic_translation>
+        <event_name>activate.life.cycle.migration</event_name>
+        <event_parm_1>false</event_parm_1>
+        <event_parm_2>false</event_parm_2>
+        <exclude_delegates>false</exclude_delegates>
+        <force_delivery>false</force_delivery>
+        <from/>
+        <generation_type>engine</generation_type>
+        <importance/>
+        <include_attachments>false</include_attachments>
+        <item>event.parm1</item>
+        <item_table/>
+        <mandatory>false</mandatory>
+        <message/>
+        <message_html><![CDATA[<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div style="font-family: ui-sans-serif, system-ui; background-color: #eaf0f3; width: 100%; height: 100%; display: inline-block; margin: 0px;">
+<table style="max-width: 900px; min-width: 590px; margin-top: 50px; margin-bottom: 50px;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr style="width: 100%;">
+<td>
+<table style="margin-top: 32px;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+<td><img style="display: block; outline: none; border: none; text-decoration: none; margin: 0px auto 0px auto;" src="x_stefa_chameleon.suggestion_box_notification_email_logo.png" /></td>
+</tr>
+</tbody>
+</table>
+<h1 style="padding: 0px; text-align: center; font-size: 40px; font-weight: 400; color: #000000; margin: 30px 0px 30px 0px;"><strong>Suggestion Canceled</strong></h1>
+<div style="background-color: #ffffff; width: 100%; display: inline-block; margin: 0px; max-width: 900px; min-width: 590px;">
+<table style="padding: 40px; text-align: center;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="15" align="center">
+<tbody>
+<tr>
+<td style="padding-bottom: 40px; text-align: center;"><img style="display: block; outline: none; border: none; text-decoration: none; margin: 0px auto 0px auto;" src="x_stefa_chameleon.suggestion_box_closed_canceled.png" /></td>
+</tr>
+<tr>
+<td style="color: #5e5e5e; font-size: 20px; font-family: Roboto, ui-sans-serif, system-ui; margin-top: 32px; text-align: center;">We are grateful for this suggestion! But we have<br />evaluated it and we will not be moving forward with your<br />suggestion at this time.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table style="margin-top: 32px; text-align: center;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="5" align="center">
+<tbody>
+<tr>
+<td>Copyright &copy; 2023</td>
+</tr>
+<tr>
+<td style="font-weight: bold;">Rockwell Portal</td>
+</tr>
+<tr>
+<td>Rockwell Automation</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>]]></message_html>
+        <message_list/>
+        <message_text/>
+        <name>Suggestion - Canceled - Notify Creator</name>
+        <omit_watermark>false</omit_watermark>
+        <order>100</order>
+        <push_message_only>false</push_message_only>
+        <recipient_fields/>
+        <recipient_groups/>
+        <recipient_users/>
+        <reply_to/>
+        <send_self>true</send_self>
+        <sms_alternate/>
+        <style/>
+        <subject>Suggestion canceled - Rockwell ServiceNow Portal</subject>
+        <subscribable>false</subscribable>
+        <sys_class_name>sysevent_email_action</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2024-05-09 14:10:27</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6854767d1bc28e505a2e113fad4bcbb1</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Suggestion - Canceled - Notify Creator</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sysevent_email_action_6854767d1bc28e505a2e113fad4bcbb1</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-09 14:22:27</sys_updated_on>
+        <sys_version>2</sys_version>
+        <template display_value="Unsubscribe and Preferences">7ed0481f3b0b2200c869c2c703efc487</template>
+        <type>email</type>
+        <weight>0</weight>
+    </sysevent_email_action>
+</record_update>

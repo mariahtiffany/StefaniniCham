@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_sharepoint_portal</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino Sharepoint Portal</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-20 12:51:04</sys_created_on>
+        <sys_id>4bbe9c5f1b487d10ad11eb93b24bcbce</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>Ino Sharepoint Portal</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_4bbe9c5f1b487d10ad11eb93b24bcbce</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-07-20 13:23:34</sys_updated_on>
+        <template><![CDATA[<div class="panel">
+  <div class="panel-heading">
+  <h2 class="panel-title">News Feed</h2>
+  </div>
+  
+  <div class="panel-body">
+    <iframe style="border: none;" 
+            frameborder="0"
+            scrolling="yes"
+            sandbox="allow-same-origin allow-forms allow-modals allow-popups allow-scripts"
+            src="https://stefaninilatam.sharepoint.com/sites/InnovationPortal" width="100%" height="600px">
+    </iframe></div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+
+.icon-default-color {
+  fill: $primary-color;
+  g {
+    fill: $primary-color;
+    path {
+      fill: $primary-color;
+    }
+  }
+}
+
+.ino-dow-msc-calendar {
+  box-shadow: $default-box-shadow;
+  background-color: #FFF;
+	margin-bottom: 3rem;
+  
+  p {
+    margin: 0;
+    padding: 2rem;
+    font-size: 16px;
+    color: $text-color;
+  }
+}
+
+.ino-dow-msc-calendar-content {
+	width: 100%;
+  padding: 2rem;
+  height: 500px;
+  overflow-y: auto;
+  
+  mgt-agenda {
+  	height: 100%;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>ino_dow_msc_calendar_widget</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW MSC Calendar Widget</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-04 17:30:44</sys_created_on>
+        <sys_id>37458bce1b3b6910ad11eb93b24bcbd4</sys_id>
+        <sys_mod_count>16</sys_mod_count>
+        <sys_name>Ino DOW MSC Calendar Widget</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_37458bce1b3b6910ad11eb93b24bcbd4</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-11-03 19:42:25</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-msc-calendar">
+  <div class="panel-heading">
+    <h3>
+      <svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="21" height="24" viewBox="0 0 21 24">
+        <path id="Icon_awesome-calendar-alt" data-name="Icon awesome-calendar-alt" d="M0,21.75A2.251,2.251,0,0,0,2.25,24h16.5A2.251,2.251,0,0,0,21,21.75V9H0Zm15-9.187A.564.564,0,0,1,15.563,12h1.875a.564.564,0,0,1,.563.563v1.875a.564.564,0,0,1-.562.563H15.563A.564.564,0,0,1,15,14.438Zm0,6A.564.564,0,0,1,15.563,18h1.875a.564.564,0,0,1,.563.563v1.875a.564.564,0,0,1-.562.563H15.563A.564.564,0,0,1,15,20.438Zm-6-6A.564.564,0,0,1,9.563,12h1.875a.564.564,0,0,1,.563.563v1.875a.564.564,0,0,1-.562.563H9.563A.564.564,0,0,1,9,14.438Zm0,6A.564.564,0,0,1,9.563,18h1.875a.564.564,0,0,1,.563.563v1.875a.564.564,0,0,1-.562.563H9.563A.564.564,0,0,1,9,20.438Zm-6-6A.564.564,0,0,1,3.563,12H5.438A.564.564,0,0,1,6,12.563v1.875A.564.564,0,0,1,5.438,15H3.563A.564.564,0,0,1,3,14.438Zm0,6A.564.564,0,0,1,3.563,18H5.438A.564.564,0,0,1,6,18.563v1.875A.564.564,0,0,1,5.438,21H3.563A.564.564,0,0,1,3,20.438ZM18.75,3H16.5V.75A.752.752,0,0,0,15.75,0h-1.5a.752.752,0,0,0-.75.75V3h-6V.75A.752.752,0,0,0,6.75,0H5.25A.752.752,0,0,0,4.5.75V3H2.25A2.251,2.251,0,0,0,0,5.25V7.5H21V5.25A2.251,2.251,0,0,0,18.75,3Z" />
+      </svg>
+
+      ${CALENDAR}
+    </h3>
+  </div>
+  <p>
+    ${Your Outlook calendar made more acessible.}
+  </p>
+  
+  <div class="ino-dow-msc-calendar-content">
+    <mgt-agenda>
+      <template data-type="no-data">
+        <mgt-login></mgt-login>
+      </template>
+    </mgt-agenda>
+   
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

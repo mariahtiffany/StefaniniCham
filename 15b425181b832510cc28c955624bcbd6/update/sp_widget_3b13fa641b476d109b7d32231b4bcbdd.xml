@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.sci-list-items {
+	display: flex;
+  gap: 1.5rem;
+  
+  overflow-y: hidden;
+  overflow-x: auto;
+  
+  .item-card {
+      margin-top: 1rem;
+  }
+
+  h2 {
+    max-width: 16rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+  
+  img {
+    width: 100%;
+    max-height: 100px;
+    text-align: center;
+    max-width: unset;
+    object-fit: contain;
+  }
+  
+  p {
+  	max-width: 20rem;
+  }
+  
+  .btn {
+  	margin-left: auto;
+  }
+}
+  
+.see-all {
+  width: 100%;
+  
+  margin-top: 1rem;
+
+  display: flex;
+  justify-content: flex-end;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>service_catalog_items</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Service Catalog Items</name>
+        <option_schema>[{"hint":"Put the URL to the page that the user will be redirect","name":"redirect_to","section":"Behavior","default_value":"/?id=sc_home","label":"When empty, redirect to","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[data.limit = options.limit || 4;
+var items = [];
+var user = gs.getUser();
+
+var count = new GlideAggregate('sc_req_item');
+count.addQuery('opened_by', '=', user.getID());
+count.addAggregate('COUNT', 'cat_item');
+count.groupBy('cat_item');
+count.addQuery('cat_item.sys_class_name', 'NOT IN', 'sc_cat_item_guide,sc_cat_item_wizard,sc_cat_item_content');
+count.addQuery('cat_item.visible_standalone', 'true');
+count.addEncodedQuery('cat_item.hide_sp=false^ORcat_item.hide_spISEMPTY');
+count.orderByAggregate('COUNT', 'cat_item');
+count.query();
+
+while (count.next() && items.length < data.limit) {
+  if (!$sp.canReadRecord("sc_cat_item", count.cat_item.sys_id.getDisplayValue()))
+    continue; // user does not have permission to see this item
+
+  var item = {};
+  item.count = 0 - count.getAggregate('COUNT', 'cat_item');
+  item.name = count.cat_item.name.getDisplayValue();
+  item.short_description = count.cat_item.short_description.getDisplayValue();
+  item.picture = count.cat_item.picture.getDisplayValue();
+  item.sys_id = count.cat_item.sys_id.getDisplayValue();
+  items.push(item);
+}
+
+data.items = items;]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-23 17:33:17</sys_created_on>
+        <sys_id>3b13fa641b476d109b7d32231b4bcbdd</sys_id>
+        <sys_mod_count>91</sys_mod_count>
+        <sys_name>Service Catalog Items</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_3b13fa641b476d109b7d32231b4bcbdd</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-10-17 17:51:26</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default to-item-card">
+	<div class="panel-heading">
+    CATALOG ITEMS FOR YOU
+  </div>
+
+	<div class="panel-body">
+    <div class="sci-list-items" ng-if="data.items.length > 0">
+      <div ng-repeat="item in data.items | orderBy: 'count' | limitTo: data.limit" class="panel panel-default item-card b sc-panel">
+        <a href="?id=sc_cat_item&sys_id={{item.sys_id}}" class="panel-body block height-100">          
+            <img ng-src="{{::item.picture}}" ng-if="::item.picture" alt="" aria-hidden="true"/>      
+            <img ng-src="/x_stefa_chameleon.no-image.png" ng-hide="::item.picture" alt="" aria-hidden="true"/>
+         
+            <h2 title="{{::item.name}}">{{::item.name}}</h2>
+        </a>
+      </div>
+    </div>
+
+    <div ng-if="data.items.length === 0">
+      <p>
+        You haven't requested anything yet, <a href="{{options.redirect_to || '?id=sc_home'}}">try now!</a>
+      </p>
+    </div>
+    
+    <div class="see-all">
+      <a href="?id=sc_category">
+          See all >
+      </a>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="Add Swiper 9.4.1">a9c0fa6a1bafa9109b7d32231b4bcb37</sp_dependency>
+        <sp_widget display_value="Ino Dow Slider Cards">f0ebaa261bafa9109b7d32231b4bcbb8</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-06-23 19:02:45</sys_created_on>
+        <sys_id>64e0fa6a1bafa9109b7d32231b4bcbe8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Add Swiper 9.4.1.Ino Dow Slider Cards</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_64e0fa6a1bafa9109b7d32231b4bcbe8</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-06-23 19:02:45</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

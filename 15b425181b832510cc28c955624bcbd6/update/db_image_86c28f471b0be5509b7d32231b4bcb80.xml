@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>Service Portal</category>
+        <format>png</format>
+        <height>38</height>
+        <image>1de28b471b0be5509b7d32231b4bcb72</image>
+        <name>x_stefa_chameleon.ino-askIT-icon.png</name>
+        <size_bytes>1985</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 13:06:54</sys_created_on>
+        <sys_id>86c28f471b0be5509b7d32231b4bcb80</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>x_stefa_chameleon.ino-askIT-icon.png</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>db_image_86c28f471b0be5509b7d32231b4bcb80</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-31 13:07:01</sys_updated_on>
+        <thumbnail/>
+        <width>39</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color>#eee0e4</average_image_color>
+        <chunk_size_bytes>700000</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <file_name>image</file_name>
+        <hash>0246137aa6d3ac3cfe8919bf7518a532c6afe1ef4a4c0c6d7c37d0b91352cc37</hash>
+        <image_height>38</image_height>
+        <image_width>39</image_width>
+        <size_bytes>1985</size_bytes>
+        <size_compressed>2008</size_compressed>
+        <state>available</state>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 13:07:01</sys_created_on>
+        <sys_id>1de28b471b0be5509b7d32231b4bcb72</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2023-05-31 13:07:01</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>86c28f471b0be5509b7d32231b4bcb80</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="1de28b471b0be5509b7d32231b4bcb72">1de28b471b0be5509b7d32231b4bcb72</sys_attachment>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 13:07:01</sys_created_on>
+        <sys_id>5de28b471b0be5509b7d32231b4bcb72</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>2664</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="1de28b471b0be5509b7d32231b4bcb72">1de28b471b0be5509b7d32231b4bcb72</sys_attachment>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-31 13:07:01</sys_created_on>
+        <sys_id>dde28b471b0be5509b7d32231b4bcb72</sys_id>
+    </sys_attachment_doc>
+</record_update>

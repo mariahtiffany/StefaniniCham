@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_fix">
+    <sys_script_fix action="INSERT_OR_UPDATE">
+        <before>false</before>
+        <description/>
+        <name>Chameleon Setup</name>
+        <record_for_rollback>true</record_for_rollback>
+        <script><![CDATA[var gr = new GlideRecord('x_stefa_chameleon_configuration');
+
+var keys = [
+	{'key': 'GPTIndexerKey', 			  'value': 'Ttq60rlqQeTJZovBsdoIXTVhtOn0RJNgFoNUDjA58zs=',    'type': 'plain'},
+	{'key': 'GPTIndexerHash', 			  'value': 'Hc5a16d1e6ac44a5cbd5e22a020d6972d',               'type': 'plain'},
+	{'key': 'GPTIndexerUrl', 			  'value': 'https://llmindexer-api-dev.saiapplications.com',  'type': 'plain'},
+	{'key': 'CallServiceDeskDomain', 	  'value': 'stefanini.com',                                   'type': 'plain'},
+	{'key': 'CallServiceDeskAddress', 	  'value': 'wss://eu-webrtc.stefanini.com:5071',              'type': 'plain'},
+	{'key': 'CallServiceDeskCall', 		  'value': '37758',                                           'type': 'plain'},
+	{'key': 'CallServiceDeskCaller', 	  'value': 'Stefanini.c2c',                                   'type': 'plain'},
+	{'key': 'CallServiceDeskCallerDN', 	  'value': 'C2C',                                             'type': 'plain'},
+	{'key': 'CallServiceDeskTitle', 	  'value': 'Call Stefanini',                                  'type': 'plain'},
+	{'key': 'CallServiceDeskDescription', 'value': 'Click on the button above to call Service Desk',  'type': 'plain'},
+	{'key': 'ChatGPTApiKey',              'value': '',                                                'type': 'encrypted'},
+	{'key': 'DefaultOnboardingDays',      'value': '360',                                             'type': 'plain'},
+];
+
+// Insert keys in the configuration table
+keys.forEach((current) => {
+	gr.initialize();
+	
+	if (gr.get('key', current.key))
+		return;
+	
+	gr.key = current.key;
+	if (current.type == 'plain')
+	  gr.value = current.value;
+	else
+	  gr.encrypted_value = current.value;
+	gr.type = current.type;
+	gr.insert();
+});
+]]></script>
+        <sys_class_name>sys_script_fix</sys_class_name>
+        <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
+        <sys_created_on>2023-05-25 17:33:25</sys_created_on>
+        <sys_id>4ef541151bcfed109b7d32231b4bcbda</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Chameleon Setup</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sys_script_fix_4ef541151bcfed109b7d32231b4bcbda</sys_update_name>
+        <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-01-25 15:24:07</sys_updated_on>
+        <unloadable>false</unloadable>
+    </sys_script_fix>
+</record_update>

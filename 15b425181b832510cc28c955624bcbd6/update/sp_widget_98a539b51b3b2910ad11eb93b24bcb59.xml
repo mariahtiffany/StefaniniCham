@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function(spModal) {
+  /* widget controller */
+  var c = this;
+
+	var CACHED_MY_STUFFS = 'CACHED_MY_STUFFS';
+
+	function saveLinks() {
+		localStorage.setItem(CACHED_MY_STUFFS, JSON.stringify(c.links));
+	}
+	
+	function getLinks() {
+		var cachedLinks = localStorage.getItem(CACHED_MY_STUFFS);
+		
+		if (!cachedLinks) {
+			return [
+				{ title: 'My Tickets', link: '?id=my_open_tickets' },
+				{ title: 'Order Services', link: '?id=sc_home' },
+			];
+		}
+		
+		return JSON.parse(cachedLinks);
+	}
+
+	c.remove = function(item) {
+		c.links = c.links.filter(function (i) {
+			return i !== item;
+		});
+
+		saveLinks();
+	}
+
+	c.links = getLinks();
+	
+	c.addShortcut = function() {
+		spModal.prompt("What is your shortcut link?").then(function(link) {
+			spModal.prompt("What is the name you want to give this shortcut?").then(function(title) {
+				var index = c.links.findIndex(function (i) {
+					return i.link === link;
+				});
+				
+				if (index !== -1) {
+					c.links[index].title = title;
+					saveLinks();
+					
+					return;
+				}
+				
+				c.links.push({
+					title: title,
+					link: link,
+				});
+				
+				saveLinks();
+			});
+		});
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$primary-color: red!default;
+$secondary-color: #666!default;
+
+.ino-dow-aside-links {
+  box-shadow: $default-box-shadow;
+  background-color: #FFF;
+  margin-bottom: 3rem;
+  height: 842px;
+
+  .ino-dow-aside-links-item {
+    padding: 2rem;
+    border-bottom: 0.1rem solid #EAEAEA;
+
+    h3 {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 0;
+      text-transform: uppercase;
+      color: $secondary-color;
+
+      svg {
+        margin-right: 10px;
+        fill: $primary-color;
+        g {
+          fill: $primary-color;
+          path {
+            fill: $primary-color;
+          }
+        }
+      }
+      
+      span {
+      	color: $primary-color;
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      
+      li {
+        padding: 1rem 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        .trash-can {
+          border: 0 none;
+          background-color: transparent;
+        }
+
+        a {
+          font-size: 1.6rem;
+          color: black!important;
+        }
+      }
+    }
+  }
+  
+  /*.icon-default-color {
+    margin-right: 10px;
+    fill: $primary-color;
+    g {
+      fill: $primary-color;
+      path {
+        fill: $primary-color;
+      }
+    }
+  }*/
+  
+  .add-favorite {
+    padding: 2rem;
+    
+    button {
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      background-color: $secondary-color;
+      color: #FFF !important;
+      border-radius: $default-border-radius;
+      padding: 8px 16px;
+      border: 0 none;
+      
+      svg {
+        width: 15px;
+        height: 15px;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+
+
+
+
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ino_dow_aside_links</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Ino DOW Aside Links</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
+        <sys_created_on>2023-07-03 17:04:08</sys_created_on>
+        <sys_id>98a539b51b3b2910ad11eb93b24bcb59</sys_id>
+        <sys_mod_count>79</sys_mod_count>
+        <sys_name>Ino DOW Aside Links</sys_name>
+        <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Chameleon">15b425181b832510cc28c955624bcbd6</sys_scope>
+        <sys_update_name>sp_widget_98a539b51b3b2910ad11eb93b24bcb59</sys_update_name>
+        <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
+        <sys_updated_on>2024-05-31 18:40:10</sys_updated_on>
+        <template><![CDATA[<div class="ino-dow-aside-links">
+  
+  <div class="panel-heading">
+    <h3>
+      <svg class="icon-default-color" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M12,13.5A6.75,6.75,0,1,0,5.25,6.75,6.752,6.752,0,0,0,12,13.5ZM18,15H15.417a8.16,8.16,0,0,1-6.834,0H6a6,6,0,0,0-6,6v.75A2.251,2.251,0,0,0,2.25,24h19.5A2.251,2.251,0,0,0,24,21.75V21A6,6,0,0,0,18,15Z" />
+      </svg>
+      <span>${MY PROFILE}</span>
+    </h3>  
+  </div>
+  
+  <div class="ino-dow-aside-links-item">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+        <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M8,9A4.5,4.5,0,1,0,3.5,4.5,4.5,4.5,0,0,0,8,9Zm4,1H10.278a5.44,5.44,0,0,1-4.556,0H4a4,4,0,0,0-4,4v.5A1.5,1.5,0,0,0,1.5,16h13A1.5,1.5,0,0,0,16,14.5V14A4,4,0,0,0,12,10Z"/>
+      </svg>
+			
+      <span>${PROFILE}</span>
+    </h3>
+    
+    <ul>
+      <li>
+      	<a href="?id=hri_user_profile&sys_id={{user.sys_id}}">${Edit Profile}</a>
+      </li>
+      <li>
+      	<a href="?id=ino_progress_all_documents">${My Documents}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="ino-dow-aside-links-item">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.314" viewBox="0 0 16 15.314">
+        <path id="Icon_awesome-star" data-name="Icon awesome-star" d="M8.583.532,6.63,4.491l-4.369.637a.957.957,0,0,0-.529,1.633l3.161,3.08-.748,4.351A.956.956,0,0,0,5.533,15.2l3.909-2.055L13.35,15.2a.957.957,0,0,0,1.388-1.008L13.99,9.842l3.161-3.08a.957.957,0,0,0-.529-1.633l-4.369-.637L10.3.532a.958.958,0,0,0-1.717,0Z" transform="translate(-1.441 0.001)" />
+      </svg>
+			
+      <span>${FAVORITES}</span>
+    </h3>
+    
+    <ul>
+      <li ng-repeat="item in c.links">
+      	<a href="{{item.link}}">{{item.title}}</a>
+        
+        <button class="trash-can" ng-click="c.remove(item)">
+          <svg id="Icon_material-delete-forever" data-name="Icon material-delete-forever" xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+            <path id="Icon_material-delete-forever-2" data-name="Icon material-delete-forever" d="M8.5,20.5a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V8.5H8.5Zm2.46-7.12,1.41-1.41,2.13,2.12,2.12-2.12,1.41,1.41L15.91,15.5l2.12,2.12-1.41,1.41L14.5,16.91l-2.12,2.12-1.41-1.41,2.12-2.12ZM18,5.5l-1-1H12l-1,1H7.5v2h14v-2Z" transform="translate(-7.5 -4.5)" fill="#707070"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="add-favorite">
+    <button ng-click="c.addShortcut()">
+      ${Add shortcut}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+        <g id="Icon_feather-plus-circle" data-name="Icon feather-plus-circle" transform="translate(-2 -2)">
+          <path id="Path_2" data-name="Path 2" d="M10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18ZM10,3.9A6.1,6.1,0,1,0,16.1,10,6.11,6.11,0,0,0,10,3.9Z" transform="translate(0)" fill="#fff"/>
+          <path id="Path_3" data-name="Path 3" d="M18,18.948a1,1,0,0,1-1-1V12a1,1,0,0,1,2,0v5.948A1,1,0,0,1,18,18.948Z" transform="translate(-8 -4.974)" fill="#fff"/>
+          <path id="Path_4" data-name="Path 4" d="M17.948,19H12a1,1,0,0,1,0-2h5.948a1,1,0,0,1,0,2Z" transform="translate(-4.974 -8)" fill="#fff"/>
+        </g>
+      </svg>
+    </button>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>
