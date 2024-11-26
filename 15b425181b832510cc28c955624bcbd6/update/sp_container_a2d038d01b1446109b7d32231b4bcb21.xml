@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Chameleon Veber - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="chameleon_veber">9ad0f4d01b1446109b7d32231b4bcb6e</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

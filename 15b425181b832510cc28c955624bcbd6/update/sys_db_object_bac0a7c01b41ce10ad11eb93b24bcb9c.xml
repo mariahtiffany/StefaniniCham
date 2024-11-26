@@ -10,7 +10,7 @@
         <create_access_controls>true</create_access_controls>
         <delete_access>false</delete_access>
         <is_extendable>false</is_extendable>
-        <label>Chameleon Kb Cards</label>
+        <label>Chameleon KB Cards</label>
         <live_feed_enabled>false</live_feed_enabled>
         <name>x_stefa_chameleon_kb_cards</name>
         <number_ref/>

@@ -2,6 +2,7 @@
     <sp_css_include action="INSERT_OR_UPDATE">
         <lazy_load>false</lazy_load>
         <name>Montserrat</name>
+        <rtl_css_file_url/>
         <source>url</source>
         <sp_css/>
         <sys_class_name>sp_css_include</sys_class_name>

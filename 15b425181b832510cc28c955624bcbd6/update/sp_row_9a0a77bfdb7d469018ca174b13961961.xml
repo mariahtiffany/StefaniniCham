@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Redirect Home (Retail) - Container 1">5e0a7f7fdb7d469018ca174b139619ca</sp_container>
         <sys_class_name>sp_row</sys_class_name>

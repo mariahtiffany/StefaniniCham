@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Ino Manager My Assigned Tickets - Container 1">d53c14fa1b3fe9509b7d32231b4bcb6e</sp_container>
         <sys_class_name>sp_row</sys_class_name>

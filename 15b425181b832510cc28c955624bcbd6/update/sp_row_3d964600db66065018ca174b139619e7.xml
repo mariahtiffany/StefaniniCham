@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="My Pending Tickets - Container 1">0943b7ffdb3d469018ca174b139619f4</sp_container>
         <sys_class_name>sp_row</sys_class_name>

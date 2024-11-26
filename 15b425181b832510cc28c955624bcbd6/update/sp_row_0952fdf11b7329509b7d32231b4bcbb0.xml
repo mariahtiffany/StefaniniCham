@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="IT Health - Device X-Ray - Container 1">c152fdf11b7329509b7d32231b4bcbae</sp_container>
         <sys_class_name>sp_row</sys_class_name>

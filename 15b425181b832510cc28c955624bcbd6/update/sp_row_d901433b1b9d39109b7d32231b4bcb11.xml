@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>3</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Chameleon Home - Container 3">4f2ba6e51b0be510ad11eb93b24bcbb9</sp_container>
         <sys_class_name>sp_row</sys_class_name>

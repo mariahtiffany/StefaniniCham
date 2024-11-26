@@ -2,6 +2,7 @@
     <sp_css_include action="INSERT_OR_UPDATE">
         <lazy_load>false</lazy_load>
         <name>Apply Montserrat Font</name>
+        <rtl_css_file_url/>
         <source>local</source>
         <sp_css display_value="Apply Montserrat Font">f9f07a051b5bed509b7d32231b4bcb59</sp_css>
         <sys_class_name>sp_css_include</sys_class_name>

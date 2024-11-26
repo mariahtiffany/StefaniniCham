@@ -18,4 +18,5 @@
         <value>key</value>
         <view_config_element display_value="key-FieldValue">2819e15c1b832510cc28c955624bcbfc</view_config_element>
     </sys_sg_view_config_element_attribute>
+    <sys_translated_text action="delete_multiple" query="documentkey=e819e15c1b832510cc28c955624bcbfe"/>
 </record_update>

@@ -28,6 +28,34 @@
             <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
             <sys_updated_on>2023-05-24 19:37:04</sys_updated_on>
         </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2024-11-25 14:46:42</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>519a389ac38212107526bd73e40131eb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_stefa_chameleon_configuration" name="x_stefa_chameleon_configuration" sys_domain="global" view="Default view">5737984d1bc76510ad11eb93b24bcbbb</sys_ui_form>
+            <sys_ui_section caption="More Details" display_value="More Details" name="x_stefa_chameleon_configuration" sys_domain="global" view="Default view">52a7108d1bc76510ad11eb93b24bcb0a</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2024-11-25 14:46:42</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2024-11-25 14:46:42</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>5d9a389ac38212107526bd73e40131eb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_stefa_chameleon_configuration" name="x_stefa_chameleon_configuration" sys_domain="global" view="Default view">5737984d1bc76510ad11eb93b24bcbbb</sys_ui_form>
+            <sys_ui_section caption="Details" display_value="Details" name="x_stefa_chameleon_configuration" sys_domain="09ff3d105f231000b12e3572f2b4775d" view="Default view">547b6ddc1b832510cc28c955624bcb87</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2024-11-25 14:46:42</sys_updated_on>
+        </sys_ui_form_section>
         <sys_ui_form action="INSERT_OR_UPDATE">
             <name>x_stefa_chameleon_configuration</name>
             <roles/>

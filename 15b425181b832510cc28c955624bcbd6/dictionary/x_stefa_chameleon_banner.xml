@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="80f37bf0db4a8a9018ca174b139619b0" label="Banner" max_length="40" name="x_stefa_chameleon_banner" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Order" max_length="40" name="u_order" type="integer"/>
+        <element label="Portal" max_length="200" name="u_portal" type="string"/>
+        <element label="Page ID" max_length="40" name="u_page_id" type="string"/>
+        <element label="Image" max_length="400" name="u_image" type="string"/>
+    </element>
+</database>

@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Ask a Question - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="ino_sqanda_new_question">3ae325941b2fa1109b7d32231b4bcb12</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

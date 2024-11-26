@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="ab6a2dfe1b732d509b7d32231b4bcba0" label="Chameleon Persona Home" max_length="40" name="x_stefa_chameleon_chameleon_persona_home" type="collection">
+        <element attributes="edge_encryption_enabled=true,encode_utf8=false" label="Persona" max_length="32" name="persona" reference="user_criteria" type="reference"/>
+        <element attributes="edge_encryption_enabled=true,encode_utf8=false" label="Home" max_length="32" name="home" reference="sp_page" type="reference"/>
+        <index name="index">
+            <element name="home"/>
+        </index>
+        <index name="index2">
+            <element name="persona"/>
+        </index>
+    </element>
+</database>

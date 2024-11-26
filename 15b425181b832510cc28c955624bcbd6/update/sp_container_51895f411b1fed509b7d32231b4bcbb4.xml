@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>My Open Tickets - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="my_open_tickets">a1799b411b1fed509b7d32231b4bcb62</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

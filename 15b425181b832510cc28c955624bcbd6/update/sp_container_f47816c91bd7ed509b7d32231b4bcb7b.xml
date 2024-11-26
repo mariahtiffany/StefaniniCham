@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Chameleon Home (Tiffany) - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_chameleon_home_tiffany">f87816c91bd7ed509b7d32231b4bcb76</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

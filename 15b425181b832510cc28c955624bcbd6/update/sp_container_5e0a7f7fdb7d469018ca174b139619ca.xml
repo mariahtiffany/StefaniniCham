@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Redirect Home (Retail) - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="redirect_home_retail">820a7f7fdb7d469018ca174b139619c8</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

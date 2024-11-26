@@ -8,6 +8,7 @@
         <container_class_name>m-b-xl</container_class_name>
         <name>Ino Welcome to Our Team - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_welcome_to_our_team">191c23b71ba721509b7d32231b4bcbfa</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

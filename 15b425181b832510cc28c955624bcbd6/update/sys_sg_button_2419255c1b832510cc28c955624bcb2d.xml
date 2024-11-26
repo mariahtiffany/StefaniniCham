@@ -74,4 +74,5 @@
         <write_back_action_item display_value="Delete (Chameleon Configuration)">6819255c1b832510cc28c955624bcb2c</write_back_action_item>
         <zombified_screens/>
     </sys_sg_button>
+    <sys_translated_text action="delete_multiple" query="documentkey=2419255c1b832510cc28c955624bcb2d"/>
 </record_update>

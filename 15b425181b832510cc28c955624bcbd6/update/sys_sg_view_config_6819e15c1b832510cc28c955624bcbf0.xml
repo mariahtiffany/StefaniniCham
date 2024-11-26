@@ -20,4 +20,5 @@
         <table>x_stefa_chameleon_configuration</table>
         <template display_value="Template 01">6bb0be5c41a71010f877183fc9b8be0c</template>
     </sys_sg_view_config>
+    <sys_translated_text action="delete_multiple" query="documentkey=6819e15c1b832510cc28c955624bcbf0"/>
 </record_update>

@@ -8,6 +8,7 @@
         <container_class_name>m-b-xl</container_class_name>
         <name>IT Health - Device X-Ray - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="it_health_device_xray">199e6d311b7329509b7d32231b4bcbc8</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

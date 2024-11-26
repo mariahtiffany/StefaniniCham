@@ -8,6 +8,7 @@
         <container_class_name>m-b-xl</container_class_name>
         <name>Ino Manager Training Progress - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_manager_training_progress">f6f992c71b776d509b7d32231b4bcb08</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

@@ -4,7 +4,6 @@
         <applet_launcher display_value="Chameleon">6819e15c1b832510cc28c955624bcbed</applet_launcher>
         <icon display_value="Home Chameleon">2819e15c1b832510cc28c955624bcbee</icon>
         <label>Chameleon</label>
-        <roles>admin</roles>
         <sys_class_name>sys_sg_applet_launcher_tab</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
         <sys_created_on>2023-05-22 17:31:17</sys_created_on>

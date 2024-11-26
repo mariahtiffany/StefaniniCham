@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Chameleon Manager - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="chameleon_manager">2b6019b51bb72910ad11eb93b24bcbe8</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

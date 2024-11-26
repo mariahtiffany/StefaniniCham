@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Tagged Questions - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_sqa_tagged_questions">ebe9c99c1baba1109b7d32231b4bcbbd</sp_page>
         <subheader>true</subheader>
         <sys_class_name>sp_container</sys_class_name>

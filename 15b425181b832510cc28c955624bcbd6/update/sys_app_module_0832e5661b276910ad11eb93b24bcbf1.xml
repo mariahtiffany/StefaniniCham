@@ -3,7 +3,6 @@
         <active>true</active>
         <application display_value="Chameleon IT Health Sensors">8832e5661b276910ad11eb93b24bcbed</application>
         <assessment/>
-        <content_page/>
         <device_type/>
         <filter/>
         <hint/>
@@ -18,6 +17,7 @@
         <override_menu_roles>false</override_menu_roles>
         <query/>
         <report/>
+        <require_confirmation>false</require_confirmation>
         <roles>x_stefa_chameleon.chameleon_it_health_sensors_user</roles>
         <sys_class_name>sys_app_module</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>

@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Ino Tagged Questions - Container 2">ffe98d9c1baba1109b7d32231b4bcba3</sp_container>
         <sys_class_name>sp_row</sys_class_name>

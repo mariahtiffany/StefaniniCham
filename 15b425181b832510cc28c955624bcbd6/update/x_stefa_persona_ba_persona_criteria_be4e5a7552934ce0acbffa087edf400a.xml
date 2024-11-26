@@ -12,6 +12,7 @@
         <role/>
         <script><![CDATA[var strArr = "b9b461171bfee5109b7d32231b4bcb1f"; 
 answer = new x_stefa_persona_ba.utilPersonas().arePersonas(user_id, strArr);]]></script>
+        <short_description/>
         <sys_class_name>x_stefa_persona_ba_persona_criteria</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
         <sys_created_on>2023-06-13 21:02:31</sys_created_on>
@@ -28,4 +29,5 @@ answer = new x_stefa_persona_ba.utilPersonas().arePersonas(user_id, strArr);]]><
         <sys_updated_on>2023-06-13 21:02:31</sys_updated_on>
         <user/>
     </x_stefa_persona_ba_persona_criteria>
+    <sys_translated_text action="delete_multiple" query="documentkey=be4e5a7552934ce0acbffa087edf400a"/>
 </record_update>

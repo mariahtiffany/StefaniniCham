@@ -17,5 +17,6 @@
         <sys_update_name>sp_css_f9f07a051b5bed509b7d32231b4bcb59</sys_update_name>
         <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
         <sys_updated_on>2023-06-06 16:57:50</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
     </sp_css>
 </record_update>

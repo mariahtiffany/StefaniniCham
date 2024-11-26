@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Search - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_search">95079b351be3e510ad11eb93b24bcbd6</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

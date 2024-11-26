@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Progress All Documents - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="ino_progress_all_documents">e83eb7041b3b61509b7d32231b4bcb0d</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

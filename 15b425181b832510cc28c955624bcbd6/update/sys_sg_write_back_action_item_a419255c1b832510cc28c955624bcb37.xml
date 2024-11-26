@@ -25,4 +25,5 @@
         <use_current_record_as_condition>true</use_current_record_as_condition>
         <use_fields_for_ref_lookup>false</use_fields_for_ref_lookup>
     </sys_sg_write_back_action_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=a419255c1b832510cc28c955624bcb37"/>
 </record_update>

@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>3</order>
+        <semantic_tag/>
         <sp_column display_value="2">8934fa811bf50e105a2e113fad4bcb97</sp_column>
         <sp_container/>
         <sys_class_name>sp_row</sys_class_name>

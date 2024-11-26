@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="9a7d32e91b064e505a2e113fad4bcb75" extends="task" label="Chameleon Suggestion" max_length="40" name="x_stefa_chameleon_suggestion" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Isanonymous" max_length="40" name="u_isanonymous" type="boolean"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="New Suggestion" label="Status" max_length="40" name="u_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Closed" sequence="7" value="Closed"/>
+                <element inactive_on_update="false" label="Initial Evaluation" sequence="2" value="Initial Evaluation"/>
+                <element inactive_on_update="false" label="Assignment Group Evaluation" sequence="3" value="Assignment Group Evaluation"/>
+                <element inactive_on_update="false" label="On hold" sequence="5" value="On hold"/>
+                <element inactive_on_update="false" label="New Suggestion" sequence="1" value="New Suggestion"/>
+                <element inactive_on_update="false" label="Completed" sequence="4" value="Completed"/>
+                <element inactive_on_update="false" label="Canceled" sequence="6" value="Canceled"/>
+            </choice>
+        </element>
+        <element attributes="edge_encryption_enabled=true" label="Rating" max_length="40" name="u_rating" type="integer"/>
+        <element label="URL" max_length="40" name="u_url" type="string"/>
+        <element label="Category" max_length="150" name="u_category" type="string"/>
+    </element>
+</database>

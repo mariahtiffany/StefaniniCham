@@ -25,4 +25,5 @@
         <sys_updated_by>andre.nunes@stefanini.com</sys_updated_by>
         <sys_updated_on>2023-05-22 17:31:17</sys_updated_on>
     </sys_sg_list_screen>
+    <sys_translated_text action="delete_multiple" query="documentkey=e019255c1b832510cc28c955624bcb0e"/>
 </record_update>

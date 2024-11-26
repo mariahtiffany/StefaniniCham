@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Chameleon Onboarding - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="chameleon_onboarding">283472811bf50e105a2e113fad4bcb08</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

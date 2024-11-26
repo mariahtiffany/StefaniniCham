@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>My Open Requests - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="my_open_requests">5554f3931b6db5109b7d32231b4bcbdf</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

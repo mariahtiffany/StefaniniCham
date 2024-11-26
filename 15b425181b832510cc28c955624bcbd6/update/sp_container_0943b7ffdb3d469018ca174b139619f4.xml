@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>My Pending Tickets - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="my_pending_tickets">8143b7ffdb3d469018ca174b139619f2</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

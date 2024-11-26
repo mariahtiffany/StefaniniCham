@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
         <sys_created_on>2023-05-24 17:58:09</sys_created_on>
-        <sys_id>a452040d1b876510ad11eb93b24bcb9f</sys_id>
         <sys_name>Encrypted Value</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

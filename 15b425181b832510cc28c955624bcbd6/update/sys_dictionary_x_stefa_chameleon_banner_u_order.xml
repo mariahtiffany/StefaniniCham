@@ -2,7 +2,7 @@
     <sys_dictionary action="INSERT_OR_UPDATE" element="u_order" table="x_stefa_chameleon_banner">
         <active>true</active>
         <array>false</array>
-        <attributes/>
+        <attributes>edge_encryption_enabled=true</attributes>
         <audit>false</audit>
         <calculation><![CDATA[(function calculatedFieldValue(current) {
 
@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
         <sys_created_on>2024-05-06 16:29:45</sys_created_on>
-        <sys_id>441737f4db4a8a9018ca174b1396193f</sys_id>
         <sys_name>Order</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Manager My Assigned Tickets - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="ino_dow_manager_my_assigned_tickets">513c9cba1b3fe9509b7d32231b4bcbfa</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

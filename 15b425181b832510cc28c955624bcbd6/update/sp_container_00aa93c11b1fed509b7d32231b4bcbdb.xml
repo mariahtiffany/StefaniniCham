@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Requests to Approve - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="requests_to_approve">3b9a93c11b1fed509b7d32231b4bcbd8</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

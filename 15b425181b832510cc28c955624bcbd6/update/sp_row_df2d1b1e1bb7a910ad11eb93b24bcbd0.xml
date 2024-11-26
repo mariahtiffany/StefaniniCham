@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Ino Manager New Hire Users - Container 1">392d97da1bb7a910ad11eb93b24bcb97</sp_container>
         <sys_class_name>sp_row</sys_class_name>

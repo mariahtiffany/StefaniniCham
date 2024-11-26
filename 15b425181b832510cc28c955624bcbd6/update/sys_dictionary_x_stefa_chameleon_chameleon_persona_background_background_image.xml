@@ -2,7 +2,7 @@
     <sys_dictionary action="INSERT_OR_UPDATE" element="background_image" table="x_stefa_chameleon_chameleon_persona_background">
         <active>true</active>
         <array>false</array>
-        <attributes>allow_public=true</attributes>
+        <attributes>allow_public=true,edge_encryption_enabled=true,pdf_cell_type=image</attributes>
         <audit>false</audit>
         <calculation><![CDATA[(function calculatedFieldValue(current) {
 
@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
         <sys_created_on>2023-06-05 16:40:17</sys_created_on>
-        <sys_id>29432d781bd3ad509b7d32231b4bcb24</sys_id>
         <sys_name>Background image</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

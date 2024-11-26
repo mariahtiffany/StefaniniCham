@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="acd2e1781bd3ad509b7d32231b4bcb67" label="Chameleon Persona Background" max_length="40" name="x_stefa_chameleon_chameleon_persona_background" type="collection">
+        <element attributes="allow_public=true,edge_encryption_enabled=true,pdf_cell_type=image" label="Background image" max_length="40" name="background_image" type="user_image"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element attributes="edge_encryption_enabled=true,encode_utf8=false" label="Persona" mandatory="true" max_length="32" name="persona" reference="user_criteria" type="reference"/>
+        <element attributes="edge_encryption_enabled=true" label="New Audio" max_length="40" name="u_audio_1" type="audio"/>
+        <index name="index">
+            <element name="persona"/>
+        </index>
+    </element>
+</database>

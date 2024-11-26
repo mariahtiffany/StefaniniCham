@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="527021261b276910ad11eb93b24bcb29" label="Chameleon IT Health Sensors" max_length="40" name="x_stefa_chameleon_it_health_sensors" type="collection">
+        <element label="Title" max_length="300" name="title" type="string"/>
+        <element label="Sensor ID" max_length="100" name="sensor_id" type="string"/>
+        <element label="Icon color" max_length="40" name="icon_color" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Priority" max_length="40" name="priority" type="boolean"/>
+        <element label="Sensor name" max_length="40" name="sensor_name" type="string"/>
+        <element label="Main variable" max_length="40" name="main_variable" type="string"/>
+        <element label="Icon image" max_length="500000" name="icon_image" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Target" max_length="20" name="target" type="decimal"/>
+    </element>
+</database>

@@ -25,4 +25,5 @@
         <sys_updated_on>2023-05-22 17:31:17</sys_updated_on>
         <table>x_stefa_chameleon_configuration</table>
     </sys_sg_details_screen>
+    <sys_translated_text action="delete_multiple" query="documentkey=2c19255c1b832510cc28c955624bcb0f"/>
 </record_update>

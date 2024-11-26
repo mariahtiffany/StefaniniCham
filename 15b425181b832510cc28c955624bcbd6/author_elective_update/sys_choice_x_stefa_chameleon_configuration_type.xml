@@ -6,7 +6,6 @@
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
             <sys_created_on>2023-05-24 19:25:29</sys_created_on>
-            <sys_id>0166d00d1bc76510ad11eb93b24bcb00</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>type</sys_name>
             <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
@@ -30,7 +29,6 @@
             <sys_created_on>2023-05-24 19:25:29</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>8966900d1bc76510ad11eb93b24bcbff</sys_id>
             <sys_mod_count>2</sys_mod_count>
             <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
             <sys_updated_on>2023-05-24 19:27:06</sys_updated_on>
@@ -50,7 +48,6 @@
             <sys_created_on>2023-05-24 19:26:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>4e86d00d1bc76510ad11eb93b24bcb27</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
             <sys_updated_on>2023-05-24 19:26:33</sys_updated_on>

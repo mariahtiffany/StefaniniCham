@@ -2,7 +2,7 @@
     <sys_dictionary action="INSERT_OR_UPDATE" element="type" table="x_stefa_chameleon_configuration">
         <active>true</active>
         <array>false</array>
-        <attributes/>
+        <attributes>edge_encryption_enabled=true</attributes>
         <audit>false</audit>
         <calculation><![CDATA[(function calculatedFieldValue(current) {
 
@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
         <sys_created_on>2023-05-24 19:25:10</sys_created_on>
-        <sys_id>aa620cc91b876510ad11eb93b24bcbfd</sys_id>
         <sys_name>Type</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

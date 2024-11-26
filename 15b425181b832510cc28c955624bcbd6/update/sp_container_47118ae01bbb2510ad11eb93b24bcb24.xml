@@ -8,6 +8,7 @@
         <container_class_name>m-b-xl</container_class_name>
         <name>Ino Onboarding Process - Container 1</name>
         <order>1</order>
+        <semantic_tag/>
         <sp_page display_value="ino_onboarding_process">6bbd633b1ba721509b7d32231b4bcb27</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

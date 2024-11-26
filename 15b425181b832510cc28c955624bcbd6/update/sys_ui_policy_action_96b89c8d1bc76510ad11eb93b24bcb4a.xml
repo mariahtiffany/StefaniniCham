@@ -3,6 +3,8 @@
         <cleared>false</cleared>
         <disabled>ignore</disabled>
         <field>value</field>
+        <field_message/>
+        <field_message_type/>
         <mandatory>ignore</mandatory>
         <sys_class_name>sys_ui_policy_action</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
@@ -18,6 +20,9 @@
         <sys_updated_on>2023-05-24 19:35:46</sys_updated_on>
         <table>x_stefa_chameleon_configuration</table>
         <ui_policy display_value="Show Configuration Value Policy">cfc7908d1bc76510ad11eb93b24bcb4e</ui_policy>
+        <value/>
+        <value_action/>
         <visible>true</visible>
     </sys_ui_policy_action>
+    <sys_translated_text action="delete_multiple" query="documentkey=96b89c8d1bc76510ad11eb93b24bcb4a"/>
 </record_update>

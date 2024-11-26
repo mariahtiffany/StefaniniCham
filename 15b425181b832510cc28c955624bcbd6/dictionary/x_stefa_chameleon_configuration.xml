@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="5b78691c1b832510cc28c955624bcb91" label="Chameleon Configuration" max_length="40" name="x_stefa_chameleon_configuration" type="collection">
+        <element attributes="edge_encryption_enabled=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element attributes="edge_encryption_enabled=true" display="true" label="Key" max_length="100" name="key" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Value" max_length="8000" name="value" type="string"/>
+        <element label="Encrypted Value" max_length="255" name="encrypted_value" type="password2"/>
+        <element attributes="edge_encryption_enabled=true" choice="3" default="plain" label="Type" mandatory="true" max_length="40" name="type" type="choice">
+            <choice>
+                <element hint="Select this option when you don't want to encrypt the value." inactive_on_update="false" label="Plain Value" value="plain"/>
+                <element hint="Select this option when you want the value to be saved encrypted" inactive_on_update="false" label="Encrypted Value" value="encrypted"/>
+            </choice>
+        </element>
+    </element>
+</database>

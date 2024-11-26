@@ -2,6 +2,7 @@
     <sp_css_include action="INSERT_OR_UPDATE">
         <lazy_load>false</lazy_load>
         <name>Arial Font</name>
+        <rtl_css_file_url/>
         <source>local</source>
         <sp_css display_value="Arial Font">0a14f4861b2be510ad11eb93b24bcb02</sp_css>
         <sys_class_name>sp_css_include</sys_class_name>

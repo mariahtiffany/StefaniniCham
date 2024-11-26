@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Social Q&amp;A - Question - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="ino_kb_social_qa_question">608c11501b2fa1109b7d32231b4bcb57</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

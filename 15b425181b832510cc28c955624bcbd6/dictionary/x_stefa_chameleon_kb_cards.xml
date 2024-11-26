@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="bac0a7c01b41ce10ad11eb93b24bcb9c" label="Chameleon KB Cards" max_length="40" name="x_stefa_chameleon_kb_cards" type="collection">
+        <element label="Image" max_length="200" name="u_image" type="string"/>
+        <element label="Portal" max_length="40" name="u_portal" type="string"/>
+        <element label="Page ID" max_length="40" name="u_page_id" type="string"/>
+        <element label="Kb" max_length="40" name="u_kb" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Order" max_length="40" name="u_order" type="integer"/>
+    </element>
+</database>

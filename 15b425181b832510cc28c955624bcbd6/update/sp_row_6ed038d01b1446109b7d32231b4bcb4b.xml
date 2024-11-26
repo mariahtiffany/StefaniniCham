@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>5</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Chameleon Veber - Container 2">a2d038d01b1446109b7d32231b4bcb21</sp_container>
         <sys_class_name>sp_row</sys_class_name>

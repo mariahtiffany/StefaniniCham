@@ -2,6 +2,7 @@
     <sp_row action="INSERT_OR_UPDATE">
         <class_name/>
         <order>1</order>
+        <semantic_tag/>
         <sp_column/>
         <sp_container display_value="Chameleon Manager - Container 4">a65127861bbb6910ad11eb93b24bcba1</sp_container>
         <sys_class_name>sp_row</sys_class_name>

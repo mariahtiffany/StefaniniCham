@@ -37,5 +37,6 @@ body * {&#13;
         <sys_update_name>sp_css_0a14f4861b2be510ad11eb93b24bcb02</sys_update_name>
         <sys_updated_by>vinicius.lourenco@stefanini.com</sys_updated_by>
         <sys_updated_on>2023-06-21 21:19:58</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
     </sp_css>
 </record_update>

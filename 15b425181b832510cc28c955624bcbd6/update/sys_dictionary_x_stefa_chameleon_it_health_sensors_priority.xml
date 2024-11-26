@@ -2,7 +2,7 @@
     <sys_dictionary action="INSERT_OR_UPDATE" element="priority" table="x_stefa_chameleon_it_health_sensors">
         <active>true</active>
         <array>false</array>
-        <attributes/>
+        <attributes>edge_encryption_enabled=true</attributes>
         <audit>false</audit>
         <calculation><![CDATA[(function calculatedFieldValue(current) {
 
@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
         <sys_created_on>2023-06-23 13:18:55</sys_created_on>
-        <sys_id>4cb025e21b276910ad11eb93b24bcbea</sys_id>
         <sys_name>Priority</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

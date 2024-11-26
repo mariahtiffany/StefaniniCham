@@ -8,6 +8,7 @@
         <container_class_name/>
         <name>Ino Manager New Hire Users - Container 2</name>
         <order>2</order>
+        <semantic_tag/>
         <sp_page display_value="ino_manager_new_hire_users">ed2d97da1bb7a910ad11eb93b24bcb93</sp_page>
         <subheader>false</subheader>
         <sys_class_name>sp_container</sys_class_name>

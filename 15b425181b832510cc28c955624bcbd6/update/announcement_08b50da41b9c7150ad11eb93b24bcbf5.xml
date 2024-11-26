@@ -16,12 +16,6 @@
         <public>false</public>
         <roles/>
         <show_for_unauthenticated_users_only>false</show_for_unauthenticated_users_only>
-        <sn_communities_announcement_type/>
-        <sn_communities_forums/>
-        <sn_communities_notification>false</sn_communities_notification>
-        <sn_communities_notification_sent>false</sn_communities_notification_sent>
-        <sn_communities_portals>5b49418bdb4aa200b1f6f78eaf96195f</sn_communities_portals>
-        <sn_communities_selected_forums/>
         <summary/>
         <sys_class_name>announcement</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>

@@ -2,7 +2,7 @@
     <sys_dictionary action="INSERT_OR_UPDATE" element="u_audio_1" table="x_stefa_chameleon_chameleon_persona_background">
         <active>true</active>
         <array>false</array>
-        <attributes/>
+        <attributes>edge_encryption_enabled=true</attributes>
         <audit>false</audit>
         <calculation/>
         <choice>0</choice>
@@ -47,7 +47,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>vinicius.lourenco@stefanini.com</sys_created_by>
         <sys_created_on>2023-07-21 17:58:08</sys_created_on>
-        <sys_id>be9ea6e31bccbd10ad11eb93b24bcb18</sys_id>
         <sys_name>New Audio</sys_name>
         <sys_package display_value="Chameleon" source="x_stefa_chameleon">15b425181b832510cc28c955624bcbd6</sys_package>
         <sys_policy/>

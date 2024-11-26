@@ -34,4 +34,5 @@
         <use_view_config>true</use_view_config>
         <view_config display_value="Chameleon Configuration Detail Screen View Config">ec19255c1b832510cc28c955624bcb00</view_config>
     </sys_sg_form_screen>
+    <sys_translated_text action="delete_multiple" query="documentkey=2019255c1b832510cc28c955624bcb0f"/>
 </record_update>

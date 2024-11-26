@@ -18,4 +18,5 @@
         <value>number</value>
         <view_config_element display_value="number-FieldValue">2419255c1b832510cc28c955624bcb01</view_config_element>
     </sys_sg_view_config_element_attribute>
+    <sys_translated_text action="delete_multiple" query="documentkey=e419255c1b832510cc28c955624bcb03"/>
 </record_update>

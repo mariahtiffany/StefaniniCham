@@ -36,4 +36,5 @@
         <table_name>x_stefa_chameleon_configuration</table_name>
         <virtual_field_value>false</virtual_field_value>
     </sys_sg_ui_parameter>
+    <sys_translated_text action="delete_multiple" query="documentkey=e419255c1b832510cc28c955624bcb34"/>
 </record_update>

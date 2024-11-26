@@ -17,7 +17,7 @@
         <provider_class/>
         <read_access>true</read_access>
         <scriptable_table>false</scriptable_table>
-        <super_class display_value="Task" name="task">b12e4e671b003010ad11eb93b24bcbd9</super_class>
+        <super_class display_value="Task" name="task">5fe6835bd12302104f34ba60d8b7c1f3</super_class>
         <sys_class_name>sys_db_object</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
         <sys_created_on>2024-05-08 20:12:23</sys_created_on>

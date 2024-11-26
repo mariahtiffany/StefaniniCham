@@ -3,7 +3,6 @@
         <active>true</active>
         <application display_value="Banner">aa047ff0db4a8a9018ca174b1396198f</application>
         <assessment/>
-        <content_page/>
         <device_type/>
         <filter/>
         <hint/>
@@ -18,6 +17,7 @@
         <override_menu_roles>false</override_menu_roles>
         <query/>
         <report/>
+        <require_confirmation>false</require_confirmation>
         <roles>x_stefa_chameleon.banner_user</roles>
         <sys_class_name>sys_app_module</sys_class_name>
         <sys_created_by>andre.nunes@stefanini.com</sys_created_by>
